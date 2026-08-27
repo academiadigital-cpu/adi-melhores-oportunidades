@@ -454,7 +454,6 @@
       <p class="login-ajuda">Fica guardado só neste aparelho, ninguém mais vê.</p>
       <div id="login-erro" class="field-error"></div>
       <button class="btn full" id="btn-entrar" onclick="fazerLogin()">Entrar</button>
-      <div class="chip-row" id="chip-row"></div>
     </div>
   </div>
 
@@ -985,19 +984,11 @@ function incrementarNacional(escolaId) {
 }
 
 function preencherChips() {
+  // Os botões de "Testar aluno de X" (atalho de desenvolvimento, usando RAs reais da base)
+  // foram removidos da tela de login pública -- não faz sentido um aluno real ver isso.
   const row = document.getElementById("chip-row");
-  if (!row) return;
-  row.innerHTML = "";
-  Object.keys(DADOS.alunos || {}).slice(0, 3).forEach(ra => {
-    const a = DADOS.alunos[ra];
-    const btn = document.createElement("button");
-    btn.className = "chip";
-    btn.textContent = `🧪 Testar aluno de ${a.municipio}`;
-    btn.onclick = () => preencherDemo(ra);
-    row.appendChild(btn);
-  });
+  if (row) row.innerHTML = "";
 }
-function preencherDemo(ra) { document.getElementById("login-matricula").value = ra; fazerLogin(); }
 
 function chaveNome(ra) { return "mo_nome_" + ra; }
 
