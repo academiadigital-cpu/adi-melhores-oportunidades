@@ -823,6 +823,12 @@ function csvParaObjetos(text) {
   return rows.slice(1).map(r => { const o = {}; header.forEach((h, i) => o[h] = r[i] !== undefined ? r[i] : ""); return o; });
 }
 
+function formatarPeriodoInscricoes(inicio, fim, legado) {
+  if (inicio && fim) return inicio + " até " + fim;
+  if (fim) return fim;
+  if (inicio) return inicio;
+  return legado || "";
+}
 function parseEscolasCSV(text) {
   const out = [];
   csvParaObjetos(text).forEach(row => {
@@ -846,6 +852,13 @@ function parseEscolasCSV(text) {
     const isencaoRaw = normalizarTexto(row["Isenção de taxa?"] || row["Isencao de taxa?"] || "");
     const isencaoTaxa = !(isencaoRaw === "nao");
     const categoria = classificarCategoria(nomeRaw, row["Tipo de escola"]);
+    // Período de inscrições: prioriza as colunas dedicadas "INÍCIO Inscrições" / "FIM Inscrições"
+    // (mais confiáveis, texto curto). Se nenhuma das duas estiver preenchida, cai pra coluna antiga
+    // "Data das Inscrições" (texto livre), mantendo compatibilidade com linhas já preenchidas nela.
+    const inicioInsc = (row["INÍCIO Inscrições"] || row["INICIO Inscrições"] || "").trim();
+    const fimInsc = (row["FIM Inscrições"] || "").trim();
+    const periodoInscricoes = formatarPeriodoInscricoes(inicioInsc, fimInsc, (row["Data das Inscrições"] || "").trim());
+    const valorInscricao = (row["Valor da Inscrição"] || row["Valor de Inscrição"] || row["Valor de inscrição"] || "").trim() || null;
     out.push({
       id: co, nome: tituloEscola(nomeRaw), municipio, uf, regiao: UF_REGIAO[uf] || "",
       tipo, categoria,
@@ -854,7 +867,8 @@ function parseEscolasCSV(text) {
       enem: parseNumBr(row["ENEM"]), ideb: parseNumBr(row["IDEB"]),
       site: limparLink(row["LINK"]), endereco: (row["Endereço"] || "").trim(),
       formaIngresso: (row["Forma de ingresso"] || "").trim() || null,
-      periodoInscricoes: (row["Data das Inscrições"] || "").trim() || null,
+      periodoInscricoes: periodoInscricoes || null,
+      valorInscricao,
       dataProva: (row["Data da Prova"] || "").trim() || null,
       periodoIsencao: (row["Período de isenção"] || row["Periodo de isencao"] || row["Data da isenção"] || "").trim() || null,
       lat, lon, coordAproximada,
@@ -1334,7 +1348,7 @@ function criarEscolaCard(escola, opts) {
         ${linhaInfo("Período de inscrições", escola.periodoInscricoes, "a equipe vai atualizar em breve")}
         ${linhaInfo("Data da prova", escola.dataProva, "a confirmar")}
         ${escolaTemTaxa
-          ? linhaInfo("Taxa de inscrição", "Há taxa de inscrição — consulte o edital para o valor", null)
+          ? linhaInfo("Taxa de inscrição", escola.valorInscricao, "Há taxa de inscrição — consulte o edital para o valor")
           : linhaInfo("Taxa de inscrição", "Não se aplica — escola pública", null)}
         ${linhaInfo("Nota ENEM média", escola.enem ? escola.enem.toFixed(1) : null, "a confirmar")}
       </div>
