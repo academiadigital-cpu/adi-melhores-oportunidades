@@ -859,6 +859,8 @@ function parseEscolasCSV(text) {
     const fimInsc = (row["FIM Inscrições"] || "").trim();
     const periodoInscricoes = formatarPeriodoInscricoes(inicioInsc, fimInsc, (row["Data das Inscrições"] || "").trim());
     const valorInscricao = (row["Valor da Inscrição"] || row["Valor de Inscrição"] || row["Valor de inscrição"] || "").trim() || null;
+    const ofereceBolsaRaw = normalizarTexto(row["Oferece bolsa?"] || "");
+    const ofereceBolsa = ofereceBolsaRaw === "sim";
     out.push({
       id: co, nome: tituloEscola(nomeRaw), municipio, uf, regiao: UF_REGIAO[uf] || "",
       tipo, categoria,
@@ -869,6 +871,7 @@ function parseEscolasCSV(text) {
       formaIngresso: (row["Forma de ingresso"] || "").trim() || null,
       periodoInscricoes: periodoInscricoes || null,
       valorInscricao,
+      ofereceBolsa,
       dataProva: (row["Data da Prova"] || "").trim() || null,
       periodoIsencao: (row["Período de isenção"] || row["Periodo de isencao"] || row["Data da isenção"] || "").trim() || null,
       lat, lon, coordAproximada,
@@ -1347,6 +1350,7 @@ function criarEscolaCard(escola, opts) {
         ${temIsencao ? linhaInfo(labelIsencao, escola.periodoIsencao, "a equipe vai divulgar o período em breve") : ""}
         ${linhaInfo("Período de inscrições", escola.periodoInscricoes, "a equipe vai atualizar em breve")}
         ${linhaInfo("Data da prova", escola.dataProva, "a confirmar")}
+        ${escola.ofereceBolsa ? linhaInfo("Bolsa de estudos", "Essa escola oferece bolsa de estudos — consulte a escola para saber os critérios", null) : ""}
         ${escolaTemTaxa
           ? linhaInfo("Taxa de inscrição", escola.valorInscricao, "Há taxa de inscrição — consulte o edital para o valor")
           : linhaInfo("Taxa de inscrição", "Não se aplica — escola pública", null)}
