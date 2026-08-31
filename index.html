@@ -379,7 +379,7 @@
   .aprovado-box, .status-box { margin-top: 14px; padding: 12px 14px; border-radius: var(--radius-s); background: var(--success-soft); color: var(--success-soft-ink); font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
   .status-box.reembolso { background: var(--yellow-soft); color: var(--yellow-soft-ink); }
   .taxa-opcoes { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin-top: 10px; }
-  .taxa-opcoes .taxa-aviso { font-size: 11.5px; color: var(--ink-faint); margin: 0; }
+  .taxa-opcoes .taxa-aviso { margin: 10px 0 0; }
   .modal-hint { font-size: 13px; margin: 0 0 4px; }
   .modal-hint a { color: var(--blue); font-weight: 700; }
 
@@ -396,6 +396,12 @@
   .modal-botoes { display: flex; gap: 10px; margin-top: 22px; }
   .modal-botoes .btn { flex: 1; margin-top: 0; }
   .aviso-box { background: var(--yellow-soft); color: var(--yellow-soft-ink); border-radius: var(--radius-s); padding: 14px; font-size: 13.5px; font-weight: 600; line-height: 1.5; margin-top: 6px; }
+
+  .aviso-obrigatorio { display: flex; align-items: flex-start; gap: 14px; background: var(--paper-raised); border: 1.5px solid var(--border); border-radius: var(--radius-l); padding: 16px 18px; margin: 14px 0 20px; }
+  .aviso-obrigatorio .recado-owl { width: 56px; height: 56px; object-fit: contain; flex-shrink: 0; margin: 0; }
+  .aviso-obrigatorio .recado-texto { font-size: 14px; line-height: 1.6; background: var(--blue-soft); color: var(--blue-soft-ink); border-radius: var(--radius-s); padding: 14px 16px; margin: 0; flex: 1; text-align: left; }
+  .aviso-obrigatorio .recado-assinatura { display: block; margin-top: 8px; font-weight: 800; text-align: right; }
+  @media (max-width: 480px) { .aviso-obrigatorio { flex-direction: column; align-items: center; text-align: center; } .aviso-obrigatorio .recado-owl { margin: 0 auto; } }
 
   .modal-recado { text-align: center; }
   .modal-recado .recado-owl { width: 64px; height: 64px; object-fit: contain; margin: 0 auto 12px; display: block; }
@@ -560,6 +566,13 @@
         <div id="tab-plano" class="tab-content">
           <div class="section-head"><h2>Seu plano de vestibulinhos</h2></div>
           <p class="hint">Escolas em que você marcou interesse — acompanhe cada etapa até a aprovação.</p>
+          <div class="aviso-obrigatorio">
+            <img class="recado-owl" id="owl-aviso-obrigatorio" src="" alt="">
+            <div class="recado-texto">
+              <strong>Atenção:</strong> todo aluno do 9º ano da Academia Digital <strong>precisa se inscrever em pelo menos um vestibulinho</strong>. Fique de olho nos prazos (aba Calendário) e conte com a gente em cada etapa! Uma dica importante: o Ismart <strong>reembolsa só 1 inscrição por aluno</strong> — a de maior valor entre as que você pagou — então vale ser estratégico(a) na hora de escolher em quais vestibulinhos investir.
+              <span class="recado-assinatura">— Equipe da Academia Digital</span>
+            </div>
+          </div>
           <div id="plano-vazio" class="empty-state" style="display:none">
             <img class="owl-ilustra" data-owl="livro" src="" alt=""><h3>Seu plano ainda está vazio</h3>
             <p>Vá até "Explorar escolas" e marque interesse nas que fizerem sentido pra você.</p>
@@ -704,6 +717,11 @@ const ALUNOS_CSV_URL = null;
 // lista inteira -- devolve só o nome de quem perguntou. Preencher quando a Heloísa configurar e
 // mandar o link publicado; até lá o nome continua só o que o próprio aluno digitar (localStorage).
 const ALUNO_NOME_API_URL = "https://script.google.com/a/macros/ismart.org.br/s/AKfycbzYy-C2OX5UKJH8I-lX1aXXDlA4zFt8w8-aMUIFnrDyoWB_DYxMHf4nGt3PraEzBbPE/exec";
+// URL da implantação (Web App) do Google Apps Script que REGISTRA (só escreve, nunca lê nem devolve
+// nada) cada passo que o aluno dá no plano -- interesse, isenção, inscrito, prova, resultado, reembolso --
+// numa planilha privada só da equipe, identificando o aluno pelo RA (nunca pelo nome). Preencher quando
+// a Heloísa implantar o Apps Script e mandar o link publicado; até lá o envio simplesmente não acontece.
+const TRACKING_API_URL = "https://script.google.com/macros/s/AKfycbzs2GpjgRiHVmsjrdrWt-PtmYVhcMLPByHQKAj1ARHmL5kGnN3S2TTMi7Ufpyis19_F/exec";
 
 const ESCOLAS_BY_ID = {};
 
@@ -987,6 +1005,27 @@ let PIN_SELECIONADO = null;
 function chaveStorage(matricula) { return "mo_plano_v2_" + matricula; }
 function carregarPlano(matricula) { try { const raw = localStorage.getItem(chaveStorage(matricula)); return raw ? JSON.parse(raw) : []; } catch (e) { return []; } }
 function salvarPlano() { try { localStorage.setItem(chaveStorage(ESTADO.matricula), JSON.stringify(ESTADO.plano)); } catch (e) {} }
+
+// Manda um "evento" pra planilha de acompanhamento da equipe (fogo-e-esquece: nunca trava a
+// navegação do aluno, ignora qualquer erro/offline em silêncio). Usa RA, nunca nome real.
+function enviarTracking(item, evento) {
+  if (!TRACKING_API_URL || !item) return;
+  try {
+    const payload = {
+      ra: ESTADO.matricula || "", evento: evento || "",
+      escolaId: item.escolaId || "", escolaNome: item.nome || "", cidade: item.cidade || "",
+      tipoEscola: item.tipo || "", categoriaInteresse: item.tipoInteresse || "", prioridade: item.prioridade || "",
+      etapaAtual: item.etapa || "", isencaoFase: item.isencaoFase || "", isencaoResultado: item.isencaoResultado || "",
+      valorPago: item.reembolso ? item.reembolso.valor : "", colocacao: item.colocacao || "", bolsa: item.bolsa || "",
+      dataHora: new Date().toISOString()
+    };
+    fetch(TRACKING_API_URL, {
+      method: "POST", mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).catch(() => {});
+  } catch (e) {}
+}
 
 // Contador de interesse: só o que foi de fato marcado (botão "Marcar interesse" -> vai pro Meu Plano),
 // contado localmente neste navegador. Sem um backend compartilhado entre alunos ainda, não dá pra somar
@@ -1548,13 +1587,15 @@ function confirmarInteresse() {
   const erroEl = document.getElementById("modal-interesse-erro");
   if (!tipoInput || !prioSel) { erroEl.textContent = "Escolha uma categoria e uma prioridade pra continuar."; erroEl.style.display = "block"; return; }
   const escola = MODAL_CTX.escola;
-  ESTADO.plano.push({
+  const novoItem = {
     escolaId: escola.id, nome: escola.nome, cidade: escola.municipio + " - " + escola.uf, tipo: escola.tipo,
     ofereceIsencao: !!(temTaxaInscricao(escola.tipo, escola.categoria) && escola.isencaoTaxa), isencaoFase: null, isencaoResultado: null, isento: false,
     origemEscolha: MODAL_CTX.origemEscolha, tipoInteresse: tipoInput.value, prioridade: Number(prioSel.dataset.val),
     etapa: "interesse", colocacao: "", bolsa: "", reembolso: null, dataAtualizacao: new Date().toISOString()
-  });
+  };
+  ESTADO.plano.push(novoItem);
   salvarPlano();
+  enviarTracking(novoItem, "interesse");
   incrementarNacional(escola.id);
   fecharModal("modal-interesse");
   renderizarTudo(); renderizarPlano();
@@ -1623,7 +1664,7 @@ function renderizarPlano() {
     } else if (item.reembolso) {
       taxaHtml = `<div class="status-box reembolso"><span>💰 Reembolso solicitado (R$ ${item.reembolso.valor}) — em análise pela coordenação.</span></div>`;
     } else if (podeTaxa) {
-      taxaHtml = `<div class="taxa-opcoes"><button class="btn small outline-blue" onclick="abrirModalReembolso('${item.escolaId}')">💰 Solicitar reembolso</button><p class="taxa-aviso">O Ismart reembolsa apenas <strong>1 inscrição por aluno</strong> — a de maior valor entre as que você pagou.</p></div>`;
+      taxaHtml = `<div class="taxa-opcoes"><button class="btn small outline-blue" onclick="abrirModalReembolso('${item.escolaId}')">💰 Solicitar reembolso</button><p class="taxa-aviso aviso-box">⚠️ O Ismart reembolsa apenas <strong>1 inscrição por aluno</strong> — a de maior valor entre as que você pagou.</p></div>`;
     }
 
     let aprovadoHtml = "";
@@ -1706,6 +1747,7 @@ function confirmarEtapa() {
   if (dataProvaEl) item.dataProva = dataProvaEl.value || null;
   item.dataAtualizacao = new Date().toISOString();
   salvarPlano(); fecharModal("modal-etapa"); renderizarPlano();
+  enviarTracking(item, item.etapa);
   mostrarToast(novaEtapa === "isencao" ? "📎 Pedido de isenção registrado!" : "📌 Etapa atualizada!");
   if (novaEtapa === "inscrito") mostrarRecado("inscrito");
   else if (novaEtapa === "prova") mostrarRecado("prova");
@@ -1719,6 +1761,7 @@ function confirmarResultadoIsencao(escolaId, conseguiu) {
   item.etapa = "inscrito";
   item.dataAtualizacao = new Date().toISOString();
   salvarPlano(); renderizarPlano();
+  enviarTracking(item, "isencao_" + item.isencaoResultado);
   mostrarToast(conseguiu ? "🎉 Que ótimo — isenção conseguida!" : "📌 Sem problema, agora é só se inscrever normalmente.");
   if (conseguiu) mostrarRecado("isencaoConcedida");
 }
@@ -1765,6 +1808,7 @@ function confirmarReembolso() {
     data: new Date().toISOString(),
   };
   salvarPlano(); fecharModal("modal-reembolso"); renderizarPlano();
+  enviarTracking(MODAL_CTX.item, "reembolso_solicitado");
   mostrarToast("💰 Solicitação de reembolso enviada!");
 }
 
@@ -1838,6 +1882,8 @@ function aplicarAssetsVisuais() {
   if (hexBr) hexBr.src = HEX_TEAL_B64;
   const heroHex = document.getElementById("hero-hex");
   if (heroHex) heroHex.src = HEX_TEAL_B64;
+  const owlAvisoObrigatorio = document.getElementById("owl-aviso-obrigatorio");
+  if (owlAvisoObrigatorio) owlAvisoObrigatorio.src = OWL_POINT_B64;
 }
 
 indexarMunicipios(DADOS.municipios);
