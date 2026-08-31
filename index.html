@@ -400,6 +400,8 @@
   .aviso-obrigatorio { display: flex; align-items: flex-start; gap: 14px; background: var(--paper-raised); border: 1.5px solid var(--border); border-radius: var(--radius-l); padding: 16px 18px; margin: 14px 0 20px; }
   .aviso-obrigatorio .recado-owl { width: 56px; height: 56px; object-fit: contain; flex-shrink: 0; margin: 0; }
   .aviso-obrigatorio .recado-texto { font-size: 14px; line-height: 1.6; background: var(--blue-soft); color: var(--blue-soft-ink); border-radius: var(--radius-s); padding: 14px 16px; margin: 0; flex: 1; text-align: left; }
+  .aviso-obrigatorio .recado-texto ul { margin: 8px 0 0; padding-left: 20px; }
+  .aviso-obrigatorio .recado-texto li { margin: 6px 0; }
   .aviso-obrigatorio .recado-assinatura { display: block; margin-top: 8px; font-weight: 800; text-align: right; }
   @media (max-width: 480px) { .aviso-obrigatorio { flex-direction: column; align-items: center; text-align: center; } .aviso-obrigatorio .recado-owl { margin: 0 auto; } }
 
@@ -569,7 +571,13 @@
           <div class="aviso-obrigatorio">
             <img class="recado-owl" id="owl-aviso-obrigatorio" src="" alt="">
             <div class="recado-texto">
-              <strong>Atenção:</strong> todo aluno do 9º ano da Academia Digital <strong>precisa se inscrever em pelo menos um vestibulinho</strong>. Fique de olho nos prazos (aba Calendário) e conte com a gente em cada etapa! Uma dica importante: o Ismart <strong>reembolsa só 1 inscrição por aluno</strong> — a de maior valor entre as que você pagou — então vale ser estratégico(a) na hora de escolher em quais vestibulinhos investir.
+              <strong>Atenção, fique de olho nestas orientações sobre a inscrição:</strong>
+              <ul>
+                <li>Inscreva-se em <strong>pelo menos 3 vestibulinhos diferentes</strong> — quanto mais opções, maiores as suas chances de conseguir uma vaga.</li>
+                <li>Fique de olho nos prazos de cada escola (aba Calendário) e conte com a gente em cada etapa!</li>
+                <li>O Ismart <strong>reembolsa apenas 1 inscrição por aluno</strong> — a de maior valor entre as que você pagou — então vale ser estratégico(a) na hora de escolher em quais vestibulinhos investir.</li>
+                <li>O reembolso será feito <strong>a partir de novembro</strong>.</li>
+              </ul>
               <span class="recado-assinatura">— Equipe da Academia Digital</span>
             </div>
           </div>
@@ -841,11 +849,14 @@ function csvParaObjetos(text) {
   return rows.slice(1).map(r => { const o = {}; header.forEach((h, i) => o[h] = r[i] !== undefined ? r[i] : ""); return o; });
 }
 
-function formatarPeriodoInscricoes(inicio, fim, legado) {
+// Período de inscrições vem SÓ das colunas dedicadas "INÍCIO Inscrições" (Q) e "FIM Inscrições" (R) --
+// sem cair mais pra coluna antiga "Data das Inscrições", que em algumas linhas tinha texto igual ao
+// da Data da Prova e confundia o aluno (pedido da Heloísa, 31/08).
+function formatarPeriodoInscricoes(inicio, fim) {
   if (inicio && fim) return inicio + " até " + fim;
   if (fim) return fim;
   if (inicio) return inicio;
-  return legado || "";
+  return "";
 }
 function parseEscolasCSV(text) {
   const out = [];
@@ -875,7 +886,7 @@ function parseEscolasCSV(text) {
     // "Data das Inscrições" (texto livre), mantendo compatibilidade com linhas já preenchidas nela.
     const inicioInsc = (row["INÍCIO Inscrições"] || row["INICIO Inscrições"] || "").trim();
     const fimInsc = (row["FIM Inscrições"] || "").trim();
-    const periodoInscricoes = formatarPeriodoInscricoes(inicioInsc, fimInsc, (row["Data das Inscrições"] || "").trim());
+    const periodoInscricoes = formatarPeriodoInscricoes(inicioInsc, fimInsc);
     const valorInscricao = (row["Valor da Inscrição"] || row["Valor de Inscrição"] || row["Valor de inscrição"] || "").trim() || null;
     const ofereceBolsaRaw = normalizarTexto(row["Oferece bolsa?"] || "");
     const ofereceBolsa = ofereceBolsaRaw === "sim";
