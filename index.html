@@ -1089,12 +1089,21 @@ function ordenarPorNivel(lista) {
   });
 }
 
+// Corte de ENEM pra contar uma escola como "boa" pro critério de completar com município vizinho
+// (08/09, combinado com a Heloísa). Se o município do aluno não tem NENHUMA escola com ENEM >= esse
+// valor, busca a escola boa mais próxima em outro município e inclui como recomendação extra, mesmo
+// que o município do aluno já tenha 3+ escolas (essas escolas locais continuam recomendadas também --
+// a escola vizinha é um complemento, não substitui nada).
+const ENEM_ESCOLA_BOA_MIN = 550;
+
 function recomendacoesParaAluno(municipioNome, ufConhecida) {
   const uf = resolverUfMunicipio(municipioNome, ufConhecida);
   const chaveAluno = normalizarTexto(municipioNome) + "|" + (uf || "");
   const idsBase = ESCOLAS_POR_MUNICIPIO[chaveAluno] || [];
   const resultado = idsBase.map(id => ({ escola: ESCOLAS_BY_ID[id], naCidade: true, distanciaKm: 0 }));
-  if (resultado.length >= 3) return ordenarPorNivel(resultado);
+  const temEscolaBoa = r => r.escola && r.escola.enem != null && r.escola.enem >= ENEM_ESCOLA_BOA_MIN;
+  let achouBoa = resultado.some(temEscolaBoa);
+  if (resultado.length >= 3 && achouBoa) return ordenarPorNivel(resultado);
 
   const centro = centroDoMunicipio(municipioNome, uf);
   if (!centro) return ordenarPorNivel(resultado);
@@ -1106,8 +1115,12 @@ function recomendacoesParaAluno(municipioNome, ufConhecida) {
     .sort((a, b) => a.dist - b.dist);
 
   for (const m of outrosMunicipios) {
-    if (resultado.length >= 3) break;
-    (ESCOLAS_POR_MUNICIPIO[m.chave] || []).forEach(id => resultado.push({ escola: ESCOLAS_BY_ID[id], naCidade: false, distanciaKm: Math.round(m.dist) }));
+    if (resultado.length >= 3 && achouBoa) break;
+    (ESCOLAS_POR_MUNICIPIO[m.chave] || []).forEach(id => {
+      const item = { escola: ESCOLAS_BY_ID[id], naCidade: false, distanciaKm: Math.round(m.dist) };
+      resultado.push(item);
+      if (temEscolaBoa(item)) achouBoa = true;
+    });
   }
   return ordenarPorNivel(resultado);
 }
@@ -1352,9 +1365,12 @@ function criarEscolaCard(escola, opts) {
     botaoHtml = `<button class="btn small ${corBotaoOutline}" onclick="abrirModalInteresse('${escola.id}', 'aluno')">Marcar interesse</button>`;
   }
 
+  // Link do site da instituição vem só da coluna LINK da planilha (nunca da coluna EDITAL, que é
+  // outro dado, sem uso aqui). Quando não tem link válido, em vez de um texto morto ("a equipe vai
+  // buscar"), vira um link real de busca no Google pelo nome da escola + edital (08/09).
   const editalHtml = escola.site
     ? `<a class="edital-link" href="${escola.site}" target="_blank" rel="noopener">🔗 Site da instituição ↗</a>`
-    : `<span class="edital-pendente">🔗 Site: a equipe vai buscar</span>`;
+    : `<a class="edital-link" href="https://www.google.com/search?q=${encodeURIComponent(escola.nome + " " + escola.municipio + " " + escola.uf + " edital")}" target="_blank" rel="noopener">🔍 Buscar edital ↗</a>`;
 
   const pertenceHtml = nac > 0
     ? `<div class="pertence-badge">🇧🇷 <span><strong>${nac}</strong> aluno${nac > 1 ? "s" : ""} da Academia Digital Ismart ${nac > 1 ? "já se inscreveram" : "já se inscreveu"} para o vestibulinho dessa oportunidade!</span></div>`
