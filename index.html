@@ -767,14 +767,13 @@ const SCHOOLS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTx5TTw
 // Link "Publicar na web -> CSV" da planilha minima RA+Município (sem nomes). Preencher quando a
 // Heloísa mandar o link publicado -- até lá o login usa só o snapshot embutido abaixo.
 const ALUNOS_CSV_URL = null;
-// URL da implantação (Web App) do Google Apps Script que busca o Nome pelo RA, SEM publicar a
-// lista inteira -- devolve só o nome de quem perguntou. ATENÇÃO: esse recurso ficou LIGADO
-// (URL preenchida) mesmo estando marcado como "pausado por decisão dela" na documentação do
-// projeto -- desativado de novo em 09/09 (nome automático nunca deve aparecer em tela, e
-// principalmente não pode aparecer numa live com aluno real logado). Só reativar com pedido
-// explícito e confirmado da Heloísa; até lá o nome continua só o que o próprio aluno digitar
-// (localStorage), e se não digitar nada mostra "aluno(a)" genérico.
-const ALUNO_NOME_API_URL = null;
+// (09/09) Recurso de buscar o Nome real do aluno automaticamente pelo RA foi REMOVIDO por completo
+// -- não só desligado. Ele tinha ficado ligado escondido (URL preenchida) mesmo estando marcado
+// como "pausado por decisão dela" na documentação do projeto, e chegou a expor nome real em tela.
+// Nome de aluno nunca deve aparecer em lugar nenhum do site (regra do projeto desde o início);
+// se um dia isso mudar por pedido explícito da Heloísa, reimplementar do zero com muito cuidado,
+// nunca só "preencher uma URL" de novo. Hoje o campo "Como podemos te chamar?" é só um apelido
+// opcional pra sessão atual (não fica salvo entre visitas) -- em branco, mostra "aluno(a)".
 // URL da implantação (Web App) do Google Apps Script que REGISTRA (só escreve, nunca lê nem devolve
 // nada) cada passo que o aluno dá no plano -- interesse, isenção, inscrito, prova, resultado, reembolso --
 // numa planilha privada só da equipe, identificando o aluno pelo RA (nunca pelo nome). Preencher quando
@@ -1220,8 +1219,12 @@ function preencherChips() {
   if (row) row.innerHTML = "";
 }
 
-function chaveNome(ra) { return "mo_nome_" + ra; }
-
+// (09/09) Removido o cache de nome em localStorage (chaveNome/mo_nome_<ra>): guardar o apelido
+// entre visitas fazia qualquer nome real que tivesse sido buscado/digitado uma vez (inclusive
+// via o recurso de busca automática, ver seção 24 do doc do projeto) reaparecer pra sempre nesse
+// navegador, mesmo depois de desligar a busca no servidor. Agora o campo "Como podemos te chamar?"
+// vale só pra sessão atual -- se ficar em branco, ou depois de recarregar a página, mostra sempre
+// "aluno(a)" genérico. Isso é essencial pra nunca expor nome de aluno numa tela compartilhada/live.
 function fazerLogin() {
   const ra = document.getElementById("login-matricula").value.trim();
   const erroEl = document.getElementById("login-erro");
@@ -1232,9 +1235,7 @@ function fazerLogin() {
     return;
   }
   erroEl.style.display = "none";
-  let nome = document.getElementById("login-nome").value.trim();
-  if (nome) { try { localStorage.setItem(chaveNome(ra), nome); } catch (e) {} }
-  else { try { nome = localStorage.getItem(chaveNome(ra)) || ""; } catch (e) { nome = ""; } }
+  const nome = document.getElementById("login-nome").value.trim();
 
   const uf = resolverUfMunicipio(aluno.municipio, aluno.uf);
   ESTADO.matricula = ra;
@@ -1257,25 +1258,9 @@ function fazerLogin() {
   renderizarTudo();
   renderizarPlano();
 
-  // Se o aluno não digitou nome e não tem um salvo neste aparelho, tenta buscar o nome real de
-  // forma segura (só o nome de QUEM perguntou, nunca a lista inteira) -- sem travar o login.
-  if (!nome && ALUNO_NOME_API_URL) buscarNomeAlunoAoVivo(ra);
-}
-function buscarNomeAlunoAoVivo(ra) {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 4000);
-  fetch(ALUNO_NOME_API_URL + "?ra=" + encodeURIComponent(ra), { signal: controller.signal })
-    .then(r => r.ok ? r.json() : null)
-    .then(data => {
-      const nomeReal = data && data.nome ? String(data.nome).trim() : "";
-      if (!nomeReal || !ESTADO.persona || ESTADO.persona.ra !== ra) return;
-      try { localStorage.setItem(chaveNome(ra), nomeReal); } catch (e) {}
-      ESTADO.persona.nome = nomeReal;
-      document.getElementById("topbar-aluno-nome").textContent = nomeReal;
-      document.getElementById("hero-nome").textContent = nomeReal.split(" ")[0];
-    })
-    .catch(() => {})
-    .finally(() => clearTimeout(timeoutId));
+  // (09/09) Removida de vez a busca automática do nome real (ver seção 24 do doc do projeto):
+  // além de já estar desligada (ALUNO_NOME_API_URL = null), o código em si foi apagado -- assim
+  // nem um preenchimento futuro dessa constante por engano volta a expor nome de aluno em tela.
 }
 function sair() {
   ESTADO = { matricula: null, persona: null, recomendadas: [], plano: [] };
