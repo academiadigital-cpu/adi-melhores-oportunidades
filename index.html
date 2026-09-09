@@ -768,9 +768,13 @@ const SCHOOLS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTx5TTw
 // Heloísa mandar o link publicado -- até lá o login usa só o snapshot embutido abaixo.
 const ALUNOS_CSV_URL = null;
 // URL da implantação (Web App) do Google Apps Script que busca o Nome pelo RA, SEM publicar a
-// lista inteira -- devolve só o nome de quem perguntou. Preencher quando a Heloísa configurar e
-// mandar o link publicado; até lá o nome continua só o que o próprio aluno digitar (localStorage).
-const ALUNO_NOME_API_URL = "https://script.google.com/a/macros/ismart.org.br/s/AKfycbzYy-C2OX5UKJH8I-lX1aXXDlA4zFt8w8-aMUIFnrDyoWB_DYxMHf4nGt3PraEzBbPE/exec";
+// lista inteira -- devolve só o nome de quem perguntou. ATENÇÃO: esse recurso ficou LIGADO
+// (URL preenchida) mesmo estando marcado como "pausado por decisão dela" na documentação do
+// projeto -- desativado de novo em 09/09 (nome automático nunca deve aparecer em tela, e
+// principalmente não pode aparecer numa live com aluno real logado). Só reativar com pedido
+// explícito e confirmado da Heloísa; até lá o nome continua só o que o próprio aluno digitar
+// (localStorage), e se não digitar nada mostra "aluno(a)" genérico.
+const ALUNO_NOME_API_URL = null;
 // URL da implantação (Web App) do Google Apps Script que REGISTRA (só escreve, nunca lê nem devolve
 // nada) cada passo que o aluno dá no plano -- interesse, isenção, inscrito, prova, resultado, reembolso --
 // numa planilha privada só da equipe, identificando o aluno pelo RA (nunca pelo nome). Preencher quando
