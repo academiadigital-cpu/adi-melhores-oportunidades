@@ -1132,6 +1132,12 @@ function ordenarPorNivel(lista) {
 // que o município do aluno já tenha 3+ escolas (essas escolas locais continuam recomendadas também --
 // a escola vizinha é um complemento, não substitui nada).
 const ENEM_ESCOLA_BOA_MIN = 550;
+// (09/10, combinado com a Heloísa) Garantia mínima de escolas PÚBLICAS (inclui IF/federal, que tem
+// tipo="publica") na recomendação -- aditiva à regra de cima, nunca substitui nem remove nada que já
+// tenha sido incluído: só entra escola pública de município vizinho a mais, se ainda faltar, até
+// fechar esse número. Feito porque 62% dos alunos reais não tinham 3 públicas na lista de hoje --
+// a maioria em cidades com bastante escola privada boa, que "escondia" a falta de opção pública.
+const MIN_ESCOLAS_PUBLICAS = 3;
 
 function recomendacoesParaAluno(municipioNome, ufConhecida) {
   const uf = resolverUfMunicipio(municipioNome, ufConhecida);
@@ -1140,25 +1146,47 @@ function recomendacoesParaAluno(municipioNome, ufConhecida) {
   const resultado = idsBase.map(id => ({ escola: ESCOLAS_BY_ID[id], naCidade: true, distanciaKm: 0 }));
   const temEscolaBoa = r => r.escola && r.escola.enem != null && r.escola.enem >= ENEM_ESCOLA_BOA_MIN;
   let achouBoa = resultado.some(temEscolaBoa);
-  if (resultado.length >= 3 && achouBoa) return ordenarPorNivel(resultado);
 
   const centro = centroDoMunicipio(municipioNome, uf);
-  if (!centro) return ordenarPorNivel(resultado);
-
-  const outrosMunicipios = Object.keys(ESCOLAS_POR_MUNICIPIO)
+  const outrosMunicipios = centro ? Object.keys(ESCOLAS_POR_MUNICIPIO)
     .filter(k => k !== chaveAluno)
     .map(k => { const c = MUNICIPIO_CENTRO_MAP[k]; return c ? { chave: k, dist: haversineKm(centro[0], centro[1], c[0], c[1]) } : null; })
     .filter(Boolean)
-    .sort((a, b) => a.dist - b.dist);
+    .sort((a, b) => a.dist - b.dist) : [];
 
-  for (const m of outrosMunicipios) {
-    if (resultado.length >= 3 && achouBoa) break;
-    (ESCOLAS_POR_MUNICIPIO[m.chave] || []).forEach(id => {
-      const item = { escola: ESCOLAS_BY_ID[id], naCidade: false, distanciaKm: Math.round(m.dist) };
-      resultado.push(item);
-      if (temEscolaBoa(item)) achouBoa = true;
-    });
+  const idsJaIncluidos = new Set(resultado.map(r => r.escola.id));
+
+  // completa por quantidade/qualidade -- regra existente desde 08/09, sem mudança de comportamento
+  if (centro && !(resultado.length >= 3 && achouBoa)) {
+    for (const m of outrosMunicipios) {
+      if (resultado.length >= 3 && achouBoa) break;
+      (ESCOLAS_POR_MUNICIPIO[m.chave] || []).forEach(id => {
+        if (idsJaIncluidos.has(id)) return;
+        const item = { escola: ESCOLAS_BY_ID[id], naCidade: false, distanciaKm: Math.round(m.dist) };
+        resultado.push(item);
+        idsJaIncluidos.add(id);
+        if (temEscolaBoa(item)) achouBoa = true;
+      });
+    }
   }
+
+  // completa por garantia mínima de escolas públicas (09/10) -- só adiciona, nunca troca nada acima
+  let totalPublicas = resultado.filter(r => r.escola.tipo === "publica").length;
+  if (centro && totalPublicas < MIN_ESCOLAS_PUBLICAS) {
+    for (const m of outrosMunicipios) {
+      if (totalPublicas >= MIN_ESCOLAS_PUBLICAS) break;
+      for (const id of (ESCOLAS_POR_MUNICIPIO[m.chave] || [])) {
+        if (totalPublicas >= MIN_ESCOLAS_PUBLICAS) break;
+        if (idsJaIncluidos.has(id)) continue;
+        const escola = ESCOLAS_BY_ID[id];
+        if (escola.tipo !== "publica") continue;
+        resultado.push({ escola, naCidade: false, distanciaKm: Math.round(m.dist) });
+        idsJaIncluidos.add(id);
+        totalPublicas++;
+      }
+    }
+  }
+
   return ordenarPorNivel(resultado);
 }
 
