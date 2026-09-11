@@ -587,12 +587,60 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 .em1-tpv-salvar-bar .em1-btn{max-width:280px;margin:0 auto;width:100%}
 
 @media(max-width:820px){
-  #em1-painel-carreiras{flex-direction:column}
-  .em1-cat-sidebar{width:100%;height:auto;position:relative;top:0;overflow-x:auto;padding:10px 0;border-right:0;border-bottom:1px solid #DCEAE1}
-  #em1-lista-categorias{display:flex;flex-direction:row;gap:4px;padding:0 10px}
+  #em1-painel-carreiras.active{flex-direction:column}
+  .em1-cat-sidebar{width:100%;height:auto;position:relative;top:0;overflow:visible;padding:12px 14px 14px;border-right:0;border-bottom:1px solid #DCEAE1;display:flex;flex-direction:column;gap:8px}
+  .em1-cat-sidebar .em1-cat-search{margin:0;width:100%}
+  #em1-lista-categorias{display:flex;flex-direction:row;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:2px 2px 4px;margin:0 -14px;padding-left:14px;padding-right:14px}
   .em1-cat-item{flex-shrink:0;white-space:nowrap;width:auto;border-radius:999px;background:#F3F7F4}
   .em1-cat-item .em1-n{display:none}
-  .em1-cat-search{display:none}
+  .em1-carreiras-main{padding:16px 16px 50px}
+  .em1-cat-banner{height:110px}
+}
+
+/* Telas de celular: navegação de verdade em uma coluna, sem esconder filtros */
+@media(max-width:600px){
+  .em1-topbar{padding:10px 14px;gap:8px;row-gap:10px}
+  .em1-topbar .em1-brand{font-size:13.5px}
+  .em1-topbar .em1-brand img{height:26px;max-width:110px;padding:4px 7px}
+  .em1-aluno-info{margin-left:0;width:100%;justify-content:space-between;font-size:11.5px;gap:8px}
+
+  .em1-tabs{padding:10px 12px;gap:8px}
+  .em1-tab-btn{min-width:0;flex:1 1 0;padding:12px 8px;font-size:12.5px;gap:6px}
+  .em1-tab-btn .em1-tico{font-size:16px}
+
+  .em1-cat-sidebar{padding:10px 12px 12px}
+  #em1-lista-categorias{margin:0 -12px;padding-left:12px;padding-right:12px}
+  .em1-carreiras-main{padding:14px 14px 46px}
+  .em1-cat-banner{height:92px;border-radius:12px;margin-bottom:12px}
+  .em1-cat-banner .em1-overlay{padding:10px 14px}
+  .em1-cat-banner .em1-overlay .em1-nome{font-size:14px}
+  .em1-carreiras-main h2.em1-tit{font-size:16px}
+  .em1-carreiras-main p.em1-sub{font-size:12px;margin-bottom:14px}
+  .em1-grid-carreiras{grid-template-columns:1fr;gap:10px}
+
+  /* modal de detalhe ocupa a tela toda -- bem melhor de ler e navegar no celular */
+  .em1-modal-bg{padding:0}
+  .em1-detalhe-card{border-radius:0;min-height:100vh;max-width:100%;margin-bottom:0}
+  .em1-detalhe-header .em1-inner{padding:18px 18px 20px}
+  .em1-detalhe-header h1{font-size:22px}
+  .em1-detalhe-nav{padding:10px 14px}
+  .em1-detalhe-body{padding:16px 18px 26px}
+  .em1-metrics{gap:6px}
+  .em1-metric{padding:9px 5px}
+  .em1-metric .em1-value{font-size:12.5px}
+  .em1-metric .em1-label{font-size:8px}
+
+  .em1-atividades-wrap{padding:14px}
+  .em1-tpv-explicacao{padding:14px 16px}
+  .em1-entrega-btn{padding:14px 16px;gap:10px}
+  .em1-entrega-titulo{font-size:13.5px}
+  .em1-tpv-pergunta{padding:14px}
+
+  /* evita o zoom automático do Safari/iOS ao tocar em campos com fonte pequena */
+  .em1-cat-search,
+  .em1-tpv-pergunta input[type=text],
+  .em1-tpv-pergunta textarea,
+  #em1-tpv-p4{font-size:16px}
 }
 
 </style>
@@ -2763,27 +2811,44 @@ function em1EnviarTPV() {
     return;
   }
 
-  document.getElementById("em1-tpv-status").textContent = "⏳ Enviando...";
-  fetch(EM1_TPV_ENTREGA1_URL, {
-    method: "POST",
-    headers: {"Content-Type": "text/plain;charset=utf-8"},
-    body: JSON.stringify(payload)
-  }).then(resp => {
-    if (!resp.ok) throw new Error("http_" + resp.status);
-    return resp.text();
-  }).then(texto => {
-    // a planilha responde {"status":"ok"} quando realmente grava a linha -- só
-    // marcamos como enviado de verdade nesse caso, nunca por "a rede não deu erro"
-    let ok = false;
-    try { ok = JSON.parse(texto).status === "ok"; } catch (e) { ok = false; }
-    if (ok) {
-      marcarEnviado();
-    } else {
-      document.getElementById("em1-tpv-status").textContent = "⚠️ A planilha não confirmou o recebimento — suas respostas continuam salvas aqui, tente de novo em instantes";
-    }
-  }).catch(() => {
-    document.getElementById("em1-tpv-status").textContent = "⚠️ Não consegui enviar agora (sem internet ou a planilha demorou pra responder) — suas respostas continuam salvas aqui, tente de novo mais tarde";
-  });
+  // O Apps Script (Google) às vezes responde com erro passageiro (fila de execução
+  // congestionada, "cold start" etc.) mesmo com o endpoint funcionando -- confirmado
+  // em teste ao vivo: a mesma chamada, poucos segundos depois, funciona normalmente.
+  // Por isso tentamos até 3 vezes (com pequena espera entre tentativas) antes de avisar
+  // o aluno que não deu certo -- nunca marcamos como enviado sem a planilha confirmar.
+  const MAX_TENTATIVAS = 3;
+  const tentarEnviar = (tentativa) => {
+    document.getElementById("em1-tpv-status").textContent = tentativa === 1
+      ? "⏳ Enviando..."
+      : "⏳ Enviando... (tentativa " + tentativa + " de " + MAX_TENTATIVAS + ")";
+    fetch(EM1_TPV_ENTREGA1_URL, {
+      method: "POST",
+      headers: {"Content-Type": "text/plain;charset=utf-8"},
+      body: JSON.stringify(payload)
+    }).then(resp => {
+      if (!resp.ok) throw new Error("http_" + resp.status);
+      return resp.text();
+    }).then(texto => {
+      // a planilha responde {"status":"ok"} quando realmente grava a linha -- só
+      // marcamos como enviado de verdade nesse caso, nunca por "a rede não deu erro"
+      let ok = false;
+      try { ok = JSON.parse(texto).status === "ok"; } catch (e) { ok = false; }
+      if (ok) {
+        marcarEnviado();
+      } else if (tentativa < MAX_TENTATIVAS) {
+        setTimeout(() => tentarEnviar(tentativa + 1), 1200);
+      } else {
+        document.getElementById("em1-tpv-status").textContent = "⚠️ A planilha não confirmou o recebimento — suas respostas continuam salvas aqui, tente de novo em instantes";
+      }
+    }).catch(() => {
+      if (tentativa < MAX_TENTATIVAS) {
+        setTimeout(() => tentarEnviar(tentativa + 1), 1200);
+      } else {
+        document.getElementById("em1-tpv-status").textContent = "⚠️ Não consegui enviar agora (sem internet ou a planilha demorou pra responder) — suas respostas continuam salvas aqui, tente de novo mais tarde";
+      }
+    });
+  };
+  tentarEnviar(1);
 }
 
 indexarMunicipios(DADOS.municipios);
