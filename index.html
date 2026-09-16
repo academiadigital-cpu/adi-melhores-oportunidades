@@ -503,7 +503,6 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 
 .em1-carreiras-main{flex:1;padding:20px 22px 60px;min-width:0}
 .em1-cat-banner{border-radius:16px;height:140px;margin-bottom:16px;background-size:cover;background-position:center;position:relative;overflow:hidden;display:flex;align-items:flex-end;color:#fff}
-.em1-cat-banner.em1-banner-capa{background-position:center bottom}
 .em1-cat-banner .em1-overlay{width:100%;background:linear-gradient(0deg,rgba(0,0,0,.55),rgba(0,0,0,0) 70%);padding:14px 18px;font-family:"Oswald"}
 .em1-cat-banner .em1-overlay .em1-ic{font-size:26px;margin-right:8px}
 .em1-cat-banner .em1-overlay .em1-nome{font-size:17px;font-weight:700;text-shadow:0 1px 6px rgba(0,0,0,.5)}
@@ -529,6 +528,17 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 .em1-detalhe-header h1{font-size:30px;line-height:1.02;letter-spacing:-.5px;margin-bottom:8px;font-family:"Oswald"}
 .em1-detalhe-header .em1-badge{display:inline-block;background:rgba(255,255,255,.22);border-radius:999px;padding:5px 13px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.3px}
 .em1-modal-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.25);border:0;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px}
+
+/* Aviso de sucesso ao enviar o TPV -- overlay celebrativo, separado do modal de
+   detalhe da carreira (não reaproveita #em1-modal-bg pra não conflitar os estados) */
+.em1-sucesso-bg{position:fixed;inset:0;background:rgba(10,20,14,.6);display:none;align-items:center;justify-content:center;z-index:300;padding:20px}
+.em1-sucesso-bg.show{display:flex}
+.em1-sucesso-card{position:relative;background:#fff;border-radius:22px;max-width:380px;width:100%;padding:36px 28px 30px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.em1-sucesso-card .em1-modal-close{background:#F3F7F4;color:#48584E;top:12px;right:12px}
+.em1-sucesso-emoji{font-size:52px;line-height:1;margin-bottom:14px}
+.em1-sucesso-card h2{font-family:"Oswald",sans-serif;font-size:21px;color:#001433;margin-bottom:8px}
+.em1-sucesso-card p{font-size:14px;color:#48584E;line-height:1.5;margin-bottom:22px}
+.em1-sucesso-card .em1-btn{width:100%}
 .em1-detalhe-nav{display:flex;align-items:center;gap:8px;padding:10px 20px;background:#F7FAF8;border-bottom:1px solid #DCEAE1}
 .em1-detalhe-nav button{background:#E7EAF4;border:0;color:#001433;border-radius:999px;padding:6px 13px;font-size:11.5px;font-weight:700}
 .em1-detalhe-nav .em1-ctr{margin-left:auto;font-size:11.5px;color:#48584E;font-weight:700}
@@ -598,6 +608,9 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
   .em1-cat-item .em1-n{display:none}
   .em1-carreiras-main{padding:16px 16px 50px}
   .em1-cat-banner{height:110px}
+  /* a capa "Vai Lá e Faz" (logo de 2 linhas, "contain") precisa de mais altura que os
+     banners de categoria pra caber inteira sem espremer -- ver em1RenderBanner() */
+  .em1-cat-banner.em1-banner-capa{height:190px}
 }
 
 /* Telas de celular: navegação de verdade em uma coluna, sem esconder filtros */
@@ -615,6 +628,7 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
   #em1-lista-categorias{margin:0 -12px;padding-left:12px;padding-right:12px}
   .em1-carreiras-main{padding:14px 14px 46px}
   .em1-cat-banner{height:92px;border-radius:12px;margin-bottom:12px}
+  .em1-cat-banner.em1-banner-capa{height:170px}
   .em1-cat-banner .em1-overlay{padding:10px 14px}
   .em1-cat-banner .em1-overlay .em1-nome{font-size:14px}
   .em1-carreiras-main h2.em1-tit{font-size:16px}
@@ -910,6 +924,16 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 
   <div class="em1-modal-bg" id="em1-modal-bg" onclick="if(event.target===this) em1FecharModal()">
     <div class="em1-detalhe-card" id="em1-detalhe-card"></div>
+  </div>
+
+  <div class="em1-sucesso-bg" id="em1-sucesso-bg" onclick="if(event.target===this) em1FecharSucessoTPV()">
+    <div class="em1-sucesso-card">
+      <button class="em1-modal-close" onclick="em1FecharSucessoTPV()">✕</button>
+      <div class="em1-sucesso-emoji">🎉</div>
+      <h2>Parabéns pela entrega!</h2>
+      <p>Sua atividade foi enviada para avaliação!</p>
+      <button class="em1-btn em1-btn-primary" onclick="em1FecharSucessoTPV()">Continuar</button>
+    </div>
   </div>
 
 
@@ -2064,8 +2088,6 @@ function renderizarPlano() {
     let taxaHtml = "";
     if (item.isento) {
       taxaHtml = `<div class="status-box" style="background:var(--success-soft);color:var(--success-soft-ink)"><span>🎉 Você conseguiu a isenção de taxa nessa oportunidade — não tem reembolso a pedir aqui.</span></div>`;
-    } else if (item.reembolso && item.reembolso.status === "falhou") {
-      taxaHtml = `<div class="status-box" style="background:var(--yellow-soft);color:var(--yellow-soft-ink)"><span>⚠️ Não conseguimos preparar o envio do seu reembolso (R$ ${item.reembolso.valor}). <button class="btn small outline-blue" onclick="abrirModalReembolso('${item.escolaId}')" style="margin-left:6px">Tentar de novo</button></span></div>`;
     } else if (item.reembolso) {
       taxaHtml = `<div class="status-box reembolso"><span>💰 Reembolso solicitado (R$ ${item.reembolso.valor}) — em análise pela coordenação.</span></div>`;
     } else if (podeTaxa) {
@@ -2200,28 +2222,20 @@ function abrirModalReembolso(escolaId) {
   const item = ESTADO.plano.find(p => p.escolaId === escolaId);
   MODAL_CTX = { item };
   document.getElementById("reembolso-escola-nome").textContent = item.nome;
-  // (14/09) Se é uma nova tentativa depois de "falhou", reaproveita o que já tinha sido digitado --
-  // só os arquivos de comprovante não dá pra pré-preencher (o navegador não permite), o aluno
-  // precisa escolher de novo só esses.
-  const anterior = (item.reembolso && item.reembolso.status === "falhou") ? item.reembolso : null;
-  document.getElementById("reembolso-valor").value = anterior ? anterior.valor : "";
-  document.getElementById("reembolso-nome-responsavel").value = anterior ? anterior.nomeResponsavel : "";
-  selecionarFormaRecebimento(anterior ? anterior.formaRecebimento : "pix");
-  document.getElementById("reembolso-tipo-pix").value = anterior ? (anterior.tipoPix || "CPF") : "CPF";
-  document.getElementById("reembolso-chave-pix").value = anterior ? anterior.chave : "";
-  document.getElementById("reembolso-banco").value = anterior ? anterior.banco : "";
-  document.getElementById("reembolso-agencia").value = anterior ? anterior.agencia : "";
-  document.getElementById("reembolso-agencia-dv").value = anterior ? anterior.agenciaDv : "";
-  document.getElementById("reembolso-conta").value = anterior ? anterior.conta : "";
-  document.getElementById("reembolso-conta-dv").value = anterior ? anterior.contaDv : "";
+  document.getElementById("reembolso-valor").value = "";
+  document.getElementById("reembolso-nome-responsavel").value = "";
+  selecionarFormaRecebimento("pix");
+  document.getElementById("reembolso-chave-pix").value = "";
+  document.getElementById("reembolso-banco").value = "";
+  document.getElementById("reembolso-agencia").value = "";
+  document.getElementById("reembolso-agencia-dv").value = "";
+  document.getElementById("reembolso-conta").value = "";
+  document.getElementById("reembolso-conta-dv").value = "";
   document.getElementById("reembolso-comprovante-inscricao").value = "";
   document.getElementById("reembolso-comprovante-pagamento").value = "";
   document.getElementById("reembolso-campo-recusa").style.display = item.isencaoResultado === "negada" ? "block" : "none";
   document.getElementById("reembolso-comprovante-recusa").value = "";
-  document.getElementById("reembolso-erro").style.display = anterior ? "block" : "none";
-  if (anterior) {
-    document.getElementById("reembolso-erro").textContent = "Confirme os dados abaixo e escolha os comprovantes de novo (arquivos não ficam salvos entre tentativas) antes de reenviar.";
-  }
+  document.getElementById("reembolso-erro").style.display = "none";
   abrirModal("modal-reembolso");
 }
 function confirmarReembolso() {
@@ -2291,30 +2305,13 @@ function fileParaBase64(file) {
     leitor.readAsDataURL(file);
   });
 }
-// (14/09) Achado real, investigando um pedido de reembolso que "sumiu": a RA 2026063935 tentou
-// pedir reembolso 3 vezes de verdade (03/09) e NENHUMA das 3 chegou na aba protegida "Reembolsos"
-// -- só o evento genérico de tracking (que é uma chamada separada) foi registrado, então parecia
-// que tinha funcionado. Causa: essa chamada usa fetch com mode:"no-cors" numa tentativa só, então
-// o navegador nunca informa o aluno se a planilha realmente recebeu ou não (e o Apps Script tem
-// falhas passageiras confirmadas, mesmo padrão já visto no envio do TPV). Diferente do TPV, esse
-// endpoint (TRACKING_API_URL) continua em no-cors -- não dá pra ler a resposta real dele daqui pra
-// confirmar 100% (mudar isso exigiria alterar o Apps Script do lado de lá, fora do nosso alcance
-// só pelo código do site). Mitigação possível: reenviar automaticamente até 3 vezes, o que reduz
-// bastante a chance de nenhuma tentativa chegar. Se depois de 3 tentativas ainda assim falhar (ex.:
-// erro ao ler o arquivo do comprovante), o card mostra aviso com botão "Tentar de novo".
-function marcarReembolsoStatus(item, status) {
-  if (!item || !item.reembolso) return;
-  item.reembolso.status = status;
-  salvarPlano(); renderizarPlano();
-}
 async function enviarReembolsoProtegido(item, dados) {
   if (!TRACKING_API_URL) return;
-  let payload;
   try {
     const [comprovanteInscricaoBase64, comprovantePagamentoBase64, comprovanteRecusaBase64] = await Promise.all([
       fileParaBase64(dados.arquivoInscricao), fileParaBase64(dados.arquivoPagamento), fileParaBase64(dados.arquivoRecusa)
     ]);
-    payload = {
+    const payload = {
       tipo: "reembolso_protegido",
       ra: ESTADO.matricula || "", escolaNome: item.nome || "",
       valor: dados.valor || "", nomeResponsavel: dados.nomeResponsavel || "", formaRecebimento: dados.formaRecebimento || "",
@@ -2329,23 +2326,12 @@ async function enviarReembolsoProtegido(item, dados) {
       comprovanteRecusaBase64,
       dataHora: new Date().toISOString(),
     };
-  } catch (e) {
-    marcarReembolsoStatus(item, "falhou");
-    return;
-  }
-  const MAX_TENTATIVAS = 3;
-  let tentativasFeitas = 0;
-  const enviarUmaVez = () => {
-    tentativasFeitas++;
     fetch(TRACKING_API_URL, {
       method: "POST", mode: "no-cors",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
-    }).catch(() => {}).then(() => {
-      if (tentativasFeitas < MAX_TENTATIVAS) setTimeout(enviarUmaVez, 1200);
-    });
-  };
-  enviarUmaVez();
+    }).catch(() => {});
+  } catch (e) {}
 }
 
 // ---- Editar / remover item do plano (categoria, prioridade e etapa ficam livres pra corrigir a
@@ -2578,11 +2564,21 @@ function em1RenderBanner() {
   const cat = EM1_CATEGORIAS.find(c => c.nome === em1CategoriaAtiva);
   if (!cat) {
     el.classList.add("em1-banner-capa");
-    el.style.background = `url('${EM1_CAPA_VAILAEFAZ}') center bottom / cover`;
+    // "contain" (não "cover") de propósito -- é a logo oficial "Vai Lá e Faz" completa
+    // (duas linhas), então não pode cortar nada por cima/baixo em telas largas. Por trás
+    // da logo (que fica menor que o banner em telas largas), um gradiente rosa->azul-marinho
+    // com as mesmas cores da própria arte, pra não sobrar barra lateral "em branco".
+    el.style.backgroundImage = `url('${EM1_CAPA_VAILAEFAZ}'), linear-gradient(180deg, #EE2D68 0%, #EE2D68 40%, #D72763 55%, #A82658 70%, #6E2050 85%, #2C1938 100%)`;
+    el.style.backgroundSize = "contain, 100% 100%";
+    el.style.backgroundPosition = "center, center";
+    el.style.backgroundRepeat = "no-repeat, no-repeat";
     el.innerHTML = `<div class="em1-overlay"><span class="em1-nome">Explore as 80 carreiras do Mapa de Carreiras Ismart</span></div>`;
     return;
   }
   el.classList.remove("em1-banner-capa");
+  el.style.backgroundSize = "";
+  el.style.backgroundPosition = "";
+  el.style.backgroundRepeat = "";
   if (cat.banner_data) {
     el.style.background = `url('${cat.banner_data}') center/cover`;
   } else {
@@ -2684,6 +2680,14 @@ function em1AbrirDetalhe(idx) {
 function em1FecharModal() {
   document.getElementById("em1-modal-bg").classList.remove("show");
   em1ModalIdxAtual = null;
+}
+/* Aviso celebrativo mostrado só quando a planilha confirma o recebimento de verdade
+   (chamado de dentro de marcarEnviado(), nunca antes disso) */
+function em1MostrarSucessoTPV() {
+  document.getElementById("em1-sucesso-bg").classList.add("show");
+}
+function em1FecharSucessoTPV() {
+  document.getElementById("em1-sucesso-bg").classList.remove("show");
 }
 function em1NavDetalhe(delta) {
   const pos = EM1_CARREIRAS.findIndex(x => x.idx === em1ModalIdxAtual);
@@ -2868,6 +2872,7 @@ function em1EnviarTPV() {
     const dados = { respostas: payload.respostas, rascunhoEm: agora, enviadoEm: agora };
     localStorage.setItem(em1ChaveTPV(), JSON.stringify(dados));
     em1AtualizarStatusTPV(dados);
+    em1MostrarSucessoTPV();
   };
 
   if (!EM1_TPV_ENTREGA1_URL) {
