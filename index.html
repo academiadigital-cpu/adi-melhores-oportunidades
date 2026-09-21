@@ -430,6 +430,12 @@
   .guia-prepara ul { margin: 10px 0 16px; padding-left: 20px; }
   .guia-prepara li { margin: 6px 0; font-size: 14px; line-height: 1.55; color: var(--ink-soft); }
   .guia-nivel-legenda { display: flex; flex-wrap: wrap; gap: 8px; }
+  .prepara-beneficio { display: flex; align-items: flex-start; gap: 14px; background: var(--paper-raised); border: 1.5px solid var(--border); border-radius: var(--radius-l); padding: 18px 20px; }
+  .prepara-beneficio-icone { width: 44px; height: 44px; border-radius: 50%; background: rgba(74,197,154,0.16); display: flex; align-items: center; justify-content: center; font-size: 21px; flex-shrink: 0; }
+  .prepara-beneficio strong { display: block; color: var(--brand-green-text); font-size: 15px; margin-bottom: 6px; }
+  .prepara-beneficio p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
+  .prepara-cta { text-align: center; margin-top: 4px; }
+  @media (max-width: 480px) { .prepara-beneficio { flex-direction: column; align-items: center; text-align: center; } }
 
   .modal-recado { text-align: center; }
   .modal-recado .recado-owl { width: 64px; height: 64px; object-fit: contain; margin: 0 auto 12px; display: block; }
@@ -741,6 +747,7 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
         <button class="tab" data-tab="explorar" onclick="trocarAba('explorar')">🏠 Escolas recomendadas</button>
         <button class="tab" data-tab="catalogo" onclick="trocarAba('catalogo')">🌎 Explorar todas as MOs do Brasil</button>
         <button class="tab" data-tab="plano" onclick="trocarAba('plano')">❤️ Meu Plano <span class="badge-count" id="tab-plano-count">0</span></button>
+        <button class="tab" data-tab="prepara" onclick="trocarAba('prepara')">🚀 Prepara-MOs</button>
       </div>
     </nav>
 
@@ -773,6 +780,11 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
                 <span class="criterio-note nivel-alto">Alta</span>
                 <span class="criterio-note nivel-medio">Média</span>
               </div>
+              <ul style="margin:10px 0 0;font-size:14px;color:var(--ink-soft);line-height:1.6">
+                <li><strong>Muito alta:</strong> Institutos Federais, ETECs, CEFETs e escolas públicas com boas notas.</li>
+                <li><strong>Alta:</strong> escolas públicas boas e escolas privadas com 100% de bolsa.</li>
+                <li><strong>Média:</strong> escolas privadas com bolsa parcial.</li>
+              </ul>
               <p style="margin:14px 0 6px;font-size:14px"><strong>Critérios que usamos pra montar suas recomendações:</strong></p>
               <ul>
                 <li>Pelo menos <strong>3 escolas</strong> no seu município ou nas cidades mais próximas de você.</li>
@@ -791,18 +803,8 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
             </div>
 
             <div class="guia-secao">
-              <h3>🎯 Como se preparar para os vestibulinhos: Prepara-MOs</h3>
-              <div class="guia-prepara">
-                <p><strong>O que é o Prepara-MOs?</strong></p>
-                <ul>
-                  <li>Plataforma de treino personalizado para os principais vestibulinhos das Melhores Oportunidades.</li>
-                  <li>Questões reais das provas das nossas praças: São Paulo, Rio de Janeiro, São José dos Campos e Belo Horizonte.</li>
-                  <li>Você escolhe a prova que vai fazer e a plataforma monta o treino certo pra você.</li>
-                  <li>Treinos objetivos — em média 10 questões, cerca de 20 minutos por sessão.</li>
-                  <li>Total autonomia para treinar no seu ritmo, com acompanhamento da própria evolução.</li>
-                </ul>
-                <a class="btn" href="https://prep.academiaprimeiraescolha.com.br/login?t=ismart" target="_blank" rel="noopener">🚀 Acessar o Prepara-MOs</a>
-              </div>
+              <h3>🎯 Como se preparar para os vestibulinhos</h3>
+              <p style="margin:0;font-size:14px;color:var(--ink-soft);line-height:1.6">A Academia Digital do Ismart criou o <strong>Prepara-MOs</strong>, uma plataforma de treino gratuita pra te ajudar a chegar mais preparado(a) no dia do vestibulinho. Confira todos os detalhes e o acesso na aba <strong>"🚀 Prepara-MOs"</strong>, ali em cima.</p>
             </div>
           </div>
         </div>
@@ -893,6 +895,47 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
             <p>Vá até "Escolas recomendadas" e marque interesse nas que fizerem sentido pra você.</p>
           </div>
           <div id="plano-lista" class="plano-lista"></div>
+        </div>
+
+        <div id="tab-prepara" class="tab-content">
+          <div class="section-head"><h2>🚀 Prepara-MOs</h2></div>
+          <p class="hint">Um benefício da Academia Digital do Ismart pra te ajudar a chegar preparado(a) no seu vestibulinho.</p>
+
+          <div class="guia-block">
+            <div class="prepara-beneficio">
+              <div class="prepara-beneficio-icone">💚</div>
+              <div>
+                <strong>Um benefício pensado pro seu futuro</strong>
+                <p>O Prepara-MOs é oferecido gratuitamente pela Academia Digital do Ismart porque a gente olha pro seu futuro: queremos garantir que você chegue bem preparado(a) pra conquistar uma vaga numa Melhor Oportunidade e comece o seu 1º ano do Ensino Médio numa escola recomendada.</p>
+              </div>
+            </div>
+
+            <div class="guia-secao">
+              <h3>📚 O que é o Prepara-MOs?</h3>
+              <div class="guia-prepara">
+                <ul>
+                  <li>Plataforma de treino personalizado para os principais vestibulinhos das Melhores Oportunidades.</li>
+                  <li>Questões reais das provas das nossas praças: São Paulo, Rio de Janeiro, São José dos Campos e Belo Horizonte.</li>
+                  <li>Você escolhe a prova que vai fazer e a plataforma monta o treino certo pra você.</li>
+                  <li>Treinos objetivos — em média 10 questões, cerca de 20 minutos por sessão.</li>
+                  <li>Total autonomia para treinar no seu ritmo, com acompanhamento da própria evolução.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="guia-secao">
+              <h3>⭐ Como isso vai te ajudar</h3>
+              <div class="guia-check-grid">
+                <div class="guia-check-card"><span class="check">✅</span><p>Você chega no dia da prova com mais confiança e menos surpresas, porque já treinou no formato real do vestibulinho.</p></div>
+                <div class="guia-check-card"><span class="check">✅</span><p>Aumenta suas chances de conquistar uma vaga numa escola recomendada, sem nenhum custo pra sua família.</p></div>
+                <div class="guia-check-card"><span class="check">✅</span><p>Mostra o cuidado da Academia Digital com a sua trajetória escolar, do 9º ano até o Ensino Médio.</p></div>
+              </div>
+            </div>
+
+            <div class="prepara-cta">
+              <a class="btn" href="https://prep.academiaprimeiraescolha.com.br/login?t=ismart" target="_blank" rel="noopener">🚀 Acessar o Prepara-MOs</a>
+            </div>
+          </div>
         </div>
 
       </div>
