@@ -430,6 +430,11 @@
   .guia-prepara ul { margin: 10px 0 16px; padding-left: 20px; }
   .guia-prepara li { margin: 6px 0; font-size: 14px; line-height: 1.55; color: var(--ink-soft); }
   .guia-nivel-legenda { display: flex; flex-wrap: wrap; gap: 8px; }
+  .guia-prepara-topo { display: flex; align-items: center; gap: 14px; background: var(--brand-green); color: #fff; text-decoration: none; border-radius: var(--radius-l); padding: 16px 20px; margin: 4px 0 20px; transition: .15s; }
+  .guia-prepara-topo:hover { filter: brightness(1.05); }
+  .guia-prepara-topo-icone { font-size: 26px; flex-shrink: 0; }
+  .guia-prepara-topo strong { display: block; font-size: 16px; }
+  .guia-prepara-topo span span { display: block; font-size: 13px; opacity: .92; margin-top: 2px; }
   .prepara-beneficio { display: flex; align-items: flex-start; gap: 14px; background: var(--paper-raised); border: 1.5px solid var(--border); border-radius: var(--radius-l); padding: 18px 20px; }
   .prepara-beneficio-icone { width: 44px; height: 44px; border-radius: 50%; background: rgba(74,197,154,0.16); display: flex; align-items: center; justify-content: center; font-size: 21px; flex-shrink: 0; }
   .prepara-beneficio strong { display: block; color: var(--brand-green-text); font-size: 15px; margin-bottom: 6px; }
@@ -615,6 +620,9 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 .em1-tpv-radio-opt{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border:2px solid #DCEAE1;border-radius:10px;font-weight:700;font-size:13.5px;color:#48584E;background:#fff}
 .em1-tpv-radio-opt.em1-sel{border-color:#002561;background:#E7EAF4;color:#001433}
 .em1-tpv-salvar-bar{position:sticky;bottom:0;background:linear-gradient(0deg,#F3F7F4 65%,transparent);padding:16px 0 6px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.em1-insc-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:2px solid #DCEAE1;border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:13.5px;color:#48584E}
+.em1-insc-item strong{color:#001433}
+.em1-insc-remover{background:none;border:0;color:#B23B3B;font-size:16px;font-weight:800;cursor:pointer;padding:4px 8px}
 .em1-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:13px 20px;font-weight:700;font-size:14.5px;transition:.15s;font-family:"Nunito";cursor:pointer}
 .em1-btn-primary{background:#002561;color:#fff}
 .em1-btn-primary:hover{background:#0C3B85}
@@ -757,7 +765,22 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
           <div class="section-head"><h2>Guia do Mapa de Oportunidades</h2></div>
           <p class="hint">Seu manual de navegação — comece por aqui pra entender como o site funciona, como lemos as recomendações e como se preparar pros vestibulinhos.</p>
 
+          <a class="guia-prepara-topo" href="https://prep.academiaprimeiraescolha.com.br/login?t=ismart" target="_blank" rel="noopener">
+            <span class="guia-prepara-topo-icone">🚀</span>
+            <span>
+              <strong>Treine no Prepara-MOs</strong>
+              <span>Acesse agora a plataforma oficial de treino gratuito pro seu vestibulinho</span>
+            </span>
+          </a>
+
           <div class="guia-block">
+            <div class="guia-secao">
+              <h3>🏫 O que são as Melhores Oportunidades?</h3>
+              <div class="guia-linha"><div class="guia-icone">🏫</div><p>Escolas de alto rendimento acadêmico (Média Enem 2026 &gt; 600 pontos e IDEB 2026 &gt; 6), públicas ou particulares com bolsa integral.</p></div>
+              <div class="guia-linha"><div class="guia-icone">📝</div><p>Escolas recomendadas pelo Ismart, que oferecem acesso ao Ensino Médio por meio de provas, vestibulinhos ou processos seletivos.</p></div>
+              <div class="guia-linha"><div class="guia-icone">🔎</div><p>Os estudantes são fortemente incentivados a prestar os processos seletivos dessas escolas em suas praças, para ingressar no Ensino Médio.</p></div>
+            </div>
+
             <div class="guia-secao">
               <h3>🧭 Como navegar pelo Mapa de Oportunidades</h3>
               <div class="guia-linha"><div class="guia-icone">🏠</div><p><strong>Escolas recomendadas:</strong> a lista de Melhores Oportunidades já filtrada pra perto de você — comece por aqui pra ver suas recomendações.</p></div>
@@ -766,10 +789,8 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
             </div>
 
             <div class="guia-secao">
-              <h3>🏫 O que são as Melhores Oportunidades?</h3>
-              <div class="guia-linha"><div class="guia-icone">🏫</div><p>Escolas de alto rendimento acadêmico (Média Enem 2026 &gt; 600 pontos e IDEB 2026 &gt; 6), públicas ou particulares com bolsa integral.</p></div>
-              <div class="guia-linha"><div class="guia-icone">📝</div><p>Escolas recomendadas pelo Ismart, que oferecem acesso ao Ensino Médio por meio de provas, vestibulinhos ou processos seletivos.</p></div>
-              <div class="guia-linha"><div class="guia-icone">🔎</div><p>Os estudantes são fortemente incentivados a prestar os processos seletivos dessas escolas em suas praças, para ingressar no Ensino Médio.</p></div>
+              <h3>🎯 Como se preparar para os vestibulinhos</h3>
+              <p style="margin:0;font-size:14px;color:var(--ink-soft);line-height:1.6">A Academia Digital do Ismart criou o <strong>Prepara-MOs</strong>, uma plataforma de treino gratuita pra te ajudar a chegar mais preparado(a) no dia do vestibulinho. Confira todos os detalhes e o acesso na aba <strong>"🚀 Prepara-MOs"</strong>, ali em cima, ou use o botão no topo desta página.</p>
             </div>
 
             <div class="guia-secao">
@@ -787,7 +808,6 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
               </ul>
               <p style="margin:14px 0 6px;font-size:14px"><strong>Critérios que usamos pra montar suas recomendações:</strong></p>
               <ul>
-                <li>Pelo menos <strong>3 escolas</strong> no seu município ou nas cidades mais próximas de você.</li>
                 <li>Escolas com nota do <strong>ENEM acima de 600 pontos</strong> e <strong>IDEB acima de 6</strong> — os principais indicadores de qualidade do ensino no Brasil.</li>
                 <li>Quando o seu município não tem nenhuma escola com ENEM acima de 600, mostramos a escola mais próxima com a maior nota do ENEM entre as disponíveis — pra você sempre ter pelo menos uma boa opção na lista.</li>
               </ul>
@@ -800,11 +820,6 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
                 <div class="guia-check-card"><span class="check">✅</span><p>Ampliam as chances do estudante de seguir uma trajetória acadêmica mais forte rumo ao Ensino Superior.</p></div>
                 <div class="guia-check-card"><span class="check">✅</span><p>Estimulam o estudante a buscar ativamente o seu melhor caminho e a ampliar sua visão de possibilidades.</p></div>
               </div>
-            </div>
-
-            <div class="guia-secao">
-              <h3>🎯 Como se preparar para os vestibulinhos</h3>
-              <p style="margin:0;font-size:14px;color:var(--ink-soft);line-height:1.6">A Academia Digital do Ismart criou o <strong>Prepara-MOs</strong>, uma plataforma de treino gratuita pra te ajudar a chegar mais preparado(a) no dia do vestibulinho. Confira todos os detalhes e o acesso na aba <strong>"🚀 Prepara-MOs"</strong>, ali em cima.</p>
             </div>
           </div>
         </div>
@@ -953,12 +968,34 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
     </header>
 
     <div class="em1-tabs">
-      <button class="em1-tab-btn active" data-tab="carreiras" onclick="em1MudarTab('carreiras')"><span class="em1-tico">🧭</span> Mapa de Carreiras</button>
+      <button class="em1-tab-btn active" data-tab="guia" onclick="em1MudarTab('guia')"><span class="em1-tico">📖</span> Guia do Painel</button>
+      <button class="em1-tab-btn" data-tab="carreiras" onclick="em1MudarTab('carreiras')"><span class="em1-tico">🧭</span> Mapa de Carreiras</button>
       <button class="em1-tab-btn" data-tab="atividades" onclick="em1MudarTab('atividades')"><span class="em1-tico">📝</span> Atividades de Jornada Orientação Profissional</button>
       <button class="em1-tab-btn" data-tab="reembolso" onclick="em1MudarTab('reembolso')"><span class="em1-tico">💰</span> Reembolso de Inscrição</button>
     </div>
 
-    <div class="em1-tab-panel active" id="em1-painel-carreiras">
+    <div class="em1-tab-panel active" id="em1-painel-guia">
+      <div class="guia-block">
+        <div class="guia-secao">
+          <h3>🧭 Como navegar pelo Painel de Orientação Profissional</h3>
+          <div class="guia-linha"><div class="guia-icone">🧭</div><p><strong>Mapa de Carreiras:</strong> conheça cada curso universitário — salário, empregabilidade, nota de corte, universidades recomendadas e muito mais. Filtre por área, estado, município ou instituição.</p></div>
+          <div class="guia-linha"><div class="guia-icone">📝</div><p><strong>Atividades de Jornada Orientação Profissional:</strong> onde você responde o Trabalho de Projeto de Vida (TPV), sua reflexão sobre curso, propósito e próximos passos — dividido em 3 entregas ao longo do ano.</p></div>
+          <div class="guia-linha"><div class="guia-icone">💰</div><p><strong>Reembolso de Inscrição:</strong> registre os vestibulares em que você já se inscreveu e, se pagou alguma taxa de inscrição (ou pediu isenção e não conseguiu), solicite o reembolso — o Ismart reembolsa 1 inscrição por aluno.</p></div>
+        </div>
+
+        <div class="guia-secao">
+          <h3>🌟 O que é a Jornada de Orientação Profissional?</h3>
+          <p style="margin:0;font-size:14px;color:var(--ink-soft);line-height:1.6">Faz parte da trilha <strong>Vai Lá e Faz (VLF)</strong> da Academia Digital do Ismart: um acompanhamento pensado pra te ajudar a construir seu Sonho Grande — descobrir suas áreas de interesse, conhecer o mundo universitário e chegar no fim do Ensino Médio com um plano claro pro que vem depois. O Trabalho de Projeto de Vida (TPV) é a atividade central dessa trilha, e conta com a orientação do seu tutor(a) em cada etapa.</p>
+        </div>
+
+        <div class="guia-secao">
+          <h3>📌 Por que registrar suas inscrições e etapas?</h3>
+          <p style="margin:0;font-size:14px;color:var(--ink-soft);line-height:1.6">Registrar em qual vestibular você se inscreveu (aba "Reembolso de Inscrição") é o que permite que a Academia Digital acompanhe sua trajetória até o Ensino Superior e te ajude quando precisar — seja no reembolso de uma taxa paga, seja no apoio pra próxima etapa da sua jornada.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="em1-tab-panel" id="em1-painel-carreiras">
       <div class="em1-cat-sidebar">
         <input class="em1-cat-search" id="em1-busca-carreira" placeholder="🔍 Buscar carreira..." oninput="em1RenderCarreiras()"/>
         <select class="em1-cat-search em1-select-estado" id="em1-filtro-area" onchange="em1FiltrarPorArea(this.value)"></select>
@@ -989,20 +1026,45 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
           </div>
           <span class="em1-entrega-status em1-pronto" id="em1-status-entrega-1">Disponível</span>
         </button>
-        <button class="em1-entrega-btn em1-disabled" disabled>
+        <button class="em1-entrega-btn em1-disabled" id="em1-entrega-btn-2" disabled onclick="em1AbrirEntrega(2)">
           <div class="em1-entrega-info">
             <span class="em1-entrega-titulo">Trabalho de Projeto de Vida - Entrega 2</span>
-            <span class="em1-entrega-prazo">📅 Prazo: Em Breve!</span>
+            <span class="em1-entrega-prazo">📅 Prazo: 23/10</span>
           </div>
-          <span class="em1-entrega-status">Em breve</span>
+          <span class="em1-entrega-status" id="em1-status-entrega-2">🔒 Abre em 03/10</span>
         </button>
-        <button class="em1-entrega-btn em1-disabled" disabled>
+        <button class="em1-entrega-btn em1-disabled" id="em1-entrega-btn-3" disabled onclick="em1AbrirEntrega(3)">
           <div class="em1-entrega-info">
             <span class="em1-entrega-titulo">Trabalho de Projeto de Vida - Entrega 3</span>
-            <span class="em1-entrega-prazo">📅 Prazo: Em Breve!</span>
+            <span class="em1-entrega-prazo">📅 Prazo: 13/11</span>
           </div>
-          <span class="em1-entrega-status">Em breve</span>
+          <span class="em1-entrega-status" id="em1-status-entrega-3">🔒 Abre em 24/10</span>
         </button>
+      </div>
+
+      <div class="em1-atividades-wrap" id="em1-entrega-2-form" style="display:none">
+        <button class="em1-voltar-atividades" onclick="em1VoltarAtividades()">← Voltar pras atividades</button>
+        <div class="em1-atividades-intro">
+          📝 <b>Trabalho de Projeto de Vida - Entrega 2.</b> Prazo: 23/10.
+        </div>
+        <div class="em1-tpv-explicacao">
+          <h3>🎓 Mundo Universitário e Mapeamento de Carreiras</h3>
+          <p>Exploração das principais diferenças do que é a faculdade e as diferenças pra com a vida escolar (Extensão, Estágios) vinculando com as atividades de autonomia, profissões do futuro e tecnologia + Orientações para o TPV.</p>
+        </div>
+        <div class="em1-tpv-pergunta">
+          <a class="em1-btn em1-btn-primary" href="https://drive.google.com/file/d/1t3I2dGeofoiaIT1Qrn3jCuCR9j2MPFYF/view?usp=sharing" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;text-align:center">🎥 Assista a gravação do Encontro do Clube sobre essa atividade!</a>
+        </div>
+      </div>
+
+      <div class="em1-atividades-wrap" id="em1-entrega-3-form" style="display:none">
+        <button class="em1-voltar-atividades" onclick="em1VoltarAtividades()">← Voltar pras atividades</button>
+        <div class="em1-atividades-intro">
+          📝 <b>Trabalho de Projeto de Vida - Entrega 3.</b> Prazo: 13/11.
+        </div>
+        <div class="em1-tpv-explicacao">
+          <h3>🎯 TPV: Consolidação e Declaração de Intenções</h3>
+          <p>Comunicação e orientações para a entrega/apresentação final do Trabalho de Projeto de Vida.</p>
+        </div>
       </div>
 
       <div class="em1-atividades-wrap" id="em1-entrega-1-form" style="display:none">
@@ -1050,6 +1112,54 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
     </div>
 
     <div class="em1-tab-panel" id="em1-painel-reembolso">
+      <div class="em1-atividades-wrap">
+        <div class="em1-atividades-intro">📋 Já se inscreveu em algum vestibular? Registre aqui pra gente acompanhar sua jornada até o Ensino Superior.</div>
+
+        <div class="em1-tpv-pergunta">
+          <label>Tipo de vestibular *</label>
+          <select id="em1-insc-tipo" onchange="em1InscricaoTipoChange()">
+            <option value="">Selecione...</option>
+            <option value="Seriado - UFMG">Seriado - UFMG</option>
+            <option value="Seriado - UFJF">Seriado - UFJF</option>
+            <option value="ENEM">ENEM</option>
+            <option value="SISU">SISU</option>
+            <option value="Comvest (UNICAMP)">Comvest (UNICAMP)</option>
+            <option value="Fuvest (USP)">Fuvest (USP)</option>
+            <option value="PISM (UFV)">PISM (UFV)</option>
+            <option value="PAS (UnB)">PAS (UnB)</option>
+            <option value="PSS (UFPR)">PSS (UFPR)</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+
+        <div class="em1-tpv-pergunta" id="em1-insc-outro-bloco" style="display:none">
+          <label>Qual vestibular? *</label>
+          <input type="text" id="em1-insc-outro" placeholder="Nome do vestibular"/>
+        </div>
+
+        <div class="em1-tpv-pergunta" id="em1-insc-etapa-bloco" style="display:none">
+          <label>Etapa *</label>
+          <select id="em1-insc-etapa">
+            <option value="Etapa 1 - 2026">Etapa 1 - 2026</option>
+            <option value="Etapa 2 - 2027">Etapa 2 - 2027</option>
+            <option value="Etapa 3 - 2028">Etapa 3 - 2028</option>
+          </select>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <label>Nome da instituição *</label>
+          <input type="text" id="em1-insc-instituicao" placeholder="Ex: Universidade Federal de Minas Gerais"/>
+        </div>
+
+        <div id="em1-insc-erro" class="field-error"></div>
+
+        <div class="em1-tpv-salvar-bar">
+          <button class="em1-btn em1-btn-primary" onclick="em1RegistrarInscricao()">✅ Registrar inscrição</button>
+        </div>
+
+        <div id="em1-insc-lista"></div>
+      </div>
+
       <div class="em1-atividades-wrap">
         <div class="em1-atividades-intro">💰 Pediu isenção da taxa de inscrição e não conseguiu, ou pagou a inscrição de algum vestibular/simulado? Preencha aqui pra solicitar o reembolso. ⚠️ O Ismart reembolsa apenas <strong>1 inscrição por aluno</strong> — a de maior valor entre as que você pagou.</div>
         <div class="em1-tpv-status" id="em1-reembolso-status" style="display:none"></div>
@@ -2809,28 +2919,58 @@ function em1Iniciar(ra) {
   }
   em1CarregarRascunhoTPV();
   em1MostrarMenuAtividades();
-  document.querySelectorAll("#view-app-1em .em1-tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === "carreiras"));
-  document.getElementById("em1-painel-carreiras").classList.add("active");
+  em1AtualizarDesbloqueioEntregas();
+  document.querySelectorAll("#view-app-1em .em1-tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === "guia"));
+  document.getElementById("em1-painel-guia").classList.add("active");
+  document.getElementById("em1-painel-carreiras").classList.remove("active");
   document.getElementById("em1-painel-atividades").classList.remove("active");
 }
 
-/* ---- Abas (Mapa de Carreiras / Atividades de Jornada Orientação Profissional / Reembolso) ---- */
+/* ---- Abas (Guia / Mapa de Carreiras / Atividades de Jornada Orientação Profissional / Reembolso) ---- */
 function em1MudarTab(tab) {
   document.querySelectorAll("#view-app-1em .em1-tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+  document.getElementById("em1-painel-guia").classList.toggle("active", tab === "guia");
   document.getElementById("em1-painel-carreiras").classList.toggle("active", tab === "carreiras");
   document.getElementById("em1-painel-atividades").classList.toggle("active", tab === "atividades");
   document.getElementById("em1-painel-reembolso").classList.toggle("active", tab === "reembolso");
 }
 
-/* ---- Atividades: menu de entregas <-> formulário da Entrega 1 ---- */
+/* ---- Atividades: menu de entregas <-> formulário/orientação de cada Entrega ----
+   Entregas 2 e 3 ainda não têm formulário de perguntas (ela não passou as perguntas
+   ainda) -- os painéis mostram só a orientação/conteúdo do Encontro do Clube
+   correspondente, e desbloqueiam sozinhos na data configurada abaixo. */
+const EM1_ENTREGA2_DESBLOQUEIO = new Date(2026, 9, 3);  // 03/10/2026 (mês 0-indexado: 9 = outubro)
+const EM1_ENTREGA3_DESBLOQUEIO = new Date(2026, 9, 24); // 24/10/2026
 function em1MostrarMenuAtividades() {
   document.getElementById("em1-atividades-menu").style.display = "block";
   document.getElementById("em1-entrega-1-form").style.display = "none";
+  document.getElementById("em1-entrega-2-form").style.display = "none";
+  document.getElementById("em1-entrega-3-form").style.display = "none";
+}
+function em1AtualizarDesbloqueioEntregas() {
+  const agora = new Date();
+  [[2, EM1_ENTREGA2_DESBLOQUEIO], [3, EM1_ENTREGA3_DESBLOQUEIO]].forEach(([numero, dataDesbloqueio]) => {
+    const btn = document.getElementById("em1-entrega-btn-" + numero);
+    const status = document.getElementById("em1-status-entrega-" + numero);
+    if (!btn || !status) return;
+    if (agora >= dataDesbloqueio) {
+      btn.disabled = false;
+      btn.classList.remove("em1-disabled");
+      status.textContent = "Disponível";
+      status.classList.add("em1-pronto");
+    }
+  });
 }
 function em1AbrirEntrega(numero) {
-  if (numero !== 1) return; // Entregas 2 e 3 ainda não têm formulário (botões "Em breve")
+  if (numero === 1) {
+    document.getElementById("em1-atividades-menu").style.display = "none";
+    document.getElementById("em1-entrega-1-form").style.display = "block";
+    return;
+  }
+  const btn = document.getElementById("em1-entrega-btn-" + numero);
+  if (!btn || btn.disabled) return; // ainda trancada, não abre
   document.getElementById("em1-atividades-menu").style.display = "none";
-  document.getElementById("em1-entrega-1-form").style.display = "block";
+  document.getElementById("em1-entrega-" + numero + "-form").style.display = "block";
 }
 function em1VoltarAtividades() { em1MostrarMenuAtividades(); }
 
@@ -3289,6 +3429,64 @@ function em1IniciarReembolso() {
   em1ReembSelecionarIsencao("");
   document.getElementById("em1-reemb-bloco-isencao-resultado").style.display = "none";
   document.getElementById("em1-reemb-bloco-pagamento").style.display = "none";
+  em1RenderizarInscricoes();
+}
+
+/* ---- Registro de inscrição em vestibulares (localStorage por RA) ----
+   Registro simples, separado do pedido de reembolso: só tipo de vestibular
+   (com etapa/ano quando for Seriado) + nome da instituição. O status é sempre
+   "Inscrição" -- não tem outras etapas por pedido dela. */
+function em1ChaveInscricoes() {
+  const ra = ESTADO.matricula || "anon";
+  return "mo1em_inscricoes_" + ra;
+}
+function em1InscricaoTipoChange() {
+  const tipo = document.getElementById("em1-insc-tipo").value;
+  document.getElementById("em1-insc-outro-bloco").style.display = tipo === "Outro" ? "block" : "none";
+  document.getElementById("em1-insc-etapa-bloco").style.display = tipo.startsWith("Seriado") ? "block" : "none";
+}
+function em1CarregarInscricoes() {
+  try { return JSON.parse(localStorage.getItem(em1ChaveInscricoes()) || "[]"); }
+  catch (e) { return []; }
+}
+function em1RenderizarInscricoes() {
+  const lista = em1CarregarInscricoes();
+  const el = document.getElementById("em1-insc-lista");
+  if (!el) return;
+  if (lista.length === 0) { el.innerHTML = ""; return; }
+  el.innerHTML = '<div class="em1-tpv-pergunta"><label>Suas inscrições registradas</label></div>' +
+    lista.map((item, i) => `
+      <div class="em1-insc-item">
+        <div><strong>${item.tipo}</strong>${item.etapa ? " · " + item.etapa : ""}<br><span>${item.instituicao}</span></div>
+        <button class="em1-insc-remover" onclick="em1RemoverInscricao(${i})" title="Remover" aria-label="Remover">✕</button>
+      </div>`).join("");
+}
+function em1RegistrarInscricao() {
+  const erroEl = document.getElementById("em1-insc-erro");
+  erroEl.textContent = "";
+  const tipoSel = document.getElementById("em1-insc-tipo").value;
+  const outro = document.getElementById("em1-insc-outro").value.trim();
+  const etapa = document.getElementById("em1-insc-etapa").value;
+  const instituicao = document.getElementById("em1-insc-instituicao").value.trim();
+  if (!tipoSel) { erroEl.textContent = "Selecione o tipo de vestibular."; return; }
+  if (tipoSel === "Outro" && !outro) { erroEl.textContent = "Conta pra gente qual vestibular é."; return; }
+  if (!instituicao) { erroEl.textContent = "Preenche o nome da instituição."; return; }
+  const tipo = tipoSel === "Outro" ? outro : tipoSel;
+  const item = { tipo, instituicao, etapa: tipoSel.startsWith("Seriado") ? etapa : null, registradoEm: new Date().toISOString() };
+  const lista = em1CarregarInscricoes();
+  lista.push(item);
+  localStorage.setItem(em1ChaveInscricoes(), JSON.stringify(lista));
+  document.getElementById("em1-insc-tipo").value = "";
+  document.getElementById("em1-insc-outro").value = "";
+  document.getElementById("em1-insc-instituicao").value = "";
+  em1InscricaoTipoChange();
+  em1RenderizarInscricoes();
+}
+function em1RemoverInscricao(indice) {
+  const lista = em1CarregarInscricoes();
+  lista.splice(indice, 1);
+  localStorage.setItem(em1ChaveInscricoes(), JSON.stringify(lista));
+  em1RenderizarInscricoes();
 }
 function em1ReembPrecisaPagamento() {
   // precisa preencher os campos de pagamento/reembolso quando não pediu isenção,
