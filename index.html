@@ -609,20 +609,39 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 /* Formulário TPV */
 .em1-tpv-status{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:#0C3B85;margin-top:10px}
 .em1-tpv-status.em1-tpv-status-ok{color:#16A34A}
+.em1-tpv-banner-enviado{display:flex;align-items:center;gap:10px;background:#F5FFF8;border:1.5px solid #A9E6BC;color:#0A7030;border-radius:12px;padding:13px 16px;margin-bottom:14px;font-size:13.5px;font-weight:700;line-height:1.4}
+.em1-tpv-banner-enviado-icone{font-size:18px;flex-shrink:0}
 .em1-tpv-pergunta{background:#fff;border-radius:12px;padding:15px;margin-bottom:12px;border:1px solid #DCEAE1}
 .em1-tpv-pergunta label{display:block;font-size:13.5px;font-weight:700;color:#001433;margin-bottom:6px;line-height:1.4}
 .em1-tpv-pergunta .em1-ajuda{font-size:11.5px;color:#48584E;margin-bottom:10px}
 .em1-tpv-pergunta input[type=text],.em1-tpv-pergunta textarea,.em1-tpv-pergunta select{width:100%;padding:12px 13px;border:2px solid #DCEAE1;border-radius:10px;font-family:inherit;font-size:14px;outline:none;resize:vertical;background:#fff}
 .em1-tpv-pergunta input[type=text]:focus,.em1-tpv-pergunta textarea:focus,.em1-tpv-pergunta select:focus{border-color:#002561}
 .em1-tpv-pergunta input[type=file]{width:100%;font-size:13px;padding:8px 0}
+.em1-tpv-pergunta input[type=text][readonly],.em1-tpv-pergunta textarea[readonly],.em1-tpv-pergunta select:disabled{background:#F3F7F4;color:#293B31;border-color:#DCEAE1;cursor:default}
 .em1-tpv-radio-opt{cursor:pointer}
 .em1-tpv-radio-row{display:flex;gap:10px}
 .em1-tpv-radio-opt{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border:2px solid #DCEAE1;border-radius:10px;font-weight:700;font-size:13.5px;color:#48584E;background:#fff}
 .em1-tpv-radio-opt.em1-sel{border-color:#002561;background:#E7EAF4;color:#001433}
+.em1-tpv-radio-opt.em1-travado{cursor:default;opacity:.75}
+.em1-tpv-radio-opt.em1-travado:hover{border-color:#DCEAE1}
 .em1-tpv-salvar-bar{position:sticky;bottom:0;background:linear-gradient(0deg,#F3F7F4 65%,transparent);padding:16px 0 6px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .em1-insc-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:2px solid #DCEAE1;border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:13.5px;color:#48584E}
 .em1-insc-item strong{color:#001433}
 .em1-insc-remover{background:none;border:0;color:#B23B3B;font-size:16px;font-weight:800;cursor:pointer;padding:4px 8px}
+/* Cards de inscrição com o mesmo fluxo de etapas (stepper) do Meu Plano do 8º/9º
+   -- reaproveita as classes globais .stepper/.step (variáveis de cor do :root,
+   já compartilhadas entre as duas visões) (23/09, seção 40). */
+.em1-insc-card{background:#fff;border:2px solid #DCEAE1;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.em1-insc-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;font-size:13.5px;color:#48584E}
+.em1-insc-card-head strong{color:#001433}
+.em1-insc-card .stepper{margin:16px 0 2px}
+.em1-insc-card-acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.em1-btn.em1-btn-sm{padding:9px 14px;font-size:12.5px}
+.em1-insc-aprovado,.em1-insc-isento{margin-top:10px;background:#F5FFF8;border:1.5px solid #A9E6BC;color:#0A7030;border-radius:10px;padding:10px 12px;font-size:13px;font-weight:700}
+.em1-insc-modal-card{position:relative;background:#fff;border-radius:20px;max-width:420px;width:100%;padding:28px 24px 24px;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.em1-insc-modal-card .em1-modal-close{background:#F3F7F4;color:#48584E;top:12px;right:12px}
+.em1-insc-modal-card h2{font-family:"Baloo 2","Manrope",sans-serif;font-size:19px;color:#001433;margin-bottom:4px}
+.em1-insc-modal-sub{font-size:13px;color:#48584E;margin-bottom:16px}
 .em1-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:13px 20px;font-weight:700;font-size:14.5px;transition:.15s;font-family:"Manrope";cursor:pointer}
 .em1-btn-primary{background:#002561;color:#fff}
 .em1-btn-primary:hover{background:#0C3B85}
@@ -682,7 +701,7 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
   .em1-metric .em1-value{font-size:12.5px}
   .em1-metric .em1-label{font-size:8px}
 
-  .em1-atividades-wrap{padding:14px}
+  .em1-atividades-wrap{padding:14px 14px 90px}
   .em1-tpv-explicacao{padding:14px 16px}
   .em1-entrega-btn{padding:14px 16px;gap:10px}
   .em1-entrega-titulo{font-size:13.5px}
@@ -975,16 +994,17 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
       <button class="em1-tab-btn active" data-tab="guia" onclick="em1MudarTab('guia')"><span class="em1-tico">📖</span> Guia do Painel</button>
       <button class="em1-tab-btn" data-tab="carreiras" onclick="em1MudarTab('carreiras')"><span class="em1-tico">🧭</span> Mapa de Carreiras</button>
       <button class="em1-tab-btn" data-tab="atividades" onclick="em1MudarTab('atividades')"><span class="em1-tico">📝</span> Atividades de Jornada Orientação Profissional</button>
-      <button class="em1-tab-btn" data-tab="reembolso" onclick="em1MudarTab('reembolso')"><span class="em1-tico">💰</span> Reembolso de Inscrição</button>
+      <button class="em1-tab-btn" data-tab="reembolso" onclick="em1MudarTab('reembolso')"><span class="em1-tico">💰</span> Inscrições e Reembolsos</button>
     </div>
 
     <div class="em1-tab-panel active" id="em1-painel-guia">
+      <div class="em1-atividades-wrap">
       <div class="guia-block">
         <div class="guia-secao">
           <h3>🧭 Como navegar pelo Painel de Orientação Profissional</h3>
           <div class="guia-linha"><div class="guia-icone">🧭</div><p><strong>Mapa de Carreiras:</strong> conheça cada curso universitário — salário, empregabilidade, nota de corte, universidades recomendadas e muito mais. Filtre por área, estado, município ou instituição.</p></div>
           <div class="guia-linha"><div class="guia-icone">📝</div><p><strong>Atividades de Jornada Orientação Profissional:</strong> onde você responde o Trabalho de Projeto de Vida (TPV), sua reflexão sobre curso, propósito e próximos passos — dividido em 3 entregas ao longo do ano.</p></div>
-          <div class="guia-linha"><div class="guia-icone">💰</div><p><strong>Reembolso de Inscrição:</strong> registre os vestibulares em que você já se inscreveu e, se pagou alguma taxa de inscrição (ou pediu isenção e não conseguiu), solicite o reembolso — o Ismart reembolsa 1 inscrição por aluno.</p></div>
+          <div class="guia-linha"><div class="guia-icone">💰</div><p><strong>Inscrições e Reembolsos:</strong> registre os vestibulares em que você já se inscreveu e, se pagou alguma taxa de inscrição (ou pediu isenção e não conseguiu), solicite o reembolso — o Ismart reembolsa 1 inscrição por aluno.</p></div>
         </div>
 
         <div class="guia-secao">
@@ -994,8 +1014,9 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 
         <div class="guia-secao">
           <h3>📌 Por que registrar suas inscrições e etapas?</h3>
-          <p style="margin:0;font-size:14px;color:var(--ink-soft);line-height:1.6">Registrar em qual vestibular você se inscreveu (aba "Reembolso de Inscrição") é o que permite que a Academia Digital acompanhe sua trajetória até o Ensino Superior e te ajude quando precisar — seja no reembolso de uma taxa paga, seja no apoio pra próxima etapa da sua jornada.</p>
+          <p style="margin:0;font-size:14px;color:var(--ink-soft);line-height:1.6">Registrar em qual vestibular você se inscreveu (aba "Inscrições e Reembolsos") é o que permite que a Academia Digital acompanhe sua trajetória até o Ensino Superior e te ajude quando precisar — seja no reembolso de uma taxa paga, seja no apoio pra próxima etapa da sua jornada.</p>
         </div>
+      </div>
       </div>
     </div>
 
@@ -1078,6 +1099,11 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
           <div class="em1-tpv-status" id="em1-tpv-status">💾 Nenhuma resposta salva ainda</div>
         </div>
 
+        <div class="em1-tpv-banner-enviado" id="em1-tpv-banner-enviado" style="display:none">
+          <span class="em1-tpv-banner-enviado-icone">✅</span>
+          <span id="em1-tpv-banner-enviado-texto"></span>
+        </div>
+
         <div class="em1-tpv-pergunta">
           <label>1. Qual é a sua escolha de curso universitário atualmente?</label>
           <div class="em1-ajuda">Sabemos que as escolhas podem mudar, mas queremos saber do seu momento atual.</div>
@@ -1108,16 +1134,19 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
           <input type="text" id="em1-tpv-p5" placeholder="Ex: Direito" oninput="em1SalvarRascunhoTPV()"/>
         </div>
 
-        <div class="em1-tpv-salvar-bar">
+        <div class="em1-tpv-salvar-bar" id="em1-tpv-salvar-bar">
           <button class="em1-btn em1-btn-secondary" onclick="em1SalvarProgressoTPV()">💾 Salvar progresso</button>
           <button class="em1-btn em1-btn-primary" onclick="em1EnviarTPV()">📤 Enviar atividade</button>
+        </div>
+        <div class="em1-tpv-salvar-bar" id="em1-tpv-editar-bar" style="display:none">
+          <button class="em1-btn em1-btn-secondary" onclick="em1EditarRespostaTPV()">✏️ Editar minha resposta</button>
         </div>
       </div>
     </div>
 
     <div class="em1-tab-panel" id="em1-painel-reembolso">
       <div class="em1-atividades-wrap">
-        <div class="em1-atividades-intro">📋 Já se inscreveu em algum vestibular? Registre aqui pra gente acompanhar sua jornada até o Ensino Superior.</div>
+        <div class="em1-atividades-intro">📋 Tem interesse ou já se inscreveu em algum vestibular? Registre aqui e acompanhe cada etapa — interesse, isenção de taxa, inscrição, prova e resultado — igual você já faz com as Melhores Oportunidades no Mapa de Oportunidades.</div>
 
         <div class="em1-tpv-pergunta">
           <label>Tipo de vestibular *</label>
@@ -1128,6 +1157,7 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
             <option value="ENEM">ENEM (inclui SISU)</option>
             <option value="Comvest (UNICAMP)">Comvest (UNICAMP)</option>
             <option value="Fuvest (USP)">Fuvest (USP)</option>
+            <option value="Insper (Treineiro)">Insper (Treineiro)</option>
             <option value="PISM (UFV)">PISM (UFV)</option>
             <option value="PAS (UnB)">PAS (UnB)</option>
             <option value="PSS (UFPR)">PSS (UFPR)</option>
@@ -1151,7 +1181,9 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 
         <div class="em1-tpv-pergunta">
           <label>Nome da instituição *</label>
-          <input type="text" id="em1-insc-instituicao" placeholder="Ex: Universidade Federal de Minas Gerais"/>
+          <input type="text" id="em1-insc-instituicao" list="em1-insc-lista-instituicoes" placeholder="Ex: Universidade Federal de Minas Gerais"/>
+          <datalist id="em1-insc-lista-instituicoes"></datalist>
+          <div class="em1-ajuda">Digite ou escolha entre as instituições do Mapa de Carreiras — se a sua não estiver na lista, pode digitar o nome mesmo assim.</div>
         </div>
 
         <div id="em1-insc-erro" class="field-error"></div>
@@ -1174,6 +1206,7 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
             <option value="ENEM (Exame Nacional do Ensino Médio) / SISU">
             <option value="Comvest (UNICAMP)">
             <option value="Fuvest (USP)">
+            <option value="Insper (Treineiro)">
             <option value="Seriado UFMG (Universidade Federal de Minas Gerais) - Etapa 1">
             <option value="Seriado UFMG (Universidade Federal de Minas Gerais) - Etapa 2">
             <option value="Seriado UFMG (Universidade Federal de Minas Gerais) - Etapa 3">
@@ -1296,6 +1329,31 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
       <h2>Parabéns pela entrega!</h2>
       <p>Sua atividade foi enviada para avaliação!</p>
       <button class="em1-btn em1-btn-primary" onclick="em1FecharSucessoTPV()">Continuar</button>
+    </div>
+  </div>
+
+  <!-- Modal de resultado do vestibular, usado só na etapa "prova" do registro de
+       inscrição -- as outras transições de etapa (isenção, inscrito, prova feita)
+       acontecem direto pelos botões do card, sem precisar de modal (23/09). -->
+  <div class="em1-modal-bg" id="em1-insc-modal-bg" style="z-index:250" onclick="if(event.target===this) em1InscFecharModal()">
+    <div class="em1-insc-modal-card">
+      <button class="em1-modal-close" onclick="em1InscFecharModal()">✕</button>
+      <h2>Qual foi o resultado?</h2>
+      <div class="em1-insc-modal-sub" id="em1-insc-modal-nome"></div>
+      <div class="em1-tpv-pergunta" style="padding:0;border:0;background:none">
+        <label>Resultado</label>
+        <select id="em1-insc-modal-resultado" onchange="em1InscModalResultadoChange()">
+          <option value="aprovado">Aprovado(a)</option>
+          <option value="nao_aprovado">Não aprovado(a)</option>
+        </select>
+      </div>
+      <div class="em1-tpv-pergunta" id="em1-insc-modal-campos-aprovado" style="padding:0;border:0;background:none;margin-top:12px">
+        <label>Colocação (opcional)</label>
+        <input type="text" id="em1-insc-modal-colocacao" placeholder="Ex: 12º lugar"/>
+      </div>
+      <div class="em1-tpv-salvar-bar" style="position:static;background:none;padding:16px 0 0">
+        <button class="em1-btn em1-btn-primary" onclick="em1InscConfirmarResultado()">Salvar resultado</button>
+      </div>
     </div>
   </div>
 
@@ -2916,6 +2974,7 @@ function em1Iniciar(ra) {
     em1PopularSelectMunicipio();
     em1PopularSelectInstituicao();
     em1PopularSelectCurso();
+    em1PopularDatalistInscricaoInstituicoes();
     em1IniciarReembolso();
     em1Iniciado = true;
   }
@@ -2948,6 +3007,25 @@ function em1MostrarMenuAtividades() {
   document.getElementById("em1-entrega-1-form").style.display = "none";
   document.getElementById("em1-entrega-2-form").style.display = "none";
   document.getElementById("em1-entrega-3-form").style.display = "none";
+  em1AtualizarStatusEntrega1Lista();
+}
+/* Se o aluno já enviou a Entrega 1 (mesma chave/lógica honesta do TPV -- só
+   conta como enviado quando a planilha confirmou), o card dela na lista de
+   atividades mostra "Atividade entregue" em vez de "Disponível", pra ficar
+   claro que já foi feito. Reavaliado toda vez que a lista de atividades
+   aparece (login, ou voltar de dentro de uma entrega). */
+function em1AtualizarStatusEntrega1Lista() {
+  const status = document.getElementById("em1-status-entrega-1");
+  if (!status) return;
+  let dados;
+  try { dados = JSON.parse(localStorage.getItem(em1ChaveTPV()) || "null"); } catch (e) { dados = null; }
+  if (dados && dados.enviadoEm) {
+    status.textContent = "✅ Atividade entregue";
+    status.classList.add("em1-pronto");
+  } else {
+    status.textContent = "Disponível";
+    status.classList.add("em1-pronto");
+  }
 }
 function em1AtualizarDesbloqueioEntregas() {
   const agora = new Date();
@@ -3074,20 +3152,33 @@ function em1CursoTemFaculdadeNoMunicipio(titulo, cidade, uf) {
 }
 /* ---- Filtro por instituição/faculdade -- varre todos os estados de cada curso (independe
    do filtro de estado/município já escolhido, que continua valendo em conjunto) ---- */
-function em1PopularSelectInstituicao() {
-  const el = document.getElementById("em1-filtro-instituicao");
-  if (!el || !EM1_CURSOS) return;
+/* Lista única de instituições/faculdades que aparecem no Mapa de Carreiras
+   (todas as universidades recomendadas em qualquer curso/estado) -- fonte
+   única reaproveitada tanto pelo filtro do Mapa de Carreiras quanto pelo
+   datalist do campo "Nome da instituição" no registro de inscrição (23/09). */
+function em1TodasInstituicoesRecomendadas() {
   const nomes = new Set();
+  if (!EM1_CURSOS || !EM1_CURSOS.porCurso) return [];
   Object.values(EM1_CURSOS.porCurso).forEach(curso => {
     if (!curso || !curso.porEstado) return;
     Object.values(curso.porEstado).forEach(lista => {
       (lista || []).forEach(f => { if (f && f.faculdade) nomes.add(f.faculdade); });
     });
   });
-  const ordenadas = Array.from(nomes).sort((a, b) => a.localeCompare(b, "pt-BR"));
+  return Array.from(nomes).sort((a, b) => a.localeCompare(b, "pt-BR"));
+}
+function em1PopularSelectInstituicao() {
+  const el = document.getElementById("em1-filtro-instituicao");
+  if (!el) return;
+  const ordenadas = em1TodasInstituicoesRecomendadas();
   let html = `<option value="">🎓 Filtrar por instituição/faculdade (todas)</option>`;
   ordenadas.forEach(nome => { html += `<option value="${nome.replace(/"/g, "&quot;")}">${nome}</option>`; });
   el.innerHTML = html;
+}
+function em1PopularDatalistInscricaoInstituicoes() {
+  const el = document.getElementById("em1-insc-lista-instituicoes");
+  if (!el) return;
+  el.innerHTML = em1TodasInstituicoesRecomendadas().map(nome => `<option value="${nome.replace(/"/g, "&quot;")}">`).join("");
 }
 function em1CursoTemInstituicao(titulo, instituicao) {
   const curso = EM1_CURSOS.porCurso[titulo];
@@ -3239,6 +3330,7 @@ function em1ChaveTPV() {
   return "mo1em_tpv1_" + ra;
 }
 function em1SelecionarP3(valor) {
+  if (document.getElementById("em1-tpv-p3-sim").classList.contains("em1-travado")) return; // resposta travada (já enviada) -- só visualização
   em1TpvP3 = valor;
   document.getElementById("em1-tpv-p3-sim").classList.toggle("em1-sel", valor === "Sim");
   document.getElementById("em1-tpv-p3-nao").classList.toggle("em1-sel", valor === "Não");
@@ -3301,6 +3393,48 @@ function em1AtualizarStatusTPV(dados) {
   } else {
     el.textContent = "💾 Rascunho salvo neste dispositivo — toque em \"Enviar atividade\" quando estiver pronto";
   }
+  em1AplicarTravaTPV(dados);
+}
+/* Depois que o aluno envia de verdade (planilha confirmou) e não mexeu em nada
+   desde então, os campos da Entrega 1 viram só-leitura -- ele visualiza a
+   resposta enviada, com o registro de data/hora, mas não edita sem querer.
+   "✏️ Editar minha resposta" destrava de novo pra permitir reenviar. (23/09) */
+function em1AplicarTravaTPV(dados) {
+  const travado = !!(dados && dados.enviadoEm && dados.enviadoEm === dados.rascunhoEm);
+  ["em1-tpv-p1", "em1-tpv-p2", "em1-tpv-p5"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.readOnly = travado;
+  });
+  const p4 = document.getElementById("em1-tpv-p4");
+  if (p4) p4.disabled = travado;
+  ["em1-tpv-p3-sim", "em1-tpv-p3-nao"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle("em1-travado", travado);
+  });
+  const salvarBar = document.getElementById("em1-tpv-salvar-bar");
+  const editarBar = document.getElementById("em1-tpv-editar-bar");
+  const banner = document.getElementById("em1-tpv-banner-enviado");
+  if (salvarBar) salvarBar.style.display = travado ? "none" : "flex";
+  if (editarBar) editarBar.style.display = travado ? "flex" : "none";
+  if (banner) {
+    banner.style.display = travado ? "flex" : "none";
+    if (travado) document.getElementById("em1-tpv-banner-enviado-texto").textContent = "Atividade entregue em " + em1FormatarHora(dados.enviadoEm) + " — as respostas abaixo são só de visualização.";
+  }
+}
+function em1EditarRespostaTPV() {
+  ["em1-tpv-p1", "em1-tpv-p2", "em1-tpv-p5"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.readOnly = false;
+  });
+  const p4 = document.getElementById("em1-tpv-p4");
+  if (p4) p4.disabled = false;
+  ["em1-tpv-p3-sim", "em1-tpv-p3-nao"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove("em1-travado");
+  });
+  document.getElementById("em1-tpv-salvar-bar").style.display = "flex";
+  document.getElementById("em1-tpv-editar-bar").style.display = "none";
+  document.getElementById("em1-tpv-banner-enviado").style.display = "none";
 }
 /* Botão "Salvar progresso": só guarda o rascunho neste dispositivo (localStorage),
    NÃO manda nada pra planilha/avaliação -- isso é o botão "Enviar atividade".
@@ -3435,9 +3569,18 @@ function em1IniciarReembolso() {
 }
 
 /* ---- Registro de inscrição em vestibulares (localStorage por RA) ----
-   Registro simples, separado do pedido de reembolso: só tipo de vestibular
-   (com etapa/ano quando for Seriado) + nome da instituição. O status é sempre
-   "Inscrição" -- não tem outras etapas por pedido dela. */
+   Reformulado em 23/09 (seção 40) pra usar o MESMO fluxo de etapas do Meu
+   Plano do 8º/9º -- pedido explícito dela, mesmo sabendo que a etapa de
+   isenção também aparece no formulário de Reembolso desta aba. Cada
+   vestibular registrado é um card independente com o stepper Interesse ->
+   Isenção de taxa -> Inscrito(a) -> Prova feita -> Aprovado(a)/Não aprovado,
+   reaproveitando ETAPA_LABEL (já global, definido lá em cima pro 8º/9º) e o
+   mesmo desenho visual do stepper (.stepper/.step, variáveis de cor do :root
+   compartilhadas pelas duas visões). As transições simples (isenção,
+   inscrito, prova feita) acontecem direto pelos botões do card; só o
+   resultado final (aprovado/não aprovado + colocação) abre um modal curto. */
+const EM1_ETAPAS_ORDEM = ["interesse", "isencao", "inscrito", "prova", "aprovado"];
+let EM1_INSC_MODAL_ID = null;
 function em1ChaveInscricoes() {
   const ra = ESTADO.matricula || "anon";
   return "mo1em_inscricoes_" + ra;
@@ -3451,44 +3594,130 @@ function em1CarregarInscricoes() {
   try { return JSON.parse(localStorage.getItem(em1ChaveInscricoes()) || "[]"); }
   catch (e) { return []; }
 }
-function em1RenderizarInscricoes() {
-  const lista = em1CarregarInscricoes();
-  const el = document.getElementById("em1-insc-lista");
-  if (!el) return;
-  if (lista.length === 0) { el.innerHTML = ""; return; }
-  el.innerHTML = '<div class="em1-tpv-pergunta"><label>Suas inscrições registradas</label></div>' +
-    lista.map((item, i) => `
-      <div class="em1-insc-item">
-        <div><strong>${item.tipo}</strong>${item.etapa ? " · " + item.etapa : ""}<br><span>${item.instituicao}</span></div>
-        <button class="em1-insc-remover" onclick="em1RemoverInscricao(${i})" title="Remover" aria-label="Remover">✕</button>
-      </div>`).join("");
+function em1SalvarInscricoes(lista) {
+  localStorage.setItem(em1ChaveInscricoes(), JSON.stringify(lista));
 }
 function em1RegistrarInscricao() {
   const erroEl = document.getElementById("em1-insc-erro");
   erroEl.textContent = "";
   const tipoSel = document.getElementById("em1-insc-tipo").value;
   const outro = document.getElementById("em1-insc-outro").value.trim();
-  const etapa = document.getElementById("em1-insc-etapa").value;
+  const etapaAno = document.getElementById("em1-insc-etapa").value;
   const instituicao = document.getElementById("em1-insc-instituicao").value.trim();
   if (!tipoSel) { erroEl.textContent = "Selecione o tipo de vestibular."; return; }
   if (tipoSel === "Outro" && !outro) { erroEl.textContent = "Conta pra gente qual vestibular é."; return; }
   if (!instituicao) { erroEl.textContent = "Preenche o nome da instituição."; return; }
   const tipo = tipoSel === "Outro" ? outro : tipoSel;
-  const item = { tipo, instituicao, etapa: tipoSel.startsWith("Seriado") ? etapa : null, registradoEm: new Date().toISOString() };
+  const agora = new Date().toISOString();
+  const item = {
+    id: Date.now() + "_" + Math.random().toString(36).slice(2, 7),
+    tipo, instituicao,
+    etapaAno: tipoSel.startsWith("Seriado") ? etapaAno : null,
+    etapa: "interesse", isencaoFase: "", isencaoResultado: "", isento: false, colocacao: "",
+    registradoEm: agora, dataAtualizacao: agora
+  };
   const lista = em1CarregarInscricoes();
   lista.push(item);
-  localStorage.setItem(em1ChaveInscricoes(), JSON.stringify(lista));
+  em1SalvarInscricoes(lista);
   document.getElementById("em1-insc-tipo").value = "";
   document.getElementById("em1-insc-outro").value = "";
   document.getElementById("em1-insc-instituicao").value = "";
   em1InscricaoTipoChange();
   em1RenderizarInscricoes();
 }
-function em1RemoverInscricao(indice) {
-  const lista = em1CarregarInscricoes();
-  lista.splice(indice, 1);
-  localStorage.setItem(em1ChaveInscricoes(), JSON.stringify(lista));
+function em1RemoverInscricao(id) {
+  const lista = em1CarregarInscricoes().filter(it => it.id !== id);
+  em1SalvarInscricoes(lista);
   em1RenderizarInscricoes();
+}
+function em1AtualizarItemInscricao(id, mudancas) {
+  const lista = em1CarregarInscricoes();
+  const item = lista.find(it => it.id === id);
+  if (!item) return;
+  Object.assign(item, mudancas, { dataAtualizacao: new Date().toISOString() });
+  em1SalvarInscricoes(lista);
+  em1RenderizarInscricoes();
+}
+function em1InscSolicitarIsencao(id) { em1AtualizarItemInscricao(id, { etapa: "isencao", isencaoFase: "solicitada" }); }
+function em1InscNaoSolicitouIsencao(id) { em1AtualizarItemInscricao(id, { etapa: "inscrito", isencaoFase: "nao_solicitada", isencaoResultado: "nao_solicitada", isento: false }); }
+function em1InscResultadoIsencao(id, conseguiu) { em1AtualizarItemInscricao(id, { etapa: "inscrito", isencaoResultado: conseguiu ? "concedida" : "negada", isento: conseguiu }); }
+function em1InscMarcarProvaFeita(id) { em1AtualizarItemInscricao(id, { etapa: "prova" }); }
+function em1InscAbrirResultado(id) {
+  const item = em1CarregarInscricoes().find(it => it.id === id);
+  if (!item) return;
+  EM1_INSC_MODAL_ID = id;
+  document.getElementById("em1-insc-modal-nome").textContent = item.instituicao + " · " + item.tipo;
+  document.getElementById("em1-insc-modal-resultado").value = "aprovado";
+  document.getElementById("em1-insc-modal-colocacao").value = "";
+  document.getElementById("em1-insc-modal-campos-aprovado").style.display = "block";
+  document.getElementById("em1-insc-modal-bg").classList.add("show");
+}
+function em1InscFecharModal() { document.getElementById("em1-insc-modal-bg").classList.remove("show"); EM1_INSC_MODAL_ID = null; }
+function em1InscModalResultadoChange() {
+  document.getElementById("em1-insc-modal-campos-aprovado").style.display = document.getElementById("em1-insc-modal-resultado").value === "aprovado" ? "block" : "none";
+}
+function em1InscConfirmarResultado() {
+  if (!EM1_INSC_MODAL_ID) return;
+  const resultado = document.getElementById("em1-insc-modal-resultado").value;
+  const colocacao = document.getElementById("em1-insc-modal-colocacao").value.trim();
+  em1AtualizarItemInscricao(EM1_INSC_MODAL_ID, { etapa: resultado, colocacao: resultado === "aprovado" ? colocacao : "" });
+  em1InscFecharModal();
+}
+function em1IrParaReembolso() {
+  const alvo = document.getElementById("em1-reemb-form-real") || document.getElementById("em1-reemb-vestibular");
+  if (alvo) alvo.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function em1CardInscricaoHtml(item) {
+  const rejeitado = item.etapa === "nao_aprovado";
+  const idxAtual = EM1_ETAPAS_ORDEM.indexOf(rejeitado ? "aprovado" : item.etapa);
+  let stepsHtml = "";
+  EM1_ETAPAS_ORDEM.forEach((etapaKey, i) => {
+    let cls = "step";
+    if (rejeitado && i <= idxAtual) cls += i === idxAtual ? " rejected" : " done";
+    else if (i < idxAtual || (i === idxAtual && !rejeitado)) cls += i === idxAtual ? " current" : " done";
+    let lbl = (rejeitado && i === idxAtual) ? "Não aprovado" : ETAPA_LABEL[etapaKey];
+    if (etapaKey === "isencao" && item.etapa === "isencao" && item.isencaoFase === "solicitada") lbl += " — aguardando resultado";
+    stepsHtml += `<div class="${cls}"><div class="line"></div><div class="dot">${i < idxAtual || (i === idxAtual && cls.includes("done")) ? "✓" : i + 1}</div><div class="lbl">${lbl}</div></div>`;
+  });
+
+  let proximaAcao = "";
+  if (!rejeitado) {
+    if (item.etapa === "interesse" || (item.etapa === "isencao" && item.isencaoFase !== "solicitada")) {
+      proximaAcao = `<button class="em1-btn em1-btn-primary em1-btn-sm" onclick="em1InscSolicitarIsencao('${item.id}')">📎 Solicite a isenção de taxa!</button><button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1InscNaoSolicitouIsencao('${item.id}')">Não solicitei a Isenção de Taxa</button>`;
+    } else if (item.etapa === "isencao" && item.isencaoFase === "solicitada") {
+      proximaAcao = `<button class="em1-btn em1-btn-primary em1-btn-sm" onclick="em1InscResultadoIsencao('${item.id}', true)">✅ Consegui a isenção!</button><button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1InscResultadoIsencao('${item.id}', false)">Não consegui a isenção</button>`;
+    } else if (item.etapa === "inscrito") {
+      proximaAcao = `<button class="em1-btn em1-btn-primary em1-btn-sm" onclick="em1InscMarcarProvaFeita('${item.id}')">Marcar prova feita</button>`;
+    } else if (item.etapa === "prova") {
+      proximaAcao = `<button class="em1-btn em1-btn-primary em1-btn-sm" onclick="em1InscAbrirResultado('${item.id}')">Registrar resultado</button>`;
+    }
+  }
+
+  const podeReembolso = item.etapa !== "interesse" && item.etapa !== "isencao" && !item.isento;
+  // Prioriza o aviso de aprovado quando o item chegou lá -- mesmo que também
+  // tenha isenção, "aprovado" é o estado mais atual/relevante pra mostrar.
+  let extraHtml = "";
+  if (item.etapa === "aprovado") extraHtml = `<div class="em1-insc-aprovado">🎉 Aprovado(a)!${item.colocacao ? " Colocação: " + item.colocacao : ""}</div>`;
+  else if (item.isento) extraHtml = `<div class="em1-insc-isento">🎉 Você conseguiu a isenção de taxa aqui — sem reembolso a pedir.</div>`;
+  const reembolsoBtn = podeReembolso ? `<button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1IrParaReembolso()">💰 Solicitar reembolso</button>` : "";
+
+  return `<div class="em1-insc-card">
+    <div class="em1-insc-card-head">
+      <div><strong>${item.tipo}</strong>${item.etapaAno ? " · " + item.etapaAno : ""}<br><span>${item.instituicao}</span></div>
+      <button class="em1-insc-remover" onclick="em1RemoverInscricao('${item.id}')" title="Remover" aria-label="Remover">✕</button>
+    </div>
+    <div class="stepper">${stepsHtml}</div>
+    ${extraHtml}
+    ${(proximaAcao || reembolsoBtn) ? `<div class="em1-insc-card-acoes">${proximaAcao}${reembolsoBtn}</div>` : ""}
+  </div>`;
+}
+function em1RenderizarInscricoes() {
+  const lista = em1CarregarInscricoes();
+  const el = document.getElementById("em1-insc-lista");
+  if (!el) return;
+  if (lista.length === 0) { el.innerHTML = ""; return; }
+  el.innerHTML = '<div class="em1-tpv-pergunta"><label>Suas inscrições registradas</label></div>' +
+    lista.slice().sort((a, b) => new Date(b.registradoEm) - new Date(a.registradoEm)).map(em1CardInscricaoHtml).join("");
 }
 function em1ReembPrecisaPagamento() {
   // precisa preencher os campos de pagamento/reembolso quando não pediu isenção,
