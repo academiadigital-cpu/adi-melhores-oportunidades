@@ -628,6 +628,9 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 .em1-insc-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:2px solid #DCEAE1;border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:13.5px;color:#48584E}
 .em1-insc-item strong{color:#001433}
 .em1-insc-remover{background:none;border:0;color:#B23B3B;font-size:16px;font-weight:800;cursor:pointer;padding:4px 8px}
+.em1-insc-card-head-acoes{display:flex;align-items:center;gap:2px;flex-shrink:0}
+.em1-insc-editar{background:none;border:0;color:#48584E;font-size:15px;cursor:pointer;padding:4px 8px;border-radius:6px}
+.em1-insc-editar:hover{background:#F3F7F4}
 /* Cards de inscrição com o mesmo fluxo de etapas (stepper) do Meu Plano do 8º/9º
    -- reaproveita as classes globais .stepper/.step (variáveis de cor do :root,
    já compartilhadas entre as duas visões) (23/09, seção 40). */
@@ -1149,41 +1152,24 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
         <div class="em1-atividades-intro">📋 Tem interesse ou já se inscreveu em algum vestibular? Registre aqui e acompanhe cada etapa — interesse, isenção de taxa, inscrição, prova e resultado — igual você já faz com as Melhores Oportunidades no Mapa de Oportunidades.</div>
 
         <div class="em1-tpv-pergunta">
-          <label>Tipo de vestibular *</label>
-          <select id="em1-insc-tipo" onchange="em1InscricaoTipoChange()">
-            <option value="">Selecione...</option>
-            <option value="Seriado - UFMG">Seriado - UFMG</option>
-            <option value="Seriado - UFJF">Seriado - UFJF</option>
-            <option value="ENEM">ENEM (inclui SISU)</option>
-            <option value="Comvest (UNICAMP)">Comvest (UNICAMP)</option>
-            <option value="Fuvest (USP)">Fuvest (USP)</option>
-            <option value="Insper (Treineiro)">Insper (Treineiro)</option>
-            <option value="PISM (UFV)">PISM (UFV)</option>
-            <option value="PAS (UnB)">PAS (UnB)</option>
-            <option value="PSS (UFPR)">PSS (UFPR)</option>
-            <option value="Outro">Outro</option>
-          </select>
+          <label>Em qual instituição você se inscreveu? *</label>
+          <select id="em1-insc-instituicao" onchange="em1InscInstituicaoChange()"></select>
+          <div class="em1-ajuda">Lista com as instituições recomendadas no Mapa de Carreiras — se a sua não estiver aqui, escolha "Outra" no fim da lista.</div>
         </div>
 
-        <div class="em1-tpv-pergunta" id="em1-insc-outro-bloco" style="display:none">
-          <label>Qual vestibular? *</label>
-          <input type="text" id="em1-insc-outro" placeholder="Nome do vestibular"/>
-        </div>
-
-        <div class="em1-tpv-pergunta" id="em1-insc-etapa-bloco" style="display:none">
-          <label>Etapa *</label>
-          <select id="em1-insc-etapa">
-            <option value="Etapa 1 - 2026">Etapa 1 - 2026</option>
-            <option value="Etapa 2 - 2027">Etapa 2 - 2027</option>
-            <option value="Etapa 3 - 2028">Etapa 3 - 2028</option>
-          </select>
+        <div class="em1-tpv-pergunta" id="em1-insc-instituicao-outro-bloco" style="display:none">
+          <label>Qual instituição? *</label>
+          <input type="text" id="em1-insc-instituicao-outro" placeholder="Nome da instituição"/>
         </div>
 
         <div class="em1-tpv-pergunta">
-          <label>Nome da instituição *</label>
-          <input type="text" id="em1-insc-instituicao" list="em1-insc-lista-instituicoes" placeholder="Ex: Universidade Federal de Minas Gerais"/>
-          <datalist id="em1-insc-lista-instituicoes"></datalist>
-          <div class="em1-ajuda">Digite ou escolha entre as instituições do Mapa de Carreiras — se a sua não estiver na lista, pode digitar o nome mesmo assim.</div>
+          <label>Para qual curso você se inscreveu? *</label>
+          <select id="em1-insc-curso" onchange="em1InscCursoChange()"></select>
+        </div>
+
+        <div class="em1-tpv-pergunta" id="em1-insc-curso-outro-bloco" style="display:none">
+          <label>Qual curso? *</label>
+          <input type="text" id="em1-insc-curso-outro" placeholder="Nome do curso"/>
         </div>
 
         <div id="em1-insc-erro" class="field-error"></div>
@@ -1353,6 +1339,29 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
       </div>
       <div class="em1-tpv-salvar-bar" style="position:static;background:none;padding:16px 0 0">
         <button class="em1-btn em1-btn-primary" onclick="em1InscConfirmarResultado()">Salvar resultado</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Editar etapa da inscrição livremente -- igual ao aluno do 9º/8º já consegue fazer
+       no Meu Plano (corrigir uma etapa marcada errada, voltar uma etapa, etc.), pedido
+       dela em 24/09. -->
+  <div class="em1-modal-bg" id="em1-insc-editar-modal-bg" style="z-index:250" onclick="if(event.target===this) em1InscFecharModalEditar()">
+    <div class="em1-insc-modal-card">
+      <button class="em1-modal-close" onclick="em1InscFecharModalEditar()">✕</button>
+      <h2>Editar inscrição</h2>
+      <div class="em1-insc-modal-sub" id="em1-insc-editar-modal-nome"></div>
+      <div class="em1-tpv-pergunta" style="padding:0;border:0;background:none">
+        <label>Etapa atual</label>
+        <select id="em1-insc-editar-etapa" onchange="em1InscEditarEtapaChange()"></select>
+      </div>
+      <div class="em1-tpv-pergunta" id="em1-insc-editar-campos-aprovado" style="padding:0;border:0;background:none;margin-top:12px;display:none">
+        <label>Colocação (opcional)</label>
+        <input type="text" id="em1-insc-editar-colocacao" placeholder="Ex: 12º lugar"/>
+      </div>
+      <div id="em1-insc-editar-erro" class="field-error"></div>
+      <div class="em1-tpv-salvar-bar" style="position:static;background:none;padding:16px 0 0">
+        <button class="em1-btn em1-btn-primary" onclick="em1InscConfirmarEdicao()">Salvar edição</button>
       </div>
     </div>
   </div>
@@ -2974,11 +2983,13 @@ function em1Iniciar(ra) {
     em1PopularSelectMunicipio();
     em1PopularSelectInstituicao();
     em1PopularSelectCurso();
-    em1PopularDatalistInscricaoInstituicoes();
+    em1PopularSelectInscricaoInstituicao();
+    em1PopularSelectInscricaoCurso();
     em1IniciarReembolso();
     em1Iniciado = true;
   }
   em1CarregarRascunhoTPV();
+  em1VerificarTPVNoServidor();
   em1MostrarMenuAtividades();
   em1AtualizarDesbloqueioEntregas();
   document.querySelectorAll("#view-app-1em .em1-tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === "guia"));
@@ -3175,10 +3186,41 @@ function em1PopularSelectInstituicao() {
   ordenadas.forEach(nome => { html += `<option value="${nome.replace(/"/g, "&quot;")}">${nome}</option>`; });
   el.innerHTML = html;
 }
-function em1PopularDatalistInscricaoInstituicoes() {
-  const el = document.getElementById("em1-insc-lista-instituicoes");
+/* Select "Em qual instituição você se inscreveu?" do registro de inscrição --
+   trocado de input+datalist pra select puro (24/09, a pedido dela), com
+   "Outra instituição" no fim abrindo um campo de texto livre. */
+function em1PopularSelectInscricaoInstituicao() {
+  const el = document.getElementById("em1-insc-instituicao");
   if (!el) return;
-  el.innerHTML = em1TodasInstituicoesRecomendadas().map(nome => `<option value="${nome.replace(/"/g, "&quot;")}">`).join("");
+  let html = `<option value="">Selecione...</option>`;
+  em1TodasInstituicoesRecomendadas().forEach(nome => { html += `<option value="${nome.replace(/"/g, "&quot;")}">${nome}</option>`; });
+  html += `<option value="Outra">Outra instituição (não está na lista)</option>`;
+  el.innerHTML = html;
+}
+function em1InscInstituicaoChange() {
+  const v = document.getElementById("em1-insc-instituicao").value;
+  document.getElementById("em1-insc-instituicao-outro-bloco").style.display = v === "Outra" ? "block" : "none";
+}
+/* Select "Para qual curso você se inscreveu?" -- mesma lista/agrupamento por
+   área já usado na pergunta 4 do TPV (EM1_CURSOS.areasOrdem/cursosPorArea),
+   com "Outro curso" no fim abrindo um campo de texto livre (24/09). */
+function em1PopularSelectInscricaoCurso() {
+  const el = document.getElementById("em1-insc-curso");
+  if (!el || !EM1_CURSOS) return;
+  let html = `<option value="">Selecione um curso...</option>`;
+  EM1_CURSOS.areasOrdem.forEach(area => {
+    const cursos = EM1_CURSOS.cursosPorArea[area] || [];
+    if (!cursos.length) return;
+    html += `<optgroup label="${area}">`;
+    cursos.forEach(curso => { html += `<option value="${curso}">${curso}</option>`; });
+    html += `</optgroup>`;
+  });
+  html += `<option value="Outro">Outro curso (não está na lista)</option>`;
+  el.innerHTML = html;
+}
+function em1InscCursoChange() {
+  const v = document.getElementById("em1-insc-curso").value;
+  document.getElementById("em1-insc-curso-outro-bloco").style.display = v === "Outro" ? "block" : "none";
 }
 function em1CursoTemInstituicao(titulo, instituicao) {
   const curso = EM1_CURSOS.porCurso[titulo];
@@ -3381,6 +3423,29 @@ function em1CarregarRascunhoTPV() {
   }
   em1AtualizarStatusTPV(dados);
 }
+/* Checa no servidor (a própria planilha do TPV) se esse RA já tem uma resposta enviada de
+   verdade -- cobre o caso de o aluno abrir o site num dispositivo/navegador diferente daquele
+   em que respondeu (o rascunho local não existe aí, mas a planilha já tem a resposta). Quando
+   encontra, usa a planilha como fonte da verdade: substitui o rascunho local e trava os campos
+   mostrando o que foi respondido, igual já acontece quando o próprio aluno envia (24/09,
+   pedido da Heloísa: "o aluno possa ver que ele já respondeu e o que ele respondeu"). Roda em
+   segundo plano, nunca trava a navegação -- se falhar (offline, endpoint fora do ar), o site
+   segue só com o que já tinha no localStorage, como já era antes. */
+function em1VerificarTPVNoServidor() {
+  if (!EM1_TPV_ENTREGA1_URL) return;
+  const ra = ESTADO.matricula || "";
+  if (!ra) return;
+  fetch(EM1_TPV_ENTREGA1_URL + "?ra=" + encodeURIComponent(ra), { method: "GET" })
+    .then(resp => resp.ok ? resp.json() : null)
+    .then(dados => {
+      if (!dados || dados.status !== "ok" || !dados.encontrado) return;
+      const enviadoEm = dados.carimbo || new Date().toISOString();
+      const registro = { respostas: dados.respostas || {}, rascunhoEm: enviadoEm, enviadoEm: enviadoEm };
+      localStorage.setItem(em1ChaveTPV(), JSON.stringify(registro));
+      em1CarregarRascunhoTPV();
+    })
+    .catch(() => {});
+}
 function em1AtualizarStatusTPV(dados) {
   const el = document.getElementById("em1-tpv-status");
   el.classList.remove("em1-tpv-status-ok");
@@ -3581,14 +3646,10 @@ function em1IniciarReembolso() {
    resultado final (aprovado/não aprovado + colocação) abre um modal curto. */
 const EM1_ETAPAS_ORDEM = ["interesse", "isencao", "inscrito", "prova", "aprovado"];
 let EM1_INSC_MODAL_ID = null;
+let EM1_INSC_EDITAR_ID = null;
 function em1ChaveInscricoes() {
   const ra = ESTADO.matricula || "anon";
   return "mo1em_inscricoes_" + ra;
-}
-function em1InscricaoTipoChange() {
-  const tipo = document.getElementById("em1-insc-tipo").value;
-  document.getElementById("em1-insc-outro-bloco").style.display = tipo === "Outro" ? "block" : "none";
-  document.getElementById("em1-insc-etapa-bloco").style.display = tipo.startsWith("Seriado") ? "block" : "none";
 }
 function em1CarregarInscricoes() {
   try { return JSON.parse(localStorage.getItem(em1ChaveInscricoes()) || "[]"); }
@@ -3597,56 +3658,90 @@ function em1CarregarInscricoes() {
 function em1SalvarInscricoes(lista) {
   localStorage.setItem(em1ChaveInscricoes(), JSON.stringify(lista));
 }
+/* Registro de inscrição reformulado em 24/09: em vez de "tipo de vestibular"
+   (ENEM/Seriado/etc.) + nome livre da instituição, agora são 2 perguntas --
+   instituição (select com as recomendadas do Mapa de Carreiras + "Outra") e
+   curso (select agrupado por área, mesma lista da pergunta 4 do TPV +
+   "Outro") -- pedido dela pra conseguir mapear pra qual curso o aluno se
+   inscreveu, não só em qual vestibular/instituição. */
 function em1RegistrarInscricao() {
   const erroEl = document.getElementById("em1-insc-erro");
   erroEl.textContent = "";
-  const tipoSel = document.getElementById("em1-insc-tipo").value;
-  const outro = document.getElementById("em1-insc-outro").value.trim();
-  const etapaAno = document.getElementById("em1-insc-etapa").value;
-  const instituicao = document.getElementById("em1-insc-instituicao").value.trim();
-  if (!tipoSel) { erroEl.textContent = "Selecione o tipo de vestibular."; return; }
-  if (tipoSel === "Outro" && !outro) { erroEl.textContent = "Conta pra gente qual vestibular é."; return; }
-  if (!instituicao) { erroEl.textContent = "Preenche o nome da instituição."; return; }
-  const tipo = tipoSel === "Outro" ? outro : tipoSel;
+  const instSel = document.getElementById("em1-insc-instituicao").value;
+  const instOutra = document.getElementById("em1-insc-instituicao-outro").value.trim();
+  const cursoSel = document.getElementById("em1-insc-curso").value;
+  const cursoOutro = document.getElementById("em1-insc-curso-outro").value.trim();
+  if (!instSel) { erroEl.textContent = "Selecione em qual instituição você se inscreveu."; return; }
+  if (instSel === "Outra" && !instOutra) { erroEl.textContent = "Conta pra gente qual instituição é."; return; }
+  if (!cursoSel) { erroEl.textContent = "Selecione pra qual curso você se inscreveu."; return; }
+  if (cursoSel === "Outro" && !cursoOutro) { erroEl.textContent = "Conta pra gente qual curso é."; return; }
+  const instituicao = instSel === "Outra" ? instOutra : instSel;
+  const curso = cursoSel === "Outro" ? cursoOutro : cursoSel;
   const agora = new Date().toISOString();
   const item = {
     id: Date.now() + "_" + Math.random().toString(36).slice(2, 7),
-    tipo, instituicao,
-    etapaAno: tipoSel.startsWith("Seriado") ? etapaAno : null,
+    instituicao, curso,
     etapa: "interesse", isencaoFase: "", isencaoResultado: "", isento: false, colocacao: "",
     registradoEm: agora, dataAtualizacao: agora
   };
   const lista = em1CarregarInscricoes();
   lista.push(item);
   em1SalvarInscricoes(lista);
-  document.getElementById("em1-insc-tipo").value = "";
-  document.getElementById("em1-insc-outro").value = "";
+  em1EnviarTracking(item, "interesse");
   document.getElementById("em1-insc-instituicao").value = "";
-  em1InscricaoTipoChange();
+  document.getElementById("em1-insc-instituicao-outro").value = "";
+  document.getElementById("em1-insc-curso").value = "";
+  document.getElementById("em1-insc-curso-outro").value = "";
+  em1InscInstituicaoChange();
+  em1InscCursoChange();
   em1RenderizarInscricoes();
 }
 function em1RemoverInscricao(id) {
-  const lista = em1CarregarInscricoes().filter(it => it.id !== id);
-  em1SalvarInscricoes(lista);
+  const lista = em1CarregarInscricoes();
+  const item = lista.find(it => it.id === id);
+  const restante = lista.filter(it => it.id !== id);
+  em1SalvarInscricoes(restante);
+  if (item) em1EnviarTracking(item, "removido_do_plano");
   em1RenderizarInscricoes();
 }
-function em1AtualizarItemInscricao(id, mudancas) {
+/* Manda os eventos de inscrição do 1º EM pro mesmo log de planilha ("Acompanhamento") que já
+   recebe os eventos do Meu Plano do 9º ano -- reaproveita a função enviarTracking() que já
+   existe, só adaptando o formato do item (instituicao/curso) pro formato que ela espera
+   (nome/tipoInteresse). Sem isso, o 1º EM nunca aparecia em "Acessos"/"Oportunidades" na
+   planilha de acompanhamento (pedido da Heloísa, 24/09). */
+function em1EnviarTracking(item, evento) {
+  if (!item) return;
+  enviarTracking({
+    escolaId: item.id || "",
+    nome: item.instituicao || "",
+    cidade: "",
+    tipo: "",
+    tipoInteresse: item.curso || "",
+    prioridade: 0,
+    etapa: item.etapa || "",
+    isencaoFase: item.isencaoFase || "",
+    isencaoResultado: item.isencaoResultado || "",
+    colocacao: item.colocacao || ""
+  }, evento);
+}
+function em1AtualizarItemInscricao(id, mudancas, evento) {
   const lista = em1CarregarInscricoes();
   const item = lista.find(it => it.id === id);
   if (!item) return;
   Object.assign(item, mudancas, { dataAtualizacao: new Date().toISOString() });
   em1SalvarInscricoes(lista);
+  em1EnviarTracking(item, evento || item.etapa);
   em1RenderizarInscricoes();
 }
-function em1InscSolicitarIsencao(id) { em1AtualizarItemInscricao(id, { etapa: "isencao", isencaoFase: "solicitada" }); }
-function em1InscNaoSolicitouIsencao(id) { em1AtualizarItemInscricao(id, { etapa: "inscrito", isencaoFase: "nao_solicitada", isencaoResultado: "nao_solicitada", isento: false }); }
-function em1InscResultadoIsencao(id, conseguiu) { em1AtualizarItemInscricao(id, { etapa: "inscrito", isencaoResultado: conseguiu ? "concedida" : "negada", isento: conseguiu }); }
+function em1InscSolicitarIsencao(id) { em1AtualizarItemInscricao(id, { etapa: "isencao", isencaoFase: "solicitada" }, "isencao_solicitada"); }
+function em1InscNaoSolicitouIsencao(id) { em1AtualizarItemInscricao(id, { etapa: "inscrito", isencaoFase: "nao_solicitada", isencaoResultado: "nao_solicitada", isento: false }, "isencao_nao_solicitada"); }
+function em1InscResultadoIsencao(id, conseguiu) { em1AtualizarItemInscricao(id, { etapa: "inscrito", isencaoResultado: conseguiu ? "concedida" : "negada", isento: conseguiu }, "isencao_" + (conseguiu ? "concedida" : "negada")); }
 function em1InscMarcarProvaFeita(id) { em1AtualizarItemInscricao(id, { etapa: "prova" }); }
 function em1InscAbrirResultado(id) {
   const item = em1CarregarInscricoes().find(it => it.id === id);
   if (!item) return;
   EM1_INSC_MODAL_ID = id;
-  document.getElementById("em1-insc-modal-nome").textContent = item.instituicao + " · " + item.tipo;
+  document.getElementById("em1-insc-modal-nome").textContent = item.instituicao + " · " + item.curso;
   document.getElementById("em1-insc-modal-resultado").value = "aprovado";
   document.getElementById("em1-insc-modal-colocacao").value = "";
   document.getElementById("em1-insc-modal-campos-aprovado").style.display = "block";
@@ -3662,6 +3757,39 @@ function em1InscConfirmarResultado() {
   const colocacao = document.getElementById("em1-insc-modal-colocacao").value.trim();
   em1AtualizarItemInscricao(EM1_INSC_MODAL_ID, { etapa: resultado, colocacao: resultado === "aprovado" ? colocacao : "" });
   em1InscFecharModal();
+}
+/* Editar a etapa de uma inscrição livremente -- igual ao aluno do 9º/8º já consegue fazer
+   no Meu Plano (corrigir uma etapa marcada errada sem precisar clicar em cada botão de
+   transição em sequência, ou voltar uma etapa). Pedido dela, 24/09. */
+function em1InscAbrirEditar(id) {
+  const item = em1CarregarInscricoes().find(it => it.id === id);
+  if (!item) return;
+  EM1_INSC_EDITAR_ID = id;
+  document.getElementById("em1-insc-editar-modal-nome").textContent = item.instituicao + " · " + item.curso;
+  document.getElementById("em1-insc-editar-erro").textContent = "";
+  const sel = document.getElementById("em1-insc-editar-etapa");
+  sel.innerHTML = EM1_ETAPAS_ORDEM.map(k => `<option value="${k}">${ETAPA_LABEL[k]}</option>`).join("") + `<option value="nao_aprovado">Não aprovado(a)</option>`;
+  sel.value = item.etapa;
+  document.getElementById("em1-insc-editar-colocacao").value = item.colocacao || "";
+  em1InscEditarEtapaChange();
+  document.getElementById("em1-insc-editar-modal-bg").classList.add("show");
+}
+function em1InscFecharModalEditar() { document.getElementById("em1-insc-editar-modal-bg").classList.remove("show"); EM1_INSC_EDITAR_ID = null; }
+function em1InscEditarEtapaChange() {
+  const etapa = document.getElementById("em1-insc-editar-etapa").value;
+  document.getElementById("em1-insc-editar-campos-aprovado").style.display = etapa === "aprovado" ? "block" : "none";
+}
+function em1InscConfirmarEdicao() {
+  if (!EM1_INSC_EDITAR_ID) return;
+  const novaEtapa = document.getElementById("em1-insc-editar-etapa").value;
+  const colocacao = document.getElementById("em1-insc-editar-colocacao").value.trim();
+  const mudancas = { etapa: novaEtapa, colocacao: novaEtapa === "aprovado" ? colocacao : "" };
+  // Voltar pra "interesse" limpa o que já tinha sido respondido sobre isenção, igual ao
+  // Meu Plano do 9º -- evita ficar um "isenção concedida" pendurado numa etapa anterior.
+  if (novaEtapa === "interesse") { mudancas.isencaoFase = ""; mudancas.isencaoResultado = ""; mudancas.isento = false; }
+  em1AtualizarItemInscricao(EM1_INSC_EDITAR_ID, mudancas, "editado_" + novaEtapa);
+  em1InscFecharModalEditar();
+  mostrarToast("✏️ Inscrição atualizada!");
 }
 function em1IrParaReembolso() {
   const alvo = document.getElementById("em1-reemb-form-real") || document.getElementById("em1-reemb-vestibular");
@@ -3703,8 +3831,11 @@ function em1CardInscricaoHtml(item) {
 
   return `<div class="em1-insc-card">
     <div class="em1-insc-card-head">
-      <div><strong>${item.tipo}</strong>${item.etapaAno ? " · " + item.etapaAno : ""}<br><span>${item.instituicao}</span></div>
-      <button class="em1-insc-remover" onclick="em1RemoverInscricao('${item.id}')" title="Remover" aria-label="Remover">✕</button>
+      <div><strong>${item.instituicao}</strong><br><span>🎓 ${item.curso}</span></div>
+      <div class="em1-insc-card-head-acoes">
+        <button class="em1-insc-editar" onclick="em1InscAbrirEditar('${item.id}')" title="Editar etapa" aria-label="Editar etapa">✏️</button>
+        <button class="em1-insc-remover" onclick="em1RemoverInscricao('${item.id}')" title="Remover" aria-label="Remover">✕</button>
+      </div>
     </div>
     <div class="stepper">${stepsHtml}</div>
     ${extraHtml}
