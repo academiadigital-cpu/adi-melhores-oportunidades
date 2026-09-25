@@ -521,7 +521,8 @@
 .em1-cat-sidebar{width:260px;flex-shrink:0;background:#fff;border-right:1px solid #DCEAE1;height:calc(100vh - 92px);position:sticky;top:92px;overflow-y:auto;padding:14px 0}
 .em1-cat-search{margin:0 14px 12px;padding:10px 12px;border:2px solid #DCEAE1;border-radius:10px;width:calc(100% - 28px);font-family:inherit;font-size:13px;outline:none}
 .em1-cat-search:focus{border-color:#002561}
-select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2348584E'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+select.em1-cat-search{cursor:pointer;background:#fff;color:#001433;font-weight:700;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23001433'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+select.em1-cat-search option{color:#001433;font-weight:700}
 .em1-cat-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;padding:10px 16px;font-size:13px;font-weight:600;color:#48584E;font-family:"Manrope"}
 .em1-cat-item .em1-n{margin-left:auto;font-size:10.5px;background:#E7EAF4;color:#001433;border-radius:999px;padding:2px 7px;font-weight:800}
 .em1-cat-item.active{background:#E7EAF4;color:#001433}
@@ -555,7 +556,7 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 .em1-mapa-instituicoes-legenda{display:flex;flex-wrap:wrap;gap:9px;font-size:10.5px;color:#48584E}
 .em1-mapa-instituicoes-legenda span{display:inline-flex;align-items:center;gap:4px}
 .em1-mapa-instituicoes-legenda i{width:9px;height:9px;border-radius:50%;display:inline-block;border:1.5px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
-.em1-mapa-instituicoes-vazio{margin:auto;text-align:center;color:#8b839a;font-size:12px;padding:0 10px}
+.em1-mapa-instituicoes-vazio{margin:auto;text-align:center;color:#001433;font-weight:700;font-size:12px;padding:0 10px}
 .em1-inst-pin{width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.35);cursor:pointer}
 .em1-inst-pin.federal{background:var(--pink)}
 .em1-inst-pin.estadual{background:var(--purple)}
@@ -619,7 +620,7 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 .em1-mapa-curso-count{color:#263044;font-size:12.8px;line-height:1.55;margin-bottom:9px}
 .em1-btn-mapa-curso{background:#E7EAF4;border:1.5px solid #C7D0EA;color:#001433;border-radius:999px;padding:7px 14px;font-size:11.5px;font-weight:800;display:inline-flex;align-items:center;gap:6px}
 .em1-btn-mapa-curso:hover{background:#DAE0F2}
-.em1-detalhe-footer{padding:12px 26px 20px;font-size:10px;color:#8b98a0}
+.em1-detalhe-footer{padding:12px 26px 20px;font-size:10px;color:#4B5563}
 
 /* Atividades de Jornada Orientação Profissional */
 .em1-atividades-wrap{padding:20px;max-width:760px;margin:0 auto;width:100%}
@@ -649,6 +650,11 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 .em1-tpv-pergunta input[type=text],.em1-tpv-pergunta textarea,.em1-tpv-pergunta select{width:100%;padding:12px 13px;border:2px solid #DCEAE1;border-radius:10px;font-family:inherit;font-size:14px;outline:none;resize:vertical;background:#fff;color:#001433;font-weight:700}
 .em1-tpv-pergunta select option{color:#001433;font-weight:700}
 .em1-tpv-pergunta input[type=text]:focus,.em1-tpv-pergunta textarea:focus,.em1-tpv-pergunta select:focus{border-color:#002561}
+/* Placeholder ("Ex: 12º lugar", "Escreva livremente...") também caía no cinza-claro
+   padrão do site inteiro (var(--ink-faint), #8b839a -- baixo contraste) -- pedido dela
+   (25/09, mais uma rodada): nenhuma letra clara no Painel. Fica no mesmo azul escuro,
+   só sem negrito, pra ainda dar pra notar a diferença entre dica e resposta digitada. */
+#view-app-1em input::placeholder,#view-app-1em textarea::placeholder{color:#001433;opacity:1;font-weight:400}
 .em1-tpv-pergunta input[type=file]{width:100%;font-size:13px;padding:8px 0}
 .em1-tpv-pergunta input[type=text][readonly],.em1-tpv-pergunta textarea[readonly],.em1-tpv-pergunta select:disabled{background:#F3F7F4;color:#293B31;border-color:#DCEAE1;cursor:default}
 .em1-tpv-radio-opt{cursor:pointer}
