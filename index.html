@@ -561,13 +561,20 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 .em1-inst-pin.estadual{background:var(--purple)}
 .em1-inst-pin.privada{background:var(--blue)}
 .em1-inst-pin.militar{background:var(--brand-green)}
+.em1-mapa-destaque{background:#FFF3CD;border:1.5px dashed #C99A12;border-radius:8px;padding:6px 10px;font-size:11px;color:#7a5c09;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.em1-mapa-destaque button{background:#fff;border:1px solid #C99A12;border-radius:999px;padding:2px 9px;font-size:10.5px;font-weight:700;color:#7a5c09;white-space:nowrap}
 @media(max-width:600px){
   .em1-mapa-instituicoes-wrap{grid-column:1/-1;grid-row:auto;min-height:300px}
   #em1-instituicoes-map{min-height:230px}
 }
 .em1-empty-state .em1-em{font-size:40px;margin-bottom:10px}
 
-.em1-modal-bg{position:fixed;inset:0;background:rgba(10,20,14,.55);display:none;align-items:flex-start;justify-content:center;z-index:200;padding:26px 14px;overflow-y:auto}
+/* z-index bem acima do Leaflet (25/09, bug reportado pela Heloísa): os controles de zoom do
+   Leaflet (.leaflet-top/.leaflet-bottom) usam z-index:1000 por padrão, e o mapa de instituições
+   fica sempre montado dentro da grade (nunca escondido) -- com o modal em z-index:200 (valor
+   antigo), o mapa aparecia por CIMA do card de detalhe da carreira, cobrindo o texto. Modal
+   sempre acima de qualquer coisa do Leaflet agora. */
+.em1-modal-bg{position:fixed;inset:0;background:rgba(10,20,14,.55);display:none;align-items:flex-start;justify-content:center;z-index:6000;padding:26px 14px;overflow-y:auto}
 .em1-modal-bg.show{display:flex}
 .em1-detalhe-card{background:#fff;border-radius:20px;max-width:560px;width:100%;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);margin-bottom:30px}
 .em1-detalhe-header{padding:0;position:relative}
@@ -579,7 +586,7 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 
 /* Aviso de sucesso ao enviar o TPV -- overlay celebrativo, separado do modal de
    detalhe da carreira (não reaproveita #em1-modal-bg pra não conflitar os estados) */
-.em1-sucesso-bg{position:fixed;inset:0;background:rgba(10,20,14,.6);display:none;align-items:center;justify-content:center;z-index:300;padding:20px}
+.em1-sucesso-bg{position:fixed;inset:0;background:rgba(10,20,14,.6);display:none;align-items:center;justify-content:center;z-index:6100;padding:20px}
 .em1-sucesso-bg.show{display:flex}
 .em1-sucesso-card{position:relative;background:#fff;border-radius:22px;max-width:380px;width:100%;padding:36px 28px 30px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.35)}
 .em1-sucesso-card .em1-modal-close{background:#F3F7F4;color:#48584E;top:12px;right:12px}
@@ -609,6 +616,9 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 .em1-progress-bar{height:100%;border-radius:999px}
 .em1-progress-label{font-size:11.5px;font-weight:800;color:#48584E}
 .em1-univ-text{color:#4B5563;font-size:10.8px;line-height:1.65}
+.em1-mapa-curso-count{color:#263044;font-size:12.8px;line-height:1.55;margin-bottom:9px}
+.em1-btn-mapa-curso{background:#E7EAF4;border:1.5px solid #C7D0EA;color:#001433;border-radius:999px;padding:7px 14px;font-size:11.5px;font-weight:800;display:inline-flex;align-items:center;gap:6px}
+.em1-btn-mapa-curso:hover{background:#DAE0F2}
 .em1-detalhe-footer{padding:12px 26px 20px;font-size:10px;color:#8b98a0}
 
 /* Atividades de Jornada Orientação Profissional */
@@ -1172,43 +1182,49 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 
     <div class="em1-tab-panel" id="em1-painel-reembolso">
       <div class="em1-atividades-wrap">
-        <div class="em1-atividades-intro">📋 Suas inscrições em vestibulares, com o acompanhamento de cada etapa — interesse, isenção de taxa, inscrição, prova e resultado. Os cards abaixo são criados e atualizados automaticamente sempre que você responde o formulário mais abaixo, e você pode ajustar a etapa a qualquer momento pelo ✏️.</div>
+        <div class="em1-atividades-intro">📋 Suas inscrições em vestibulares, com o <strong>acompanhamento de cada etapa</strong> — interesse, isenção de taxa, inscrição, prova e resultado. Os cards abaixo são <strong>criados e atualizados automaticamente</strong> sempre que você responde o formulário mais abaixo, e você pode <strong>ajustar a etapa a qualquer momento</strong> pelo ✏️.</div>
         <div id="em1-insc-lista"></div>
       </div>
 
       <div class="em1-atividades-wrap">
-        <div class="em1-atividades-intro">✍️ Registre aqui o vestibular em que você se inscreveu — esse mesmo formulário serve pra acompanhar sua inscrição e, se for o caso, pedir reembolso da taxa. ⚠️ O Ismart reembolsa apenas <strong>1 inscrição por aluno</strong> — a de maior valor entre as que você pagou.</div>
+        <div class="em1-atividades-intro">✍️ Em qual instituição e curso você se inscreveu? Toda vez que você responder aqui, um card de acompanhamento aparece (ou é atualizado) ali em cima — é <strong>por ele</strong> que você avisa se pediu isenção, se já fez a prova e o resultado, e pede reembolso se for o caso.</div>
+
+        <div class="em1-tpv-pergunta">
+          <label>1. Em qual instituição você se inscreveu? *</label>
+          <select id="em1-insc-instituicao" onchange="em1InscInstituicaoChange()"></select>
+        </div>
+        <div class="em1-tpv-pergunta" id="em1-insc-instituicao-outro-wrap" style="display:none">
+          <label>Para qual Instituição você se inscreveu? *</label>
+          <input type="text" id="em1-insc-instituicao-outro" placeholder="Digite o nome da instituição"/>
+        </div>
+
+        <div class="em1-tpv-pergunta" id="em1-insc-curso-select-wrap">
+          <label>2. Para qual curso você se inscreveu? *</label>
+          <select id="em1-insc-curso" onchange="em1InscCursoChange()"><option value="">Selecione um curso...</option></select>
+        </div>
+        <div class="em1-tpv-pergunta" id="em1-insc-curso-outro-wrap" style="display:none">
+          <label id="em1-insc-curso-outro-label">Para qual curso você se inscreveu? *</label>
+          <input type="text" id="em1-insc-curso-outro" placeholder="Digite o nome do curso"/>
+        </div>
+
+        <div id="em1-insc-erro" class="field-error"></div>
+
+        <div class="em1-tpv-salvar-bar">
+          <button class="em1-btn em1-btn-primary" onclick="em1EnviarInscricao()">📤 Registrar inscrição</button>
+        </div>
+      </div>
+
+      <div class="em1-atividades-wrap" id="em1-reembolso-wrap" style="display:none">
+        <div class="em1-atividades-intro">💰 Solicitação de reembolso da taxa de inscrição de <strong id="em1-reemb-alvo-nome"></strong>. ⚠️ O Ismart reembolsa apenas <strong>1 inscrição por aluno</strong> — a de maior valor entre as que você pagou.</div>
         <div class="em1-tpv-status" id="em1-reembolso-status" style="display:none"></div>
 
         <div class="em1-tpv-pergunta">
-          <label>1. Qual vestibular/simulado você se inscreveu? *</label>
-          <input type="text" id="em1-reemb-vestibular" list="em1-lista-vestibulares" placeholder="Ex: ENEM (Exame Nacional do Ensino Médio)"/>
-          <datalist id="em1-lista-vestibulares">
-            <option value="ENEM (Exame Nacional do Ensino Médio) / SISU">
-            <option value="Comvest (UNICAMP)">
-            <option value="Fuvest (USP)">
-            <option value="Insper (Treineiro)">
-            <option value="Seriado UFMG (Universidade Federal de Minas Gerais) - Etapa 1">
-            <option value="Seriado UFMG (Universidade Federal de Minas Gerais) - Etapa 2">
-            <option value="Seriado UFMG (Universidade Federal de Minas Gerais) - Etapa 3">
-            <option value="PISM (UFV)">
-            <option value="PAS (UnB)">
-            <option value="PSS (UFPR)">
-          </datalist>
-        </div>
-
-        <div class="em1-tpv-pergunta">
-          <label>2. Seu nome completo (aluno/a) *</label>
+          <label>Seu nome completo (aluno/a) *</label>
           <input type="text" id="em1-reemb-nome" placeholder="Nome completo, sem abreviações"/>
         </div>
 
         <div class="em1-tpv-pergunta">
-          <label>3. Qual seu curso de interesse? *</label>
-          <input type="text" id="em1-reemb-curso" placeholder="Ex: Engenharia da Computação"/>
-        </div>
-
-        <div class="em1-tpv-pergunta">
-          <label>4. Você solicitou a isenção da taxa desse vestibular? *</label>
+          <label>Você solicitou a isenção da taxa desse vestibular? *</label>
           <div class="em1-tpv-radio-row">
             <div class="em1-tpv-radio-opt" id="em1-reemb-isencao-sim" onclick="em1ReembSelecionarIsencao('Sim')">✅ Sim</div>
             <div class="em1-tpv-radio-opt" id="em1-reemb-isencao-nao" onclick="em1ReembSelecionarIsencao('Não')">❌ Não</div>
@@ -1217,7 +1233,7 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 
         <div id="em1-reemb-bloco-isencao-resultado" style="display:none">
           <div class="em1-tpv-pergunta">
-            <label>5. Você conseguiu a isenção da taxa? *</label>
+            <label>Você conseguiu a isenção da taxa? *</label>
             <div class="em1-tpv-radio-row">
               <div class="em1-tpv-radio-opt" id="em1-reemb-conseguiu-sim" onclick="em1ReembSelecionarConseguiu('Sim')">✅ Sim</div>
               <div class="em1-tpv-radio-opt" id="em1-reemb-conseguiu-nao" onclick="em1ReembSelecionarConseguiu('Não')">❌ Não</div>
@@ -1293,7 +1309,8 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
         <div id="em1-reembolso-erro" class="field-error"></div>
 
         <div class="em1-tpv-salvar-bar">
-          <button class="em1-btn em1-btn-primary" onclick="em1EnviarReembolso()">📤 Enviar</button>
+          <button class="em1-btn em1-btn-secondary" onclick="em1FecharReembolso()">✕ Cancelar</button>
+          <button class="em1-btn em1-btn-primary" onclick="em1EnviarReembolso()">📤 Enviar solicitação de reembolso</button>
         </div>
       </div>
     </div>
@@ -1316,7 +1333,7 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
   <!-- Modal de resultado do vestibular, usado só na etapa "prova" do registro de
        inscrição -- as outras transições de etapa (isenção, inscrito, prova feita)
        acontecem direto pelos botões do card, sem precisar de modal (23/09). -->
-  <div class="em1-modal-bg" id="em1-insc-modal-bg" style="z-index:250" onclick="if(event.target===this) em1InscFecharModal()">
+  <div class="em1-modal-bg" id="em1-insc-modal-bg" style="z-index:6000" onclick="if(event.target===this) em1InscFecharModal()">
     <div class="em1-insc-modal-card">
       <button class="em1-modal-close" onclick="em1InscFecharModal()">✕</button>
       <h2>Qual foi o resultado?</h2>
@@ -1341,7 +1358,7 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
   <!-- Editar etapa da inscrição livremente -- igual ao aluno do 9º/8º já consegue fazer
        no Meu Plano (corrigir uma etapa marcada errada, voltar uma etapa, etc.), pedido
        dela em 24/09. -->
-  <div class="em1-modal-bg" id="em1-insc-editar-modal-bg" style="z-index:250" onclick="if(event.target===this) em1InscFecharModalEditar()">
+  <div class="em1-modal-bg" id="em1-insc-editar-modal-bg" style="z-index:6010" onclick="if(event.target===this) em1InscFecharModalEditar()">
     <div class="em1-insc-modal-card">
       <button class="em1-modal-close" onclick="em1InscFecharModalEditar()">✕</button>
       <h2>Editar inscrição</h2>
@@ -2987,6 +3004,8 @@ function em1Iniciar(ra) {
     em1PopularSelectMunicipio();
     em1PopularSelectInstituicao();
     em1PopularSelectCurso();
+    em1PopularSelectInscInstituicao();
+    em1PopularSelectInscCurso("");
     em1IniciarReembolso();
     em1Iniciado = true;
   }
@@ -3318,6 +3337,24 @@ function em1InstituicoesParaMapa(listaCarreiras) {
   });
   return Array.from(vistos.values());
 }
+/* Lista única de instituições recomendadas pra UM curso específico, em todo o Brasil --
+   ignora os filtros da barra lateral de propósito (ao contrário de em1InstituicoesParaMapa):
+   é a resposta pra "quantas instituições esse curso tem no mapa do Brasil", pedida pela
+   Heloísa no card de detalhe da carreira (25/09), então conta o total nacional, não só o que
+   está filtrado no momento. */
+function em1InstituicoesDoCurso(tituloCurso) {
+  const curso = EM1_CURSOS.porCurso[tituloCurso];
+  const vistos = new Map();
+  if (curso && curso.porEstado) {
+    Object.entries(curso.porEstado).forEach(([uf, faculdades]) => {
+      (faculdades || []).forEach(f => {
+        const key = (f.sigla || "") + "|" + f.faculdade + "|" + f.cidade + "|" + uf;
+        if (!vistos.has(key)) vistos.set(key, { key, faculdade: f.faculdade, sigla: f.sigla, cidade: f.cidade, uf });
+      });
+    });
+  }
+  return Array.from(vistos.values());
+}
 function em1PosicaoInstituicao(inst) {
   const manual = EM1_INSTITUICOES_LATLON[inst.key];
   if (manual) return manual;
@@ -3329,7 +3366,7 @@ function em1PosicaoInstituicao(inst) {
 function em1TooltipInstituicaoHtml(inst, tipo) {
   return `<strong>${inst.sigla ? inst.sigla + " — " : ""}${inst.faculdade}</strong><br>${inst.cidade} (${inst.uf})${tipo ? " · " + tipo : ""}`;
 }
-function em1AtualizarMapaInstituicoes(listaInstituicoes) {
+function em1AtualizarMapaInstituicoes(listaInstituicoes, destaqueCurso) {
   if (!LMAP2 || !LCAMADA_MARCADORES2) return;
   LCAMADA_MARCADORES2.clearLayers();
   let algumPino = false;
@@ -3342,11 +3379,23 @@ function em1AtualizarMapaInstituicoes(listaInstituicoes) {
     const marker = L.marker(pos, { icon, keyboard: false }).addTo(LCAMADA_MARCADORES2);
     marker.bindTooltip(em1TooltipInstituicaoHtml(inst, tipo), { direction: "top", offset: [0, -6] });
   });
-  const vazio = document.querySelector("#em1-mapa-instituicoes-wrap .em1-mapa-instituicoes-vazio");
+  const wrap = document.getElementById("em1-mapa-instituicoes-wrap");
+  const vazio = wrap.querySelector(".em1-mapa-instituicoes-vazio");
   if (!algumPino) {
-    if (!vazio) document.getElementById("em1-mapa-instituicoes-wrap").insertAdjacentHTML("beforeend", `<div class="em1-mapa-instituicoes-vazio">Nenhuma instituição pra mostrar com esses filtros.</div>`);
+    if (!vazio) wrap.insertAdjacentHTML("beforeend", `<div class="em1-mapa-instituicoes-vazio">Nenhuma instituição pra mostrar com esses filtros.</div>`);
   } else if (vazio) {
     vazio.remove();
+  }
+  // Faixa "mostrando só: <curso>" -- aparece quando o aluno chega ao mapa pelo botão
+  // "🗺️ Ver essas instituições no mapa" do card de detalhe (em1VerCursoNoMapa, 25/09).
+  // Some sozinha assim que qualquer filtro normal roda de novo (em1RenderCarreiras chama esta
+  // função sem o 2º argumento), inclusive pelo próprio botão "✕ limpar" da faixa.
+  const destaqueEl = wrap.querySelector(".em1-mapa-destaque");
+  if (destaqueCurso) {
+    const html = `<div class="em1-mapa-destaque">Mostrando instituições de: <strong>${destaqueCurso}</strong><button onclick="em1RenderCarreiras()">✕ limpar</button></div>`;
+    if (destaqueEl) destaqueEl.outerHTML = html; else wrap.insertAdjacentHTML("afterbegin", html);
+  } else if (destaqueEl) {
+    destaqueEl.remove();
   }
 }
 
@@ -3412,6 +3461,7 @@ function em1DetalheHtml(c) {
     <div class="em1-dsec"><div class="em1-icon" style="color:#EF4444">⚠️</div><div><h2>Desafios</h2>${em1ChipsHtml(c.desafios,'red')}</div></div>
     <div class="em1-dsec"><div class="em1-icon">💡</div><div><h2>Curiosidade</h2><p class="em1-curiosidade">${c.curiosidade}</p></div></div>
     <div class="em1-dsec"><div class="em1-icon">🎓</div><div><h2>Universidades recomendadas</h2><p class="em1-univ-text">${c.universidades.join(" · ")}</p></div></div>
+    ${em1InstituicoesCursoMapaHtml(c)}
     ${em1FaculdadesEstadoHtml(c)}
   </div>
   <div class="em1-detalhe-footer">Fontes: MEC · Portal Único SISU/INEP · Salario.com.br · WEF Future of Jobs 2025</div>
@@ -3436,6 +3486,33 @@ function em1FaculdadesEstadoHtml(c) {
   const chips = lista.map(f => `${f.sigla ? f.sigla + " — " : ""}${f.faculdade} (${f.cidade})`);
   return `<div class="em1-dsec"><div class="em1-icon">📍</div><div><h2>Faculdades recomendadas em ${local}</h2>${em1ChipsHtml(chips)}</div></div>`;
 }
+/* Seção "Instituições no mapa do Brasil" do card de detalhe -- pedido da Heloísa (25/09):
+   ao abrir um curso, ver quantas instituições recomendadas ele tem no mapa, com um atalho
+   pra já abrir o Mapa de Carreiras filtrado só nelas. Conta o total nacional (não é afetada
+   pelos filtros da barra lateral, que só valem pra grade/mapa normal). */
+function em1InstituicoesCursoMapaHtml(c) {
+  const lista = em1InstituicoesDoCurso(c.titulo);
+  if (!lista.length) return "";
+  const estados = new Set(lista.map(i => i.uf)).size;
+  const tituloEscapado = c.titulo.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+  return `<div class="em1-dsec"><div class="em1-icon">🗺️</div><div><h2>Instituições no mapa do Brasil</h2>
+    <p class="em1-mapa-curso-count">${lista.length} instituiç${lista.length === 1 ? "ão" : "ões"} recomendada${lista.length === 1 ? "" : "s"} pra esse curso, em ${estados} estado${estados === 1 ? "" : "s"}.</p>
+    <button class="em1-btn-mapa-curso" onclick="em1VerCursoNoMapa('${tituloEscapado}')">🗺️ Ver essas instituições no mapa</button>
+  </div></div>`;
+}
+/* Fecha o modal, vai pro Mapa de Carreiras e filtra o mapa só pras instituições desse curso
+   (ignorando os filtros normais da barra lateral, igual em1InstituicoesDoCurso) -- some sozinho
+   assim que qualquer filtro normal rodar de novo, ou pelo botão "✕ limpar" da própria faixa. */
+function em1VerCursoNoMapa(tituloCurso) {
+  em1FecharModal();
+  em1MudarTab("carreiras");
+  setTimeout(() => {
+    em1AtualizarMapaInstituicoes(em1InstituicoesDoCurso(tituloCurso), tituloCurso);
+    const wrap = document.getElementById("em1-mapa-instituicoes-wrap");
+    if (wrap) wrap.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (LMAP2) LMAP2.invalidateSize();
+  }, 250);
+}
 
 /* ---- Pergunta 4 do TPV: lista suspensa com os cursos recomendados pelo Ismart ---- */
 function em1PopularSelectCurso() {
@@ -3451,6 +3528,109 @@ function em1PopularSelectCurso() {
     html += `</optgroup>`;
   });
   el.innerHTML = html;
+}
+/* Formulário de Inscrições, redesenhado 25/09 (2ª rodada, a pedido dela): agora só 2
+   perguntas -- "Em qual instituição você se inscreveu?" (ENEM/SISU como opção normal +
+   as instituições recomendadas da planilha de Carreiras + "Outro") e "Para qual curso
+   você se inscreveu?" (lista de cursos daquela instituição especificamente, ou a lista
+   cheia de 57 cursos por área se ENEM/SISU foi escolhido). Isenção/comprovantes/dados
+   bancários saíram totalmente daqui -- viraram um formulário à parte, só de reembolso,
+   aberto pelo botão "💰 Solicitar reembolso" de cada card (em1IrParaReembolso). */
+function em1TodasInstituicoesUnicas() {
+  if (window.__em1TodasInstituicoesCache) return window.__em1TodasInstituicoesCache;
+  const vistos = new Map();
+  Object.keys((EM1_CURSOS && EM1_CURSOS.porCurso) || {}).forEach(curso => {
+    const porEstado = EM1_CURSOS.porCurso[curso].porEstado || {};
+    Object.values(porEstado).forEach(faculdades => {
+      (faculdades || []).forEach(f => { if (f.faculdade && !vistos.has(f.faculdade)) vistos.set(f.faculdade, true); });
+    });
+  });
+  window.__em1TodasInstituicoesCache = Array.from(vistos.keys()).sort((a, b) => a.localeCompare(b, "pt-BR"));
+  return window.__em1TodasInstituicoesCache;
+}
+function em1CursosDaInstituicao(nomeInstituicao) {
+  if (!window.__em1CursosPorInstituicaoCache) {
+    const mapa = {};
+    Object.keys((EM1_CURSOS && EM1_CURSOS.porCurso) || {}).forEach(curso => {
+      const porEstado = EM1_CURSOS.porCurso[curso].porEstado || {};
+      Object.values(porEstado).forEach(faculdades => {
+        (faculdades || []).forEach(f => {
+          if (!f.faculdade) return;
+          if (!mapa[f.faculdade]) mapa[f.faculdade] = new Set();
+          mapa[f.faculdade].add(curso);
+        });
+      });
+    });
+    window.__em1CursosPorInstituicaoCache = mapa;
+  }
+  const set = window.__em1CursosPorInstituicaoCache[nomeInstituicao];
+  return set ? Array.from(set).sort((a, b) => a.localeCompare(b, "pt-BR")) : [];
+}
+function em1PopularSelectInscInstituicao() {
+  const el = document.getElementById("em1-insc-instituicao");
+  if (!el || !EM1_CURSOS) return;
+  let html = `<option value="">Selecione...</option>`;
+  html += `<option value="ENEM (Exame Nacional do Ensino Médio) / SISU">ENEM (Exame Nacional do Ensino Médio) / SISU</option>`;
+  em1TodasInstituicoesUnicas().forEach(nome => { html += `<option value="${nome}">${nome}</option>`; });
+  html += `<option value="__outro__">Outro — a instituição que me inscrevi não está na lista</option>`;
+  el.innerHTML = html;
+}
+function em1PopularSelectInscCurso(nomeInstituicao) {
+  const el = document.getElementById("em1-insc-curso");
+  if (!el || !EM1_CURSOS) return;
+  let html = `<option value="">Selecione um curso...</option>`;
+  if (!nomeInstituicao || nomeInstituicao === "ENEM (Exame Nacional do Ensino Médio) / SISU") {
+    EM1_CURSOS.areasOrdem.forEach(area => {
+      const cursos = EM1_CURSOS.cursosPorArea[area] || [];
+      if (!cursos.length) return;
+      html += `<optgroup label="${area}">`;
+      cursos.forEach(curso => { html += `<option value="${curso}">${curso}</option>`; });
+      html += `</optgroup>`;
+    });
+  } else {
+    em1CursosDaInstituicao(nomeInstituicao).forEach(curso => { html += `<option value="${curso}">${curso}</option>`; });
+  }
+  html += `<option value="__outro__">O curso que me inscrevi não consta na lista</option>`;
+  el.innerHTML = html;
+}
+/* Alterna os campos de texto livre ("Outro") de instituição e curso -- quando o aluno
+   escolhe "Outro" na instituição, o curso vira texto livre direto (não faz sentido
+   cascatear uma lista de cursos de uma instituição que nem está na nossa lista), a
+   pedido dela (25/09: "quando o aluno seleciona 'Outro' apareça um campo pra escrever
+   'Para qual Instituição você se inscreveu?' e abaixo 'Para qual curso você se
+   inscreveu?' também em texto"). */
+function em1InscInstituicaoChange() {
+  const val = document.getElementById("em1-insc-instituicao").value;
+  const instOutroWrap = document.getElementById("em1-insc-instituicao-outro-wrap");
+  const cursoSelectWrap = document.getElementById("em1-insc-curso-select-wrap");
+  const cursoOutroWrap = document.getElementById("em1-insc-curso-outro-wrap");
+  const cursoOutroLabel = document.getElementById("em1-insc-curso-outro-label");
+  if (val === "__outro__") {
+    instOutroWrap.style.display = "block";
+    cursoSelectWrap.style.display = "none";
+    cursoOutroWrap.style.display = "block";
+    cursoOutroLabel.textContent = "Para qual curso você se inscreveu? *";
+  } else {
+    instOutroWrap.style.display = "none";
+    document.getElementById("em1-insc-instituicao-outro").value = "";
+    cursoSelectWrap.style.display = "block";
+    em1PopularSelectInscCurso(val);
+    em1InscCursoChange();
+  }
+}
+function em1InscCursoChange() {
+  const instVal = document.getElementById("em1-insc-instituicao").value;
+  if (instVal === "__outro__") return; // já em texto livre, tratado acima
+  const cursoVal = document.getElementById("em1-insc-curso").value;
+  const cursoOutroWrap = document.getElementById("em1-insc-curso-outro-wrap");
+  const cursoOutroLabel = document.getElementById("em1-insc-curso-outro-label");
+  if (cursoVal === "__outro__") {
+    cursoOutroWrap.style.display = "block";
+    cursoOutroLabel.textContent = "Para qual curso você se inscreveu? *";
+  } else {
+    cursoOutroWrap.style.display = "none";
+    document.getElementById("em1-insc-curso-outro").value = "";
+  }
 }
 
 /* ---- TPV - Entrega 1 (localStorage por RA + envio pra planilha) ---- */
@@ -3849,9 +4029,31 @@ function em1InscConfirmarEdicao() {
   em1InscFecharModalEditar();
   mostrarToast("✏️ Inscrição atualizada!");
 }
-function em1IrParaReembolso() {
-  const alvo = document.getElementById("em1-reemb-form-real") || document.getElementById("em1-reemb-vestibular");
-  if (alvo) alvo.scrollIntoView({ behavior: "smooth", block: "start" });
+/* Formulário de reembolso, agora à parte do de inscrição (25/09, 2ª rodada) -- pré-preenchido
+   e travado com a instituição+curso do card clicado, só pergunta o que é específico de
+   reembolso (isenção, comprovantes, dados bancários/PIX). */
+let EM1_REEMB_ALVO_ID = null;
+function em1IrParaReembolso(id) {
+  const item = em1CarregarInscricoes().find(it => it.id === id);
+  if (!item) return;
+  EM1_REEMB_ALVO_ID = id;
+  document.getElementById("em1-reemb-alvo-nome").textContent = item.instituicao + " · " + item.curso;
+  const statusEl = document.getElementById("em1-reembolso-status");
+  statusEl.style.display = "none";
+  statusEl.classList.remove("em1-tpv-status-ok");
+  document.getElementById("em1-reembolso-erro").style.display = "none";
+  const nomeSalvo = localStorage.getItem("mo1em_nome_busca_" + (ESTADO.matricula || ""));
+  document.getElementById("em1-reemb-nome").value = nomeSalvo || "";
+  em1ReembSelecionarIsencao("");
+  document.getElementById("em1-reemb-bloco-isencao-resultado").style.display = "none";
+  document.getElementById("em1-reemb-bloco-pagamento").style.display = "none";
+  const wrap = document.getElementById("em1-reembolso-wrap");
+  wrap.style.display = "block";
+  wrap.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function em1FecharReembolso() {
+  document.getElementById("em1-reembolso-wrap").style.display = "none";
+  EM1_REEMB_ALVO_ID = null;
 }
 function em1CardInscricaoHtml(item) {
   const rejeitado = item.etapa === "nao_aprovado";
@@ -3885,7 +4087,7 @@ function em1CardInscricaoHtml(item) {
   let extraHtml = "";
   if (item.etapa === "aprovado") extraHtml = `<div class="em1-insc-aprovado">🎉 Aprovado(a)!${item.colocacao ? " Colocação: " + item.colocacao : ""}</div>`;
   else if (item.isento) extraHtml = `<div class="em1-insc-isento">🎉 Você conseguiu a isenção de taxa aqui — sem reembolso a pedir.</div>`;
-  const reembolsoBtn = podeReembolso ? `<button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1IrParaReembolso()">💰 Solicitar reembolso</button>` : "";
+  const reembolsoBtn = podeReembolso ? `<button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1IrParaReembolso('${item.id}')">💰 Solicitar reembolso</button>` : "";
   const badgePlanilha = item.confirmadoPlanilha ? `<div class="em1-insc-badge-planilha">📄 Confirmado na planilha da equipe</div>` : "";
 
   return `<div class="em1-insc-card">
@@ -3946,45 +4148,69 @@ function em1EtapaDoRegistroPlanilha(registro) {
   // só confirma que a inscrição existe, então a etapa mínima inferida é "inscrito".
   return { etapa: "inscrito", isencaoFase, isencaoResultado, isento };
 }
-/* Formulário único de Inscrições e Reembolsos (redesenhado 25/09, a pedido dela): a
-   pergunta "Qual vestibular/simulado você se inscreveu?" faz as vezes de "instituição",
-   então toda vez que o aluno responde/envia esse formulário, o card de etapas dessa aba
-   aparece/atualiza sozinho na etapa "Inscrito(a)" -- sem precisar de um botão de registro
-   separado (que existia antes e foi removido, junto com a seleção de instituição por lista,
-   por não ter o ENEM como opção e duplicar a pergunta do vestibular). Reaproveita a mesma
-   lógica de inferir a etapa a partir da isenção (em1EtapaDoRegistroPlanilha) e de achar um
-   card já existente pelo nome do vestibular (em1EncontrarItemCorrespondente), já usadas pra
-   casar registros vindos da planilha. */
-function em1RegistrarOuAtualizarInscricaoLocal(vestibular, curso, isencaoSolicitada, isencaoConseguida) {
-  if (!vestibular) return;
-  const inferido = em1EtapaDoRegistroPlanilha({ isencaoSolicitada, isencaoConseguida });
+/* Formulário de Inscrições (redesenhado 25/09, 2ª rodada, a pedido dela): só capta
+   instituição + curso -- nada de isenção aqui (isso é dos botões do card, ou do
+   formulário à parte de reembolso). Cada envio cria (ou atualiza o curso de) um card
+   na etapa inicial "interesse", e o mesmo em1EnviarTracking de sempre garante que
+   instituição+curso corretos (inclusive texto livre de "Outro") cheguem na planilha
+   de acompanhamento. Reaproveita em1EncontrarItemCorrespondente pra não duplicar um
+   card já existente pra mesma instituição. */
+function em1RegistrarInscricaoLocal(instituicao, curso) {
+  if (!instituicao || !curso) return null;
   const lista = em1CarregarInscricoes();
-  let item = em1EncontrarItemCorrespondente(lista, { vestibular });
+  let item = em1EncontrarItemCorrespondente(lista, { vestibular: instituicao });
   const agora = new Date().toISOString();
+  let evento;
   if (item) {
-    const idxAtual = EM1_ETAPAS_ORDEM.indexOf(item.etapa);
-    const idxInferido = EM1_ETAPAS_ORDEM.indexOf(inferido.etapa);
-    // Nunca volta uma etapa já mais avançada (prova feita/aprovado) por causa de um reenvio
-    // do formulário -- só a isenção é sempre atualizada, por ser a resposta mais recente do aluno.
-    if (idxInferido > idxAtual) item.etapa = inferido.etapa;
-    if (curso) item.curso = curso;
-    item.isencaoFase = inferido.isencaoFase;
-    item.isencaoResultado = inferido.isencaoResultado;
-    item.isento = inferido.isento;
+    item.curso = curso;
     item.dataAtualizacao = agora;
+    evento = "curso_atualizado";
   } else {
     item = {
       id: Date.now() + "_" + Math.random().toString(36).slice(2, 7),
-      instituicao: vestibular, curso: curso || "Não informado",
-      etapa: inferido.etapa, isencaoFase: inferido.isencaoFase,
-      isencaoResultado: inferido.isencaoResultado, isento: inferido.isento,
+      instituicao, curso,
+      etapa: "interesse", isencaoFase: "", isencaoResultado: "", isento: false,
       colocacao: "", registradoEm: agora, dataAtualizacao: agora
     };
     lista.push(item);
+    evento = "interesse_registrado";
   }
   em1SalvarInscricoes(lista);
-  em1EnviarTracking(item, item.etapa);
+  em1EnviarTracking(item, evento);
   em1RenderizarInscricoes();
+  return item;
+}
+function em1EnviarInscricao() {
+  const erroEl = document.getElementById("em1-insc-erro");
+  const instSel = document.getElementById("em1-insc-instituicao").value;
+  const instituicao = instSel === "__outro__" ? document.getElementById("em1-insc-instituicao-outro").value.trim() : instSel;
+
+  let curso;
+  if (instSel === "__outro__") {
+    curso = document.getElementById("em1-insc-curso-outro").value.trim();
+  } else {
+    const cursoSel = document.getElementById("em1-insc-curso").value;
+    curso = cursoSel === "__outro__" ? document.getElementById("em1-insc-curso-outro").value.trim() : cursoSel;
+  }
+
+  const faltando = [];
+  if (!instSel) faltando.push("em qual instituição você se inscreveu");
+  else if (!instituicao) faltando.push("para qual instituição você se inscreveu");
+  if (!curso) faltando.push("para qual curso você se inscreveu");
+  if (faltando.length) {
+    erroEl.textContent = "Preencha antes de enviar: " + faltando.join(", ") + ".";
+    erroEl.style.display = "block";
+    return;
+  }
+  erroEl.style.display = "none";
+
+  em1RegistrarInscricaoLocal(instituicao, curso);
+  document.getElementById("em1-insc-instituicao").value = "";
+  document.getElementById("em1-insc-instituicao-outro").value = "";
+  document.getElementById("em1-insc-curso-outro").value = "";
+  em1PopularSelectInscCurso("");
+  em1InscInstituicaoChange();
+  mostrarToast("✅ Inscrição registrada! Confira o card acima ⬆️");
 }
 function em1VerificarInscricoesNoServidor(nomeBusca) {
   const statusEl = document.getElementById("em1-insc-busca-status");
@@ -4041,21 +4267,38 @@ function em1ReembPrecisaPagamento() {
   // ou pediu e foi negada
   return EM1_REEMB_ISENCAO === "Não" || (EM1_REEMB_ISENCAO === "Sim" && EM1_REEMB_CONSEGUIU === "Não");
 }
+/* Depois que a solicitação de reembolso é enviada com sucesso, guarda a resposta de isenção
+   (Sim/Não/conseguiu) de volta no MESMO card -- reaproveita em1AtualizarItemInscricao, que já
+   dispara o em1EnviarTracking pra planilha de acompanhamento sozinho. Não mexe na etapa do
+   card (isso é só dos botões ✅/❌ do próprio card) -- só garante que isencaoFase/isencaoResultado
+   fiquem certos na planilha mesmo se o aluno respondeu aqui em vez de pelos botões. */
+function em1AtualizarIsencaoDoAlvoReembolso(id) {
+  const mudancas = {
+    isencaoFase: EM1_REEMB_ISENCAO === "Sim" ? "solicitada" : "nao_solicitada",
+    isencaoResultado: EM1_REEMB_ISENCAO === "Sim" ? (EM1_REEMB_CONSEGUIU === "Sim" ? "concedida" : "negada") : "nao_solicitada",
+    isento: EM1_REEMB_ISENCAO === "Sim" && EM1_REEMB_CONSEGUIU === "Sim"
+  };
+  em1AtualizarItemInscricao(id, mudancas, "reembolso_solicitado");
+}
 function em1EnviarReembolso() {
   const erroEl = document.getElementById("em1-reembolso-erro");
   const statusEl = document.getElementById("em1-reembolso-status");
   const val = (id) => (document.getElementById(id).value || "").trim();
   const arq = (id) => document.getElementById(id).files[0] || null;
 
-  const vestibular = val("em1-reemb-vestibular");
+  const itemAlvo = EM1_REEMB_ALVO_ID ? em1CarregarInscricoes().find(it => it.id === EM1_REEMB_ALVO_ID) : null;
+  if (!itemAlvo) {
+    erroEl.textContent = "Não encontramos essa inscrição — feche e abra o reembolso de novo pelo botão do card.";
+    erroEl.style.display = "block";
+    return;
+  }
+  const vestibular = itemAlvo.instituicao;
+  const curso = itemAlvo.curso;
   const nomeAluno = val("em1-reemb-nome");
-  const curso = val("em1-reemb-curso");
   const observacoes = val("em1-reemb-observacoes");
 
   const faltando = [];
-  if (!vestibular) faltando.push("qual vestibular/simulado");
   if (!nomeAluno) faltando.push("seu nome completo");
-  if (!curso) faltando.push("curso de interesse");
   if (!EM1_REEMB_ISENCAO) faltando.push("se solicitou isenção");
   if (EM1_REEMB_ISENCAO === "Sim" && !EM1_REEMB_CONSEGUIU) faltando.push("se conseguiu a isenção");
   if (EM1_REEMB_ISENCAO === "Sim" && EM1_REEMB_CONSEGUIU === "Sim" && !arq("em1-reemb-comprovante-isencao")) faltando.push("comprovante de isenção da taxa");
@@ -4125,7 +4368,7 @@ function em1EnviarReembolso() {
 
     if (!EM1_REEMBOLSO_URL) {
       statusEl.textContent = "💾 Salvo neste dispositivo (a equipe ainda vai conectar a planilha) — anote com seu tutor(a) pra não perder o prazo";
-      em1RegistrarOuAtualizarInscricaoLocal(vestibular, curso, EM1_REEMB_ISENCAO, EM1_REEMB_ISENCAO === "Sim" ? EM1_REEMB_CONSEGUIU : "");
+      em1AtualizarIsencaoDoAlvoReembolso(itemAlvo.id);
       return;
     }
 
@@ -4146,8 +4389,9 @@ function em1EnviarReembolso() {
           statusEl.classList.add("em1-tpv-status-ok");
           statusEl.textContent = "✅ Solicitação enviada! Acompanhe com seu tutor(a).";
           localStorage.setItem("mo1em_nome_busca_" + (ESTADO.matricula || ""), nomeAluno);
-          em1RegistrarOuAtualizarInscricaoLocal(vestibular, curso, EM1_REEMB_ISENCAO, EM1_REEMB_ISENCAO === "Sim" ? EM1_REEMB_CONSEGUIU : "");
-          mostrarToast("💰 Solicitação enviada! Confira sua inscrição acima ⬆️");
+          em1AtualizarIsencaoDoAlvoReembolso(itemAlvo.id);
+          mostrarToast("💰 Solicitação de reembolso enviada!");
+          setTimeout(em1FecharReembolso, 1800);
         } else if (tentativa < MAX_TENTATIVAS) {
           setTimeout(() => tentarEnviar(tentativa + 1), 1200);
         } else {
