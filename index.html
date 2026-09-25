@@ -641,6 +641,9 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 .em1-insc-card-acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .em1-btn.em1-btn-sm{padding:9px 14px;font-size:12.5px}
 .em1-insc-aprovado,.em1-insc-isento{margin-top:10px;background:#F5FFF8;border:1.5px solid #A9E6BC;color:#0A7030;border-radius:10px;padding:10px 12px;font-size:13px;font-weight:700}
+.em1-insc-badge-planilha{display:inline-block;margin-bottom:8px;background:var(--blue-soft);color:var(--blue-soft-ink);border-radius:100px;padding:4px 10px;font-size:11.5px;font-weight:700}
+.em1-insc-busca-planilha .em1-ajuda{margin-bottom:8px}
+.em1-insc-busca-status{margin-top:8px;font-size:12.5px;color:var(--ink-soft)}
 .em1-insc-modal-card{position:relative;background:#fff;border-radius:20px;max-width:420px;width:100%;padding:28px 24px 24px;box-shadow:0 24px 60px rgba(0,0,0,.35)}
 .em1-insc-modal-card .em1-modal-close{background:#F3F7F4;color:#48584E;top:12px;right:12px}
 .em1-insc-modal-card h2{font-family:"Baloo 2","Manrope",sans-serif;font-size:19px;color:#001433;margin-bottom:4px}
@@ -1179,6 +1182,16 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
         </div>
 
         <div id="em1-insc-lista"></div>
+
+        <div class="em1-tpv-pergunta em1-insc-busca-planilha">
+          <label>Já se inscreveu em algum vestibular antes de existir esse registro aqui no site? 🔎</label>
+          <div class="em1-ajuda">Digite seu nome completo do jeito que você preencheu no formulário de reembolso, pra gente puxar o que já está registrado na planilha da equipe e completar seus cards automaticamente.</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <input type="text" id="em1-insc-busca-nome" placeholder="Nome completo, sem abreviações" style="flex:1;min-width:200px"/>
+            <button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1BuscarInscricoesPorNome()">Buscar</button>
+          </div>
+          <div id="em1-insc-busca-status" class="em1-insc-busca-status"></div>
+        </div>
       </div>
 
       <div class="em1-atividades-wrap">
@@ -3631,6 +3644,10 @@ function em1IniciarReembolso() {
   document.getElementById("em1-reemb-bloco-isencao-resultado").style.display = "none";
   document.getElementById("em1-reemb-bloco-pagamento").style.display = "none";
   em1RenderizarInscricoes();
+  const nomeSalvo = localStorage.getItem("mo1em_nome_busca_" + (ESTADO.matricula || ""));
+  const inpBusca = document.getElementById("em1-insc-busca-nome");
+  if (nomeSalvo && inpBusca) inpBusca.value = nomeSalvo;
+  em1VerificarInscricoesNoServidor(); // busca silenciosa por RA -- cobre tudo enviado pelo reembolso deste site
 }
 
 /* ---- Registro de inscrição em vestibulares (localStorage por RA) ----
@@ -3828,8 +3845,10 @@ function em1CardInscricaoHtml(item) {
   if (item.etapa === "aprovado") extraHtml = `<div class="em1-insc-aprovado">🎉 Aprovado(a)!${item.colocacao ? " Colocação: " + item.colocacao : ""}</div>`;
   else if (item.isento) extraHtml = `<div class="em1-insc-isento">🎉 Você conseguiu a isenção de taxa aqui — sem reembolso a pedir.</div>`;
   const reembolsoBtn = podeReembolso ? `<button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1IrParaReembolso()">💰 Solicitar reembolso</button>` : "";
+  const badgePlanilha = item.confirmadoPlanilha ? `<div class="em1-insc-badge-planilha">📄 Confirmado na planilha da equipe</div>` : "";
 
   return `<div class="em1-insc-card">
+    ${badgePlanilha}
     <div class="em1-insc-card-head">
       <div><strong>${item.instituicao}</strong><br><span>🎓 ${item.curso}</span></div>
       <div class="em1-insc-card-head-acoes">
@@ -3850,6 +3869,101 @@ function em1RenderizarInscricoes() {
   el.innerHTML = '<div class="em1-tpv-pergunta"><label>Suas inscrições registradas</label></div>' +
     lista.slice().sort((a, b) => new Date(b.registradoEm) - new Date(a.registradoEm)).map(em1CardInscricaoHtml).join("");
 }
+
+/* ---- Puxar da planilha "Vestibulares - ADI 2026 (respostas)" o que já foi
+   registrado por lá (formulário de reembolso), pra completar/confirmar os
+   cards de inscrição do aluno -- pedido da Heloísa, 25/09. Busca primeiro
+   por RA (funciona sozinho, sem o aluno fazer nada, pra tudo que for
+   enviado pelo formulário de reembolso DESTE SITE daqui pra frente, já que
+   ele já manda o RA junto). Registros antigos, enviados direto pelo
+   Google Forms antes de existir esse recurso, não têm RA salvo -- pra esses,
+   o aluno pode digitar o nome completo e buscar manualmente (abaixo). */
+function em1Normalizar(s) {
+  return (s || "").toString().normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .trim().toLowerCase().replace(/[()]/g, "").replace(/\s+/g, " ");
+}
+function em1EncontrarItemCorrespondente(lista, registro) {
+  const vest = em1Normalizar(registro.vestibular);
+  if (!vest) return null;
+  return lista.find(it => {
+    const inst = em1Normalizar(it.instituicao);
+    return inst && (vest.indexOf(inst) !== -1 || inst.indexOf(vest) !== -1);
+  }) || null;
+}
+function em1EtapaDoRegistroPlanilha(registro) {
+  const sol = (registro.isencaoSolicitada || "").trim().toLowerCase();
+  const con = (registro.isencaoConseguida || "").trim().toLowerCase();
+  let isencaoFase = "", isencaoResultado = "", isento = false;
+  if (sol === "sim") {
+    isencaoFase = "solicitada";
+    if (con === "sim") { isencaoResultado = "concedida"; isento = true; }
+    else if (con === "não" || con === "nao") { isencaoResultado = "negada"; isento = false; }
+  } else if (sol === "não" || sol === "nao") {
+    isencaoFase = "nao_solicitada"; isencaoResultado = "nao_solicitada";
+  }
+  // A planilha não tem como saber se o aluno já fez a prova ou foi aprovado --
+  // só confirma que a inscrição existe, então a etapa mínima inferida é "inscrito".
+  return { etapa: "inscrito", isencaoFase, isencaoResultado, isento };
+}
+function em1VerificarInscricoesNoServidor(nomeBusca) {
+  const statusEl = document.getElementById("em1-insc-busca-status");
+  if (!EM1_REEMBOLSO_URL) return;
+  const ra = ESTADO.matricula || "";
+  if (!ra && !nomeBusca) return;
+  let url = EM1_REEMBOLSO_URL + "?ra=" + encodeURIComponent(ra);
+  if (nomeBusca) url += "&nome=" + encodeURIComponent(nomeBusca);
+  fetch(url, { method: "GET" })
+    .then(resp => resp.ok ? resp.json() : null)
+    .then(dados => {
+      if (!dados || dados.status !== "ok" || !dados.registros || !dados.registros.length) {
+        if (nomeBusca && statusEl) statusEl.textContent = "Não encontramos nenhuma inscrição com esse nome na planilha ainda.";
+        return;
+      }
+      const lista = em1CarregarInscricoes();
+      dados.registros.forEach(registro => {
+        const inferido = em1EtapaDoRegistroPlanilha(registro);
+        let item = em1EncontrarItemCorrespondente(lista, registro);
+        if (item) {
+          const idxAtual = EM1_ETAPAS_ORDEM.indexOf(item.etapa);
+          const idxInferido = EM1_ETAPAS_ORDEM.indexOf(inferido.etapa);
+          if (idxInferido > idxAtual) item.etapa = inferido.etapa;
+          if (!item.isencaoFase && inferido.isencaoFase) {
+            item.isencaoFase = inferido.isencaoFase;
+            item.isencaoResultado = inferido.isencaoResultado;
+            item.isento = inferido.isento;
+          }
+          item.confirmadoPlanilha = true;
+          item.dataAtualizacao = new Date().toISOString();
+        } else {
+          lista.push({
+            id: "planilha_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
+            instituicao: registro.vestibular || "Vestibular",
+            curso: registro.curso || "Não informado",
+            etapa: inferido.etapa, isencaoFase: inferido.isencaoFase,
+            isencaoResultado: inferido.isencaoResultado, isento: inferido.isento,
+            colocacao: "", confirmadoPlanilha: true,
+            registradoEm: registro.carimbo || new Date().toISOString(),
+            dataAtualizacao: new Date().toISOString()
+          });
+        }
+      });
+      em1SalvarInscricoes(lista);
+      em1RenderizarInscricoes();
+      if (nomeBusca && statusEl) statusEl.textContent = "✅ Encontramos " + dados.registros.length + " inscrição(ões) na planilha e atualizamos seus cards!";
+    })
+    .catch(() => {
+      if (nomeBusca && statusEl) statusEl.textContent = "⚠️ Não consegui buscar agora, tente de novo em instantes.";
+    });
+}
+function em1BuscarInscricoesPorNome() {
+  const nome = (document.getElementById("em1-insc-busca-nome").value || "").trim();
+  const statusEl = document.getElementById("em1-insc-busca-status");
+  if (!nome) { if (statusEl) statusEl.textContent = "Digite seu nome completo primeiro."; return; }
+  localStorage.setItem("mo1em_nome_busca_" + (ESTADO.matricula || ""), nome);
+  if (statusEl) statusEl.textContent = "🔎 Buscando...";
+  em1VerificarInscricoesNoServidor(nome);
+}
+
 function em1ReembPrecisaPagamento() {
   // precisa preencher os campos de pagamento/reembolso quando não pediu isenção,
   // ou pediu e foi negada
