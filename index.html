@@ -646,7 +646,8 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 .em1-tpv-pergunta{background:#fff;border-radius:12px;padding:15px;margin-bottom:12px;border:1px solid #DCEAE1}
 .em1-tpv-pergunta label{display:block;font-size:13.5px;font-weight:700;color:#001433;margin-bottom:6px;line-height:1.4}
 .em1-tpv-pergunta .em1-ajuda{font-size:11.5px;color:#48584E;margin-bottom:10px}
-.em1-tpv-pergunta input[type=text],.em1-tpv-pergunta textarea,.em1-tpv-pergunta select{width:100%;padding:12px 13px;border:2px solid #DCEAE1;border-radius:10px;font-family:inherit;font-size:14px;outline:none;resize:vertical;background:#fff}
+.em1-tpv-pergunta input[type=text],.em1-tpv-pergunta textarea,.em1-tpv-pergunta select{width:100%;padding:12px 13px;border:2px solid #DCEAE1;border-radius:10px;font-family:inherit;font-size:14px;outline:none;resize:vertical;background:#fff;color:#001433;font-weight:700}
+.em1-tpv-pergunta select option{color:#001433;font-weight:700}
 .em1-tpv-pergunta input[type=text]:focus,.em1-tpv-pergunta textarea:focus,.em1-tpv-pergunta select:focus{border-color:#002561}
 .em1-tpv-pergunta input[type=file]{width:100%;font-size:13px;padding:8px 0}
 .em1-tpv-pergunta input[type=text][readonly],.em1-tpv-pergunta textarea[readonly],.em1-tpv-pergunta select:disabled{background:#F3F7F4;color:#293B31;border-color:#DCEAE1;cursor:default}
@@ -673,6 +674,7 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
 .em1-insc-card-acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .em1-btn.em1-btn-sm{padding:9px 14px;font-size:12.5px}
 .em1-insc-aprovado,.em1-insc-isento{margin-top:10px;background:#F5FFF8;border:1.5px solid #A9E6BC;color:#0A7030;border-radius:10px;padding:10px 12px;font-size:13px;font-weight:700}
+.em1-insc-treineiro{margin-top:10px;background:var(--blue-soft);border:1.5px solid #A9CBE0;color:var(--blue-soft-ink);border-radius:10px;padding:10px 12px;font-size:13px;font-weight:700}
 .em1-insc-badge-planilha{display:inline-block;margin-bottom:8px;background:var(--blue-soft);color:var(--blue-soft-ink);border-radius:100px;padding:4px 10px;font-size:11.5px;font-weight:700}
 .em1-insc-modal-card{position:relative;background:#fff;border-radius:20px;max-width:420px;width:100%;padding:28px 24px 24px;box-shadow:0 24px 60px rgba(0,0,0,.35)}
 .em1-insc-modal-card .em1-modal-close{background:#F3F7F4;color:#48584E;top:12px;right:12px}
@@ -1219,11 +1221,6 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
         <div class="em1-tpv-status" id="em1-reembolso-status" style="display:none"></div>
 
         <div class="em1-tpv-pergunta">
-          <label>Seu nome completo (aluno/a) *</label>
-          <input type="text" id="em1-reemb-nome" placeholder="Nome completo, sem abreviações"/>
-        </div>
-
-        <div class="em1-tpv-pergunta">
           <label>Você solicitou a isenção da taxa desse vestibular? *</label>
           <div class="em1-tpv-radio-row">
             <div class="em1-tpv-radio-opt" id="em1-reemb-isencao-sim" onclick="em1ReembSelecionarIsencao('Sim')">✅ Sim</div>
@@ -1343,11 +1340,16 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
         <select id="em1-insc-modal-resultado" onchange="em1InscModalResultadoChange()">
           <option value="aprovado">Aprovado(a)</option>
           <option value="nao_aprovado">Não aprovado(a)</option>
+          <option value="treineiro">Fiz como treineiro (não estou concorrendo à vaga)</option>
         </select>
       </div>
       <div class="em1-tpv-pergunta" id="em1-insc-modal-campos-aprovado" style="padding:0;border:0;background:none;margin-top:12px">
         <label>Colocação (opcional)</label>
         <input type="text" id="em1-insc-modal-colocacao" placeholder="Ex: 12º lugar"/>
+      </div>
+      <div class="em1-tpv-pergunta" id="em1-insc-modal-campos-treineiro" style="padding:0;border:0;background:none;margin-top:12px;display:none">
+        <label>Conte sua nota, se quiser compartilhar conosco (opcional)</label>
+        <input type="text" id="em1-insc-modal-nota" placeholder="Ex: 720 pontos"/>
       </div>
       <div class="em1-tpv-salvar-bar" style="position:static;background:none;padding:16px 0 0">
         <button class="em1-btn em1-btn-primary" onclick="em1InscConfirmarResultado()">Salvar resultado</button>
@@ -1370,6 +1372,10 @@ select.em1-cat-search{cursor:pointer;background:#fff;color:#48584E;-webkit-appea
       <div class="em1-tpv-pergunta" id="em1-insc-editar-campos-aprovado" style="padding:0;border:0;background:none;margin-top:12px;display:none">
         <label>Colocação (opcional)</label>
         <input type="text" id="em1-insc-editar-colocacao" placeholder="Ex: 12º lugar"/>
+      </div>
+      <div class="em1-tpv-pergunta" id="em1-insc-editar-campos-treineiro" style="padding:0;border:0;background:none;margin-top:12px;display:none">
+        <label>Conte a nota, se quiser compartilhar (opcional)</label>
+        <input type="text" id="em1-insc-editar-nota" placeholder="Ex: 720 pontos"/>
       </div>
       <div id="em1-insc-editar-erro" class="field-error"></div>
       <div class="em1-tpv-salvar-bar" style="position:static;background:none;padding:16px 0 0">
@@ -3903,8 +3909,6 @@ function em1IniciarReembolso() {
   // antigos da planilha (de antes do RA ser salvo) -- tudo silencioso, sem botão de busca,
   // a pedido dela (25/09): a busca por nome deixou de ser uma ação separada do aluno.
   const nomeSalvo = localStorage.getItem("mo1em_nome_busca_" + (ESTADO.matricula || ""));
-  const inpNome = document.getElementById("em1-reemb-nome");
-  if (nomeSalvo && inpNome && !inpNome.value) inpNome.value = nomeSalvo;
   em1VerificarInscricoesNoServidor(); // busca silenciosa por RA -- cobre tudo enviado pelo reembolso deste site
   if (nomeSalvo) em1VerificarInscricoesNoServidor(nomeSalvo); // busca silenciosa por nome -- cobre registros históricos sem RA
 }
@@ -3982,18 +3986,29 @@ function em1InscAbrirResultado(id) {
   document.getElementById("em1-insc-modal-nome").textContent = item.instituicao + " · " + item.curso;
   document.getElementById("em1-insc-modal-resultado").value = "aprovado";
   document.getElementById("em1-insc-modal-colocacao").value = "";
-  document.getElementById("em1-insc-modal-campos-aprovado").style.display = "block";
+  document.getElementById("em1-insc-modal-nota").value = "";
+  em1InscModalResultadoChange();
   document.getElementById("em1-insc-modal-bg").classList.add("show");
 }
 function em1InscFecharModal() { document.getElementById("em1-insc-modal-bg").classList.remove("show"); EM1_INSC_MODAL_ID = null; }
+/* "Treineiro" (25/09, 3ª rodada, sugestão dela): quem faz a prova só pra treinar, sem
+   concorrer à vaga de verdade, não tem "aprovado(a)/não aprovado(a)" -- só uma nota
+   opcional pra compartilhar, sem cobrar resultado que nem existe nesse caso. */
 function em1InscModalResultadoChange() {
-  document.getElementById("em1-insc-modal-campos-aprovado").style.display = document.getElementById("em1-insc-modal-resultado").value === "aprovado" ? "block" : "none";
+  const valor = document.getElementById("em1-insc-modal-resultado").value;
+  document.getElementById("em1-insc-modal-campos-aprovado").style.display = valor === "aprovado" ? "block" : "none";
+  document.getElementById("em1-insc-modal-campos-treineiro").style.display = valor === "treineiro" ? "block" : "none";
 }
 function em1InscConfirmarResultado() {
   if (!EM1_INSC_MODAL_ID) return;
   const resultado = document.getElementById("em1-insc-modal-resultado").value;
   const colocacao = document.getElementById("em1-insc-modal-colocacao").value.trim();
-  em1AtualizarItemInscricao(EM1_INSC_MODAL_ID, { etapa: resultado, colocacao: resultado === "aprovado" ? colocacao : "" });
+  const nota = document.getElementById("em1-insc-modal-nota").value.trim();
+  em1AtualizarItemInscricao(EM1_INSC_MODAL_ID, {
+    etapa: resultado,
+    colocacao: resultado === "aprovado" ? colocacao : "",
+    nota: resultado === "treineiro" ? nota : ""
+  });
   em1InscFecharModal();
 }
 /* Editar a etapa de uma inscrição livremente -- igual ao aluno do 9º/8º já consegue fazer
@@ -4006,9 +4021,10 @@ function em1InscAbrirEditar(id) {
   document.getElementById("em1-insc-editar-modal-nome").textContent = item.instituicao + " · " + item.curso;
   document.getElementById("em1-insc-editar-erro").textContent = "";
   const sel = document.getElementById("em1-insc-editar-etapa");
-  sel.innerHTML = EM1_ETAPAS_ORDEM.map(k => `<option value="${k}">${ETAPA_LABEL[k]}</option>`).join("") + `<option value="nao_aprovado">Não aprovado(a)</option>`;
+  sel.innerHTML = EM1_ETAPAS_ORDEM.map(k => `<option value="${k}">${ETAPA_LABEL[k]}</option>`).join("") + `<option value="nao_aprovado">Não aprovado(a)</option><option value="treineiro">Fiz como treineiro (não estou concorrendo à vaga)</option>`;
   sel.value = item.etapa;
   document.getElementById("em1-insc-editar-colocacao").value = item.colocacao || "";
+  document.getElementById("em1-insc-editar-nota").value = item.nota || "";
   em1InscEditarEtapaChange();
   document.getElementById("em1-insc-editar-modal-bg").classList.add("show");
 }
@@ -4016,12 +4032,18 @@ function em1InscFecharModalEditar() { document.getElementById("em1-insc-editar-m
 function em1InscEditarEtapaChange() {
   const etapa = document.getElementById("em1-insc-editar-etapa").value;
   document.getElementById("em1-insc-editar-campos-aprovado").style.display = etapa === "aprovado" ? "block" : "none";
+  document.getElementById("em1-insc-editar-campos-treineiro").style.display = etapa === "treineiro" ? "block" : "none";
 }
 function em1InscConfirmarEdicao() {
   if (!EM1_INSC_EDITAR_ID) return;
   const novaEtapa = document.getElementById("em1-insc-editar-etapa").value;
   const colocacao = document.getElementById("em1-insc-editar-colocacao").value.trim();
-  const mudancas = { etapa: novaEtapa, colocacao: novaEtapa === "aprovado" ? colocacao : "" };
+  const nota = document.getElementById("em1-insc-editar-nota").value.trim();
+  const mudancas = {
+    etapa: novaEtapa,
+    colocacao: novaEtapa === "aprovado" ? colocacao : "",
+    nota: novaEtapa === "treineiro" ? nota : ""
+  };
   // Voltar pra "interesse" limpa o que já tinha sido respondido sobre isenção, igual ao
   // Meu Plano do 9º -- evita ficar um "isenção concedida" pendurado numa etapa anterior.
   if (novaEtapa === "interesse") { mudancas.isencaoFase = ""; mudancas.isencaoResultado = ""; mudancas.isento = false; }
@@ -4042,8 +4064,6 @@ function em1IrParaReembolso(id) {
   statusEl.style.display = "none";
   statusEl.classList.remove("em1-tpv-status-ok");
   document.getElementById("em1-reembolso-erro").style.display = "none";
-  const nomeSalvo = localStorage.getItem("mo1em_nome_busca_" + (ESTADO.matricula || ""));
-  document.getElementById("em1-reemb-nome").value = nomeSalvo || "";
   em1ReembSelecionarIsencao("");
   document.getElementById("em1-reemb-bloco-isencao-resultado").style.display = "none";
   document.getElementById("em1-reemb-bloco-pagamento").style.display = "none";
@@ -4056,20 +4076,27 @@ function em1FecharReembolso() {
   EM1_REEMB_ALVO_ID = null;
 }
 function em1CardInscricaoHtml(item) {
-  const rejeitado = item.etapa === "nao_aprovado";
-  const idxAtual = EM1_ETAPAS_ORDEM.indexOf(rejeitado ? "aprovado" : item.etapa);
+  // "Treineiro" (25/09, 3ª rodada): quem fez a prova só de treino, sem concorrer à vaga
+  // de verdade, também termina fora da sequência normal de etapas (igual "não aprovado"),
+  // só que sem o tom de rejeição -- por isso os dois entram em "especial", mas só
+  // "nao_aprovado" pinta o passo de vermelho.
+  const especial = item.etapa === "nao_aprovado" || item.etapa === "treineiro";
+  const idxAtual = EM1_ETAPAS_ORDEM.indexOf(especial ? "aprovado" : item.etapa);
   let stepsHtml = "";
   EM1_ETAPAS_ORDEM.forEach((etapaKey, i) => {
     let cls = "step";
-    if (rejeitado && i <= idxAtual) cls += i === idxAtual ? " rejected" : " done";
-    else if (i < idxAtual || (i === idxAtual && !rejeitado)) cls += i === idxAtual ? " current" : " done";
-    let lbl = (rejeitado && i === idxAtual) ? "Não aprovado" : ETAPA_LABEL[etapaKey];
+    if (item.etapa === "nao_aprovado" && i <= idxAtual) cls += i === idxAtual ? " rejected" : " done";
+    else if (item.etapa === "treineiro" && i <= idxAtual) cls += " done";
+    else if (i < idxAtual || (i === idxAtual && !especial)) cls += i === idxAtual ? " current" : " done";
+    let lbl = ETAPA_LABEL[etapaKey];
+    if (item.etapa === "nao_aprovado" && i === idxAtual) lbl = "Não aprovado";
+    else if (item.etapa === "treineiro" && i === idxAtual) lbl = "Treineiro";
     if (etapaKey === "isencao" && item.etapa === "isencao" && item.isencaoFase === "solicitada") lbl += " — aguardando resultado";
     stepsHtml += `<div class="${cls}"><div class="line"></div><div class="dot">${i < idxAtual || (i === idxAtual && cls.includes("done")) ? "✓" : i + 1}</div><div class="lbl">${lbl}</div></div>`;
   });
 
   let proximaAcao = "";
-  if (!rejeitado) {
+  if (!especial) {
     if (item.etapa === "interesse" || (item.etapa === "isencao" && item.isencaoFase !== "solicitada")) {
       proximaAcao = `<button class="em1-btn em1-btn-primary em1-btn-sm" onclick="em1InscSolicitarIsencao('${item.id}')">📎 Solicite a isenção de taxa!</button><button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1InscNaoSolicitouIsencao('${item.id}')">Não solicitei a Isenção de Taxa</button>`;
     } else if (item.etapa === "isencao" && item.isencaoFase === "solicitada") {
@@ -4082,10 +4109,11 @@ function em1CardInscricaoHtml(item) {
   }
 
   const podeReembolso = item.etapa !== "interesse" && item.etapa !== "isencao" && !item.isento;
-  // Prioriza o aviso de aprovado quando o item chegou lá -- mesmo que também
-  // tenha isenção, "aprovado" é o estado mais atual/relevante pra mostrar.
+  // Prioriza o aviso de aprovado/treineiro quando o item chegou lá -- mesmo que também
+  // tenha isenção, é o estado mais atual/relevante pra mostrar.
   let extraHtml = "";
   if (item.etapa === "aprovado") extraHtml = `<div class="em1-insc-aprovado">🎉 Aprovado(a)!${item.colocacao ? " Colocação: " + item.colocacao : ""}</div>`;
+  else if (item.etapa === "treineiro") extraHtml = `<div class="em1-insc-treineiro">🎓 Fez como treineiro${item.nota ? " — Nota: " + item.nota : ""}</div>`;
   else if (item.isento) extraHtml = `<div class="em1-insc-isento">🎉 Você conseguiu a isenção de taxa aqui — sem reembolso a pedir.</div>`;
   const reembolsoBtn = podeReembolso ? `<button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1IrParaReembolso('${item.id}')">💰 Solicitar reembolso</button>` : "";
   const badgePlanilha = item.confirmadoPlanilha ? `<div class="em1-insc-badge-planilha">📄 Confirmado na planilha da equipe</div>` : "";
@@ -4294,11 +4322,14 @@ function em1EnviarReembolso() {
   }
   const vestibular = itemAlvo.instituicao;
   const curso = itemAlvo.curso;
-  const nomeAluno = val("em1-reemb-nome");
+  // Nome completo do aluno não é mais perguntado aqui (25/09, 3ª rodada) -- o RA já
+  // identifica quem está pedindo, então reaproveita o nome que ele já digitou em algum
+  // momento anterior (busca por nome, ver em1IniciarReembolso), se houver, só como
+  // informação extra pra planilha -- nunca bloqueia o envio.
+  const nomeAluno = localStorage.getItem("mo1em_nome_busca_" + (ESTADO.matricula || "")) || "";
   const observacoes = val("em1-reemb-observacoes");
 
   const faltando = [];
-  if (!nomeAluno) faltando.push("seu nome completo");
   if (!EM1_REEMB_ISENCAO) faltando.push("se solicitou isenção");
   if (EM1_REEMB_ISENCAO === "Sim" && !EM1_REEMB_CONSEGUIU) faltando.push("se conseguiu a isenção");
   if (EM1_REEMB_ISENCAO === "Sim" && EM1_REEMB_CONSEGUIU === "Sim" && !arq("em1-reemb-comprovante-isencao")) faltando.push("comprovante de isenção da taxa");
@@ -4388,7 +4419,6 @@ function em1EnviarReembolso() {
         if (ok) {
           statusEl.classList.add("em1-tpv-status-ok");
           statusEl.textContent = "✅ Solicitação enviada! Acompanhe com seu tutor(a).";
-          localStorage.setItem("mo1em_nome_busca_" + (ESTADO.matricula || ""), nomeAluno);
           em1AtualizarIsencaoDoAlvoReembolso(itemAlvo.id);
           mostrarToast("💰 Solicitação de reembolso enviada!");
           setTimeout(em1FecharReembolso, 1800);
