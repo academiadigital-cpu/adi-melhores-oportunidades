@@ -1226,33 +1226,12 @@ select.em1-cat-search option{color:#001433;font-weight:700}
         <div class="em1-atividades-intro">💰 Solicitação de reembolso da taxa de inscrição de <strong id="em1-reemb-alvo-nome"></strong>. ⚠️ O Ismart reembolsa apenas <strong>1 inscrição por aluno</strong> — a de maior valor entre as que você pagou.</div>
         <div class="em1-tpv-status" id="em1-reembolso-status" style="display:none"></div>
 
-        <div class="em1-tpv-pergunta">
-          <label>Você solicitou a isenção da taxa desse vestibular? *</label>
-          <div class="em1-tpv-radio-row">
-            <div class="em1-tpv-radio-opt" id="em1-reemb-isencao-sim" onclick="em1ReembSelecionarIsencao('Sim')">✅ Sim</div>
-            <div class="em1-tpv-radio-opt" id="em1-reemb-isencao-nao" onclick="em1ReembSelecionarIsencao('Não')">❌ Não</div>
-          </div>
+        <div class="em1-tpv-pergunta" id="em1-reemb-bloco-comprovante-negativa" style="display:none">
+          <label>Comprovante de que a isenção foi negada *</label>
+          <input type="file" id="em1-reemb-comprovante-negativa" accept="image/*,.pdf">
         </div>
 
-        <div id="em1-reemb-bloco-isencao-resultado" style="display:none">
-          <div class="em1-tpv-pergunta">
-            <label>Você conseguiu a isenção da taxa? *</label>
-            <div class="em1-tpv-radio-row">
-              <div class="em1-tpv-radio-opt" id="em1-reemb-conseguiu-sim" onclick="em1ReembSelecionarConseguiu('Sim')">✅ Sim</div>
-              <div class="em1-tpv-radio-opt" id="em1-reemb-conseguiu-nao" onclick="em1ReembSelecionarConseguiu('Não')">❌ Não</div>
-            </div>
-          </div>
-          <div class="em1-tpv-pergunta" id="em1-reemb-bloco-comprovante-isencao" style="display:none">
-            <label>Comprovante de isenção da taxa *</label>
-            <input type="file" id="em1-reemb-comprovante-isencao" accept="image/*,.pdf">
-          </div>
-          <div class="em1-tpv-pergunta" id="em1-reemb-bloco-comprovante-negativa" style="display:none">
-            <label>Comprovante de que a isenção foi negada *</label>
-            <input type="file" id="em1-reemb-comprovante-negativa" accept="image/*,.pdf">
-          </div>
-        </div>
-
-        <div id="em1-reemb-bloco-pagamento" style="display:none">
+        <div id="em1-reemb-bloco-pagamento">
           <div class="em1-tpv-pergunta">
             <label>Valor pago na inscrição (R$) *</label>
             <input type="text" id="em1-reemb-valor" placeholder="Ex: 85,00"/>
@@ -3865,39 +3844,10 @@ function em1EnviarTPV() {
    (respostas)" que a Heloísa já usa pro formulário de inscrição de reembolsos (18/09).
    Mesmo padrão honesto de envio do TPV: só marca como enviado quando a planilha confirma
    {"status":"ok"}, com até 3 tentativas -- nunca finge sucesso só porque a rede não deu erro. */
-let EM1_REEMB_ISENCAO = "";   // "Sim" | "Não" | ""
-let EM1_REEMB_CONSEGUIU = ""; // "Sim" | "Não" | ""
 let EM1_REEMB_PIX = "";       // "Sim" | "Não" | ""
 function em1ReembToggleRadio(prefixo, valor, estadoAtual) {
   document.getElementById(prefixo + "-sim").classList.toggle("em1-sel", valor === "Sim");
   document.getElementById(prefixo + "-nao").classList.toggle("em1-sel", valor === "Não");
-}
-function em1ReembSelecionarIsencao(valor) {
-  EM1_REEMB_ISENCAO = valor;
-  em1ReembToggleRadio("em1-reemb-isencao", valor);
-  const blocoResultado = document.getElementById("em1-reemb-bloco-isencao-resultado");
-  const blocoPagamento = document.getElementById("em1-reemb-bloco-pagamento");
-  if (valor === "Sim") {
-    blocoResultado.style.display = "block";
-    // se ainda não respondeu se conseguiu, esconde o bloco de pagamento até responder
-    if (EM1_REEMB_CONSEGUIU !== "Não") blocoPagamento.style.display = "none";
-  } else {
-    blocoResultado.style.display = "none";
-    EM1_REEMB_CONSEGUIU = "";
-    em1ReembToggleRadio("em1-reemb-conseguiu", "");
-    document.getElementById("em1-reemb-bloco-comprovante-isencao").style.display = "none";
-    document.getElementById("em1-reemb-bloco-comprovante-negativa").style.display = "none";
-    blocoPagamento.style.display = "block";
-  }
-}
-function em1ReembSelecionarConseguiu(valor) {
-  EM1_REEMB_CONSEGUIU = valor;
-  em1ReembToggleRadio("em1-reemb-conseguiu", valor);
-  document.getElementById("em1-reemb-bloco-comprovante-isencao").style.display = valor === "Sim" ? "block" : "none";
-  document.getElementById("em1-reemb-bloco-comprovante-negativa").style.display = valor === "Não" ? "block" : "none";
-  // se conseguiu a isenção, não pagou nada -- não há reembolso a pedir, então esconde o bloco de pagamento.
-  // se a isenção foi negada, ele pagou a inscrição normalmente e pode pedir reembolso.
-  document.getElementById("em1-reemb-bloco-pagamento").style.display = valor === "Não" ? "block" : "none";
 }
 function em1ReembSelecionarPix(valor) {
   EM1_REEMB_PIX = valor;
@@ -3906,9 +3856,6 @@ function em1ReembSelecionarPix(valor) {
   document.getElementById("em1-reemb-bloco-bancario").style.display = valor === "Não" ? "block" : "none";
 }
 function em1IniciarReembolso() {
-  em1ReembSelecionarIsencao("");
-  document.getElementById("em1-reemb-bloco-isencao-resultado").style.display = "none";
-  document.getElementById("em1-reemb-bloco-pagamento").style.display = "none";
   em1RenderizarInscricoes();
   // Pré-preenche o nome com o que o aluno já digitou numa submissão anterior (não obriga
   // reescrever toda vez) e, se já tiver um nome salvo, aproveita pra tentar casar registros
@@ -4070,9 +4017,11 @@ function em1IrParaReembolso(id) {
   statusEl.style.display = "none";
   statusEl.classList.remove("em1-tpv-status-ok");
   document.getElementById("em1-reembolso-erro").style.display = "none";
-  em1ReembSelecionarIsencao("");
-  document.getElementById("em1-reemb-bloco-isencao-resultado").style.display = "none";
-  document.getElementById("em1-reemb-bloco-pagamento").style.display = "none";
+  // A resposta de isenção já foi dada pelos botões do próprio card (ver em1CardInscricaoHtml) --
+  // esse formulário não pergunta de novo (25/09, 4ª rodada). Só mostra o campo de comprovante
+  // quando a isenção foi negada; o resto (pagamento/PIX) é sempre relevante aqui, já que
+  // "podeReembolso" só libera este botão quando não houve isenção concedida.
+  document.getElementById("em1-reemb-bloco-comprovante-negativa").style.display = item.isencaoResultado === "negada" ? "block" : "none";
   const wrap = document.getElementById("em1-reembolso-wrap");
   wrap.style.display = "block";
   wrap.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -4296,24 +4245,6 @@ function em1VerificarInscricoesNoServidor(nomeBusca) {
       if (nomeBusca && statusEl) statusEl.textContent = "⚠️ Não consegui buscar agora, tente de novo em instantes.";
     });
 }
-function em1ReembPrecisaPagamento() {
-  // precisa preencher os campos de pagamento/reembolso quando não pediu isenção,
-  // ou pediu e foi negada
-  return EM1_REEMB_ISENCAO === "Não" || (EM1_REEMB_ISENCAO === "Sim" && EM1_REEMB_CONSEGUIU === "Não");
-}
-/* Depois que a solicitação de reembolso é enviada com sucesso, guarda a resposta de isenção
-   (Sim/Não/conseguiu) de volta no MESMO card -- reaproveita em1AtualizarItemInscricao, que já
-   dispara o em1EnviarTracking pra planilha de acompanhamento sozinho. Não mexe na etapa do
-   card (isso é só dos botões ✅/❌ do próprio card) -- só garante que isencaoFase/isencaoResultado
-   fiquem certos na planilha mesmo se o aluno respondeu aqui em vez de pelos botões. */
-function em1AtualizarIsencaoDoAlvoReembolso(id) {
-  const mudancas = {
-    isencaoFase: EM1_REEMB_ISENCAO === "Sim" ? "solicitada" : "nao_solicitada",
-    isencaoResultado: EM1_REEMB_ISENCAO === "Sim" ? (EM1_REEMB_CONSEGUIU === "Sim" ? "concedida" : "negada") : "nao_solicitada",
-    isento: EM1_REEMB_ISENCAO === "Sim" && EM1_REEMB_CONSEGUIU === "Sim"
-  };
-  em1AtualizarItemInscricao(id, mudancas, "reembolso_solicitado");
-}
 function em1EnviarReembolso() {
   const erroEl = document.getElementById("em1-reembolso-erro");
   const statusEl = document.getElementById("em1-reembolso-status");
@@ -4335,36 +4266,38 @@ function em1EnviarReembolso() {
   const nomeAluno = localStorage.getItem("mo1em_nome_busca_" + (ESTADO.matricula || "")) || "";
   const observacoes = val("em1-reemb-observacoes");
 
-  const faltando = [];
-  if (!EM1_REEMB_ISENCAO) faltando.push("se solicitou isenção");
-  if (EM1_REEMB_ISENCAO === "Sim" && !EM1_REEMB_CONSEGUIU) faltando.push("se conseguiu a isenção");
-  if (EM1_REEMB_ISENCAO === "Sim" && EM1_REEMB_CONSEGUIU === "Sim" && !arq("em1-reemb-comprovante-isencao")) faltando.push("comprovante de isenção da taxa");
-  if (EM1_REEMB_ISENCAO === "Sim" && EM1_REEMB_CONSEGUIU === "Não" && !arq("em1-reemb-comprovante-negativa")) faltando.push("comprovante de que a isenção foi negada");
+  // A isenção já foi respondida pelos botões do próprio card (ver em1CardInscricaoHtml) --
+  // este formulário não pergunta de novo (25/09, 4ª rodada). Deriva Sim/Não só pra manter o
+  // mesmo formato que a planilha já espera; "podeReembolso" garante que, se chegou até aqui,
+  // ou não foi pedida isenção, ou foi pedida e negada (nunca concedida).
+  const isencaoNegada = itemAlvo.isencaoResultado === "negada";
+  const isencaoSolicitada = itemAlvo.isencaoFase === "nao_solicitada" ? "Não" : "Sim";
+  const isencaoConseguida = isencaoSolicitada === "Sim" ? "Não" : "";
 
-  let valor = "", nomeTitular = "", cpfTitular = "", tipoConta = "", banco = "", agencia = "", agenciaDv = "", conta = "", contaDv = "", tipoPix = "", chavePix = "";
-  let arquivoPagamento = null, arquivoInscricao = null;
-  if (em1ReembPrecisaPagamento()) {
-    valor = val("em1-reemb-valor");
-    nomeTitular = val("em1-reemb-nome-titular");
-    cpfTitular = val("em1-reemb-cpf-titular");
-    arquivoPagamento = arq("em1-reemb-comprovante-pagamento");
-    arquivoInscricao = arq("em1-reemb-comprovante-inscricao");
-    if (!valor) faltando.push("valor pago");
-    if (!nomeTitular) faltando.push("nome do titular da conta");
-    if (!cpfTitular) faltando.push("CPF do titular da conta");
-    if (!arquivoPagamento) faltando.push("comprovante de pagamento da taxa de inscrição");
-    if (!EM1_REEMB_PIX) faltando.push("se o titular possui PIX");
-    if (EM1_REEMB_PIX === "Sim") {
-      tipoPix = val("em1-reemb-tipo-pix"); chavePix = val("em1-reemb-chave-pix");
-      if (!chavePix) faltando.push("chave PIX");
-    } else if (EM1_REEMB_PIX === "Não") {
-      tipoConta = val("em1-reemb-tipo-conta"); banco = val("em1-reemb-banco");
-      agencia = val("em1-reemb-agencia"); agenciaDv = val("em1-reemb-agencia-dv");
-      conta = val("em1-reemb-conta"); contaDv = val("em1-reemb-conta-dv");
-      if (!banco) faltando.push("banco do titular");
-      if (!agencia) faltando.push("agência");
-      if (!conta) faltando.push("conta");
-    }
+  const faltando = [];
+  if (isencaoNegada && !arq("em1-reemb-comprovante-negativa")) faltando.push("comprovante de que a isenção foi negada");
+
+  const valor = val("em1-reemb-valor");
+  const nomeTitular = val("em1-reemb-nome-titular");
+  const cpfTitular = val("em1-reemb-cpf-titular");
+  const arquivoPagamento = arq("em1-reemb-comprovante-pagamento");
+  const arquivoInscricao = arq("em1-reemb-comprovante-inscricao");
+  let tipoConta = "", banco = "", agencia = "", agenciaDv = "", conta = "", contaDv = "", tipoPix = "", chavePix = "";
+  if (!valor) faltando.push("valor pago");
+  if (!nomeTitular) faltando.push("nome do titular da conta");
+  if (!cpfTitular) faltando.push("CPF do titular da conta");
+  if (!arquivoPagamento) faltando.push("comprovante de pagamento da taxa de inscrição");
+  if (!EM1_REEMB_PIX) faltando.push("se o titular possui PIX");
+  if (EM1_REEMB_PIX === "Sim") {
+    tipoPix = val("em1-reemb-tipo-pix"); chavePix = val("em1-reemb-chave-pix");
+    if (!chavePix) faltando.push("chave PIX");
+  } else if (EM1_REEMB_PIX === "Não") {
+    tipoConta = val("em1-reemb-tipo-conta"); banco = val("em1-reemb-banco");
+    agencia = val("em1-reemb-agencia"); agenciaDv = val("em1-reemb-agencia-dv");
+    conta = val("em1-reemb-conta"); contaDv = val("em1-reemb-conta-dv");
+    if (!banco) faltando.push("banco do titular");
+    if (!agencia) faltando.push("agência");
+    if (!conta) faltando.push("conta");
   }
 
   if (faltando.length) {
@@ -4374,7 +4307,6 @@ function em1EnviarReembolso() {
   }
   erroEl.style.display = "none";
 
-  const arquivoIsencao = arq("em1-reemb-comprovante-isencao");
   const arquivoNegativa = arq("em1-reemb-comprovante-negativa");
 
   statusEl.style.display = "flex";
@@ -4382,30 +4314,29 @@ function em1EnviarReembolso() {
   statusEl.textContent = "⏳ Enviando...";
 
   Promise.all([
-    fileParaBase64(arquivoIsencao), fileParaBase64(arquivoNegativa),
+    fileParaBase64(arquivoNegativa),
     fileParaBase64(arquivoPagamento), fileParaBase64(arquivoInscricao)
-  ]).then(([isencaoB64, negativaB64, pagamentoB64, inscricaoB64]) => {
+  ]).then(([negativaB64, pagamentoB64, inscricaoB64]) => {
     const payload = {
       tipo: "reembolso_1em",
       ra: ESTADO.matricula || "",
       carimbo: new Date().toISOString(),
       nomeCompleto: nomeAluno,
       vestibular, dificuldadeRelato: "", curso,
-      isencaoSolicitada: EM1_REEMB_ISENCAO, isencaoConseguida: EM1_REEMB_ISENCAO === "Sim" ? EM1_REEMB_CONSEGUIU : "",
-      comprovanteIsencaoNome: arquivoIsencao ? arquivoIsencao.name : "", comprovanteIsencaoBase64: isencaoB64,
+      isencaoSolicitada, isencaoConseguida,
+      comprovanteIsencaoNome: "", comprovanteIsencaoBase64: null,
       comprovanteNegativaNome: arquivoNegativa ? arquivoNegativa.name : "", comprovanteNegativaBase64: negativaB64,
       comprovantePagamentoNome: arquivoPagamento ? arquivoPagamento.name : "", comprovantePagamentoBase64: pagamentoB64,
       valorReembolso: valor,
       comprovanteInscricaoNome: arquivoInscricao ? arquivoInscricao.name : "", comprovanteInscricaoBase64: inscricaoB64,
       nomeTitular, cpfTitular,
-      possuiPix: em1ReembPrecisaPagamento() ? EM1_REEMB_PIX : "",
+      possuiPix: EM1_REEMB_PIX,
       tipoPix, chavePix, tipoConta, banco, agencia, agenciaDv, conta, contaDv,
       observacoes,
     };
 
     if (!EM1_REEMBOLSO_URL) {
       statusEl.textContent = "💾 Salvo neste dispositivo (a equipe ainda vai conectar a planilha) — anote com seu tutor(a) pra não perder o prazo";
-      em1AtualizarIsencaoDoAlvoReembolso(itemAlvo.id);
       return;
     }
 
@@ -4425,7 +4356,6 @@ function em1EnviarReembolso() {
         if (ok) {
           statusEl.classList.add("em1-tpv-status-ok");
           statusEl.textContent = "✅ Solicitação enviada! Acompanhe com seu tutor(a).";
-          em1AtualizarIsencaoDoAlvoReembolso(itemAlvo.id);
           mostrarToast("💰 Solicitação de reembolso enviada!");
           setTimeout(em1FecharReembolso, 1800);
         } else if (tentativa < MAX_TENTATIVAS) {
