@@ -2057,6 +2057,8 @@ async function fazerLogin() {
     document.getElementById("view-app").style.display = "none";
     document.getElementById("view-app-1em").style.display = "flex";
     document.getElementById("em1-info-ra").textContent = "RA " + ra + " · 1º EM";
+    ESTADO.matricula = ra; // já setado acima, mas garante que em1EnviarTrackingAcesso() já enxerga o RA certo
+    em1EnviarTrackingAcesso(); // registra o acesso de verdade (login), mesmo que o aluno não faça mais nada (29/09)
     em1Iniciar(ra);
     return;
   }
@@ -2917,6 +2919,18 @@ async function carregarDadosAoVivo() {
     tarefas.push(fetchComRetry(ALUNOS_CSV_URL).then(text => {
       if (!text) return;
       const alunos = parseAlunosCSV(text);
+      // NOVO (30/09): a planilha pública de RA+Município não tem coluna de UF (de propósito, pra
+      // ficar mínima) -- então todo aluno vindo dela chega aqui com uf:null. Sem preservar o UF já
+      // conhecido (do snapshot embutido, ou de uma carga ao vivo anterior), um nome de município
+      // ambíguo (~5% dos casos, ex. "São Francisco": existe em SP/PB/SE/MG) cai no "melhor-esforço"
+      // de resolverUfMunicipio() e pode resolver pro estado errado -- foi exatamente o que aconteceu
+      // com a aluna Maria Clara Souza Oliveira (RA 2026065327, São Francisco-MG): o UF correto já
+      // estava no snapshot, mas a carga ao vivo apagava ele a cada atualização, fazendo o site
+      // recomendar escolas de São Francisco-SP (o primeiro estado da lista) em vez de MG, e sumindo
+      // com as recomendações certas perto da casa dela.
+      Object.keys(alunos).forEach(ra => {
+        if (!alunos[ra].uf && DADOS.alunos[ra] && DADOS.alunos[ra].uf) alunos[ra].uf = DADOS.alunos[ra].uf;
+      });
       // Mescla (não substitui) por cima do snapshot embutido no HTML: os RAs da planilha ao vivo
       // sempre têm prioridade (sobrescrevem), mas um RA que só existe no snapshot (ex.: RA de teste
       // fictício, ou um aluno que por algum motivo sumiu momentaneamente da planilha) continua
@@ -3919,6 +3933,20 @@ function em1EnviarTracking(item, evento) {
     colocacao: item.colocacao || ""
   }, evento);
 }
+/* Evento de acesso de verdade (login) ao Painel de Orientação Profissional -- disparado uma
+   vez, no momento do login, mesmo que o aluno não registre nenhuma inscrição depois. Sem isso,
+   "Acessos" na planilha de acompanhamento só contava quem tomava alguma ação (inscrição,
+   isenção, reembolso), deixando de fora quem só navegava pelo Mapa de Carreiras ou pelo Guia
+   (pedido da Heloísa, 29/09). Não tem "escola" associada de propósito -- o script
+   `atualizar_acompanhamento.gs` já soma qualquer linha de evento no contador de acessos, e só
+   usa eventos COM escola pra montar as colunas de "Oportunidade 1/2/3", então este evento entra
+   só na contagem de acesso, sem virar uma inscrição fantasma. */
+function em1EnviarTrackingAcesso() {
+  enviarTracking({
+    escolaId: "", nome: "Painel de Orientação Profissional", cidade: "", tipo: "",
+    tipoInteresse: "", prioridade: 0, etapa: "", isencaoFase: "", isencaoResultado: "", colocacao: ""
+  }, "acesso");
+}
 function em1AtualizarItemInscricao(id, mudancas, evento) {
   const lista = em1CarregarInscricoes();
   const item = lista.find(it => it.id === id);
@@ -4337,6 +4365,7 @@ function em1EnviarReembolso() {
 
     if (!EM1_REEMBOLSO_URL) {
       statusEl.textContent = "💾 Salvo neste dispositivo (a equipe ainda vai conectar a planilha) — anote com seu tutor(a) pra não perder o prazo";
+      em1EnviarTracking(itemAlvo, "reembolso_solicitado");
       return;
     }
 
@@ -4356,6 +4385,7 @@ function em1EnviarReembolso() {
         if (ok) {
           statusEl.classList.add("em1-tpv-status-ok");
           statusEl.textContent = "✅ Solicitação enviada! Acompanhe com seu tutor(a).";
+          em1EnviarTracking(itemAlvo, "reembolso_solicitado");
           mostrarToast("💰 Solicitação de reembolso enviada!");
           setTimeout(em1FecharReembolso, 1800);
         } else if (tentativa < MAX_TENTATIVAS) {
