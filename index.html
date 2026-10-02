@@ -1658,10 +1658,10 @@ const ALUNOS_CSV_URL = "https://docs.google.com/spreadsheets/d/1c1LvnmBW88movDTy
 // vão direto pra planilha (upsert por RA); continuam guardadas também no
 // localStorage do navegador dele como rascunho/backup.
 const EM1_TPV_ENTREGA1_URL = "https://script.google.com/macros/s/AKfycbxxG3oip_5ZRTMEzYn1aUM_FAJQ4GSpZl1cP6Et9b7EeNei9eBghYW8Yu4e3h7AXQgBog/exec";
-// Preenchida por ela depois de implantar o Apps Script "registrar_tpv_entrega2.gs" na
-// planilha nova "231026_1ano_VLF_Fase12_PainelOP" -- enquanto estiver vazia, a Entrega 2
-// só salva no dispositivo (localStorage), sem mandar nada pra planilha.
-const EM1_TPV_ENTREGA2_URL = "";
+// Link do Apps Script (Web app) "registrar_tpv_entrega2.gs", implantado por ela na
+// planilha nova "231026_1ano_VLF_Fase12_PainelOP" (02/10). Igual à Entrega 1, com upsert
+// NÃO: aqui o doPost recusa sobrescrever um RA já enviado (trava permanente, ver doc).
+const EM1_TPV_ENTREGA2_URL = "https://script.google.com/macros/s/AKfycbyav8xZ8VM55wrbRbFFghyIz56QBGLl_7aefNCUUbcUwbvgTLHi4SroKviqNUCmOfbq/exec";
 // Preencher com a URL do Apps Script (Extensões > Apps Script > Implantar) depois de colar o
 // código em EM1_REEMBOLSO_APPS_SCRIPT.gs na planilha "Vestibulares - ADI 2026 (respostas)" --
 // enquanto estiver vazio, o formulário de reembolso do 1º EM salva só neste dispositivo (18/09).
@@ -3264,7 +3264,7 @@ function em1MudarTab(tab) {
    Entregas 2 e 3 ainda não têm formulário de perguntas (ela não passou as perguntas
    ainda) -- os painéis mostram só a orientação/conteúdo do Encontro do Clube
    correspondente, e desbloqueiam sozinhos na data configurada abaixo. */
-const EM1_ENTREGA2_DESBLOQUEIO = new Date(2026, 9, 3);  // 03/10/2026 (mês 0-indexado: 9 = outubro)
+const EM1_ENTREGA2_DESBLOQUEIO = new Date(2026, 9, 2);  // liberada hoje (02/10/2026) a pedido dela, pra testar navegação antes do prazo oficial de 03/10 -- mês 0-indexado: 9 = outubro
 const EM1_ENTREGA3_DESBLOQUEIO = new Date(2026, 9, 24); // 24/10/2026
 function em1MostrarMenuAtividades() {
   document.getElementById("em1-atividades-menu").style.display = "block";
