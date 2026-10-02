@@ -663,6 +663,14 @@ select.em1-cat-search option{color:#001433;font-weight:700}
 .em1-tpv-radio-opt.em1-sel{border-color:#002561;background:#E7EAF4;color:#001433}
 .em1-tpv-radio-opt.em1-travado{cursor:default;opacity:.75}
 .em1-tpv-radio-opt.em1-travado:hover{border-color:#DCEAE1}
+.em1-tpv-check-col{display:flex;flex-direction:column;gap:8px}
+.em1-tpv-check-opt{display:flex;align-items:center;gap:10px;padding:12px 14px;border:2px solid #DCEAE1;border-radius:10px;font-weight:700;font-size:13.5px;color:#48584E;background:#fff;cursor:pointer}
+.em1-tpv-check-opt .em1-tpv-check-marca{width:20px;height:20px;border-radius:6px;border:2px solid #9BA3AF;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:900;background:#fff}
+.em1-tpv-check-opt.em1-sel{border-color:#002561;background:#E7EAF4;color:#001433}
+.em1-tpv-check-opt.em1-sel .em1-tpv-check-marca{background:#002561;border-color:#002561}
+.em1-tpv-check-opt.em1-sel .em1-tpv-check-marca::after{content:"✓"}
+.em1-tpv-check-opt.em1-travado{cursor:default;opacity:.75}
+.em1-tpv-check-opt.em1-travado:hover{border-color:#DCEAE1}
 .em1-tpv-salvar-bar{position:sticky;bottom:0;background:linear-gradient(0deg,#F3F7F4 65%,transparent);padding:16px 0 6px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .em1-insc-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:2px solid #DCEAE1;border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:13.5px;color:#48584E}
 .em1-insc-item strong{color:#001433}
@@ -1114,14 +1122,134 @@ select.em1-cat-search option{color:#001433;font-weight:700}
       <div class="em1-atividades-wrap" id="em1-entrega-2-form" style="display:none">
         <button class="em1-voltar-atividades" onclick="em1VoltarAtividades()">← Voltar pras atividades</button>
         <div class="em1-atividades-intro">
-          📝 <b>Trabalho de Projeto de Vida - Entrega 2.</b> Prazo: 23/10.
+          📝 <b>Trabalho de Projeto de Vida - Entrega 2.</b> Responda com calma — você pode navegar pelo Mapa de Carreiras a qualquer momento e voltar aqui depois, suas respostas ficam salvas neste dispositivo enquanto você digita. Toque em "Salvar progresso" sempre que quiser ter certeza de que está tudo guardado. Só quando estiver pronto de verdade, toque em "Enviar atividade" — depois de enviada, a resposta fica registrada e não pode mais ser alterada.
+          <div class="em1-tpv-status" id="em1-tpv2-status">💾 Nenhuma resposta salva ainda</div>
         </div>
+
+        <div class="em1-tpv-banner-enviado" id="em1-tpv2-banner-enviado" style="display:none">
+          <span class="em1-tpv-banner-enviado-icone">✅</span>
+          <span id="em1-tpv2-banner-enviado-texto"></span>
+        </div>
+
         <div class="em1-tpv-explicacao">
           <h3>🎓 Mundo Universitário e Mapeamento de Carreiras</h3>
           <p>Exploração das principais diferenças do que é a faculdade e as diferenças pra com a vida escolar (Extensão, Estágios) vinculando com as atividades de autonomia, profissões do futuro e tecnologia + Orientações para o TPV.</p>
         </div>
         <div class="em1-tpv-pergunta">
           <a class="em1-btn em1-btn-primary" href="https://drive.google.com/file/d/1t3I2dGeofoiaIT1Qrn3jCuCR9j2MPFYF/view?usp=sharing" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;text-align:center">🎥 Assista a gravação do Encontro do Clube sobre essa atividade!</a>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <label>Fale um pouco sobre quem é você. (opcional)</label>
+          <div class="em1-ajuda">Se preferir, escreva uma palavra que te define e explique o porquê.</div>
+          <textarea id="em1-tpv2-p0" rows="3" placeholder="Escreva livremente..." oninput="em1SalvarRascunhoTPV2()"></textarea>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <label>1. Quais são as três habilidades que você mais reconhece em si mesmo(a)? *</label>
+          <div class="em1-ajuda">Não precisam ser habilidades grandes ou extraordinárias. Pense em coisas simples do seu dia a dia: aquilo que você faz bem, que as pessoas elogiam em você ou que você percebe que consegue fazer com facilidade. Alguns exemplos: ser educado(a), organizado(a), responsável, bom(a) em ouvir, gentil, engraçado(a), curioso(a), criativo(a), persistente, bom(a) em trabalhar em grupo, ter facilidade com tecnologia ou ser alguém em quem os outros podem confiar. Explique brevemente por que escolheu cada uma.</div>
+          <textarea id="em1-tpv2-p1" rows="4" placeholder="Escreva livremente..." oninput="em1SalvarRascunhoTPV2()"></textarea>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <label>2. Quais habilidades você gostaria de desenvolver nos próximos anos? *</label>
+          <div class="em1-ajuda">Pense em habilidades acadêmicas, pessoais, sociais ou profissionais.</div>
+          <textarea id="em1-tpv2-p2" rows="4" placeholder="Escreva livremente..." oninput="em1SalvarRascunhoTPV2()"></textarea>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <label>3. Quais são os seus principais interesses? *</label>
+          <div class="em1-ajuda">Marque as áreas que mais chamam sua atenção.</div>
+          <div class="em1-tpv-check-col">
+            <div class="em1-tpv-check-opt" id="em1-tpv2-int-exatas" onclick="em1Tpv2Toggle('interesses','Ciências Exatas','em1-tpv2-int-exatas')"><span class="em1-tpv-check-marca"></span>Ciências Exatas</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-int-humanas" onclick="em1Tpv2Toggle('interesses','Ciências Humanas','em1-tpv2-int-humanas')"><span class="em1-tpv-check-marca"></span>Ciências Humanas</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-int-biologicas" onclick="em1Tpv2Toggle('interesses','Ciências Biológicas','em1-tpv2-int-biologicas')"><span class="em1-tpv-check-marca"></span>Ciências Biológicas</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-int-tecnologia" onclick="em1Tpv2Toggle('interesses','Tecnologia','em1-tpv2-int-tecnologia')"><span class="em1-tpv-check-marca"></span>Tecnologia</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-int-artes" onclick="em1Tpv2Toggle('interesses','Artes e Comunicação','em1-tpv2-int-artes')"><span class="em1-tpv-check-marca"></span>Artes e Comunicação</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-int-empreendedorismo" onclick="em1Tpv2Toggle('interesses','Empreendedorismo','em1-tpv2-int-empreendedorismo')"><span class="em1-tpv-check-marca"></span>Empreendedorismo</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-int-pensando" onclick="em1Tpv2Toggle('interesses','Estou pensando.','em1-tpv2-int-pensando')"><span class="em1-tpv-check-marca"></span>Estou pensando.</div>
+          </div>
+          <input type="text" id="em1-tpv2-p3-outro" placeholder="Outro (opcional)" oninput="em1SalvarRascunhoTPV2()" style="margin-top:8px"/>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <label>4. Você tem um sonho? Conta um pouco mais! *</label>
+          <div class="em1-ajuda">Descreva, com suas palavras, o que você deseja conquistar no futuro.</div>
+          <textarea id="em1-tpv2-p4" rows="4" placeholder="Escreva livremente..." oninput="em1SalvarRascunhoTPV2()"></textarea>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <label>5. Por que esse sonho é importante para você? *</label>
+          <div class="em1-ajuda">Explique o que faz esse objetivo ter significado na sua vida.</div>
+          <textarea id="em1-tpv2-p5" rows="4" placeholder="Escreva livremente..." oninput="em1SalvarRascunhoTPV2()"></textarea>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <label>6. Quem te apoia na realização desse sonho? *</label>
+          <div class="em1-ajuda">Pode ser sua família, amigos, professores, tutor(a) ou outras pessoas importantes para você.</div>
+          <textarea id="em1-tpv2-p6" rows="3" placeholder="Escreva livremente..." oninput="em1SalvarRascunhoTPV2()"></textarea>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <label>7. Quem te inspira e por quê? *</label>
+          <div class="em1-ajuda">Pode ser uma pessoa da sua família, um professor, uma personalidade pública, um profissional ou alguém da sua comunidade.</div>
+          <textarea id="em1-tpv2-p7" rows="3" placeholder="Escreva livremente..." oninput="em1SalvarRascunhoTPV2()"></textarea>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <label>8. Quais cursos ou profissões você está considerando neste momento? *</label>
+          <div class="em1-ajuda">Pense no que está conectado com "Aonde você quer chegar". Liste pelo menos duas opções e explique o que te atrai em cada uma.</div>
+          <textarea id="em1-tpv2-p8" rows="4" placeholder="Escreva livremente..." oninput="em1SalvarRascunhoTPV2()"></textarea>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <label>9. O que você já sabe sobre esses cursos? *</label>
+          <div class="em1-ajuda">Escreva o que você conhece sobre o curso, mercado de trabalho, rotina profissional ou possibilidades de atuação.</div>
+          <textarea id="em1-tpv2-p9" rows="4" placeholder="Escreva livremente..." oninput="em1SalvarRascunhoTPV2()"></textarea>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <label>10. O que você ainda precisa pesquisar? *</label>
+          <div class="em1-ajuda">Marque os temas que você precisa aprofundar.</div>
+          <div class="em1-tpv-check-col">
+            <div class="em1-tpv-check-opt" id="em1-tpv2-pesq-universidades" onclick="em1Tpv2Toggle('pesquisar','Universidades que oferecem o curso','em1-tpv2-pesq-universidades')"><span class="em1-tpv-check-marca"></span>Universidades que oferecem o curso</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-pesq-notacorte" onclick="em1Tpv2Toggle('pesquisar','Nota de corte do ENEM','em1-tpv2-pesq-notacorte')"><span class="em1-tpv-check-marca"></span>Nota de corte do ENEM</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-pesq-mercado" onclick="em1Tpv2Toggle('pesquisar','Mercado de trabalho','em1-tpv2-pesq-mercado')"><span class="em1-tpv-check-marca"></span>Mercado de trabalho</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-pesq-salario" onclick="em1Tpv2Toggle('pesquisar','Salário médio','em1-tpv2-pesq-salario')"><span class="em1-tpv-check-marca"></span>Salário médio</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-pesq-rotina" onclick="em1Tpv2Toggle('pesquisar','Rotina da profissão','em1-tpv2-pesq-rotina')"><span class="em1-tpv-check-marca"></span>Rotina da profissão</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-pesq-especializacao" onclick="em1Tpv2Toggle('pesquisar','Possibilidades de especialização','em1-tpv2-pesq-especializacao')"><span class="em1-tpv-check-marca"></span>Possibilidades de especialização</div>
+          </div>
+          <input type="text" id="em1-tpv2-p10-outro" placeholder="Outro (opcional)" oninput="em1SalvarRascunhoTPV2()" style="margin-top:8px"/>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <label>11. Quem pode te apoiar na construção do seu TPV? *</label>
+          <div class="em1-ajuda">Pense em pessoas que podem te ajudar com ideias, pesquisas, revisões ou orientações.</div>
+          <textarea id="em1-tpv2-p11" rows="3" placeholder="Escreva livremente..." oninput="em1SalvarRascunhoTPV2()"></textarea>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <label>12. Quais ferramentas você pretende usar para construir o seu TPV? *</label>
+          <div class="em1-ajuda">Marque as opções que acredita que podem te ajudar a organizar suas ideias, criar os slides e preparar o vídeo.</div>
+          <div class="em1-tpv-check-col">
+            <div class="em1-tpv-check-opt" id="em1-tpv2-ferr-canva" onclick="em1Tpv2Toggle('ferramentas','Canva','em1-tpv2-ferr-canva')"><span class="em1-tpv-check-marca"></span>Canva</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-ferr-ppt" onclick="em1Tpv2Toggle('ferramentas','PowerPoint (PPT)','em1-tpv2-ferr-ppt')"><span class="em1-tpv-check-marca"></span>PowerPoint (PPT)</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-ferr-slides" onclick="em1Tpv2Toggle('ferramentas','Google Slides','em1-tpv2-ferr-slides')"><span class="em1-tpv-check-marca"></span>Google Slides</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-ferr-caderno" onclick="em1Tpv2Toggle('ferramentas','Caderno ou folha de anotações','em1-tpv2-ferr-caderno')"><span class="em1-tpv-check-marca"></span>Caderno ou folha de anotações</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-ferr-docs" onclick="em1Tpv2Toggle('ferramentas','Documentos digitais (Google Docs, Word etc.)','em1-tpv2-ferr-docs')"><span class="em1-tpv-check-marca"></span>Documentos digitais (Google Docs, Word etc.)</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-ferr-videos" onclick="em1Tpv2Toggle('ferramentas','Vídeos de referência','em1-tpv2-ferr-videos')"><span class="em1-tpv-check-marca"></span>Vídeos de referência</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-ferr-pesquisas" onclick="em1Tpv2Toggle('ferramentas','Pesquisas na internet','em1-tpv2-ferr-pesquisas')"><span class="em1-tpv-check-marca"></span>Pesquisas na internet</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-ferr-profissionais" onclick="em1Tpv2Toggle('ferramentas','Conversa com profissionais da área','em1-tpv2-ferr-profissionais')"><span class="em1-tpv-check-marca"></span>Conversa com profissionais da área</div>
+            <div class="em1-tpv-check-opt" id="em1-tpv2-ferr-tutor" onclick="em1Tpv2Toggle('ferramentas','Ajuda do tutor(a)','em1-tpv2-ferr-tutor')"><span class="em1-tpv-check-marca"></span>Ajuda do tutor(a)</div>
+          </div>
+          <input type="text" id="em1-tpv2-p12-outro" placeholder="Outro (opcional)" oninput="em1SalvarRascunhoTPV2()" style="margin-top:8px"/>
+        </div>
+
+        <div id="em1-tpv2-erro" class="field-error"></div>
+
+        <div class="em1-tpv-salvar-bar" id="em1-tpv2-salvar-bar">
+          <button class="em1-btn em1-btn-secondary" onclick="em1SalvarProgressoTPV2()">💾 Salvar progresso</button>
+          <button class="em1-btn em1-btn-primary" onclick="em1EnviarTPV2()">📤 Enviar atividade</button>
         </div>
       </div>
 
@@ -1530,6 +1658,10 @@ const ALUNOS_CSV_URL = "https://docs.google.com/spreadsheets/d/1c1LvnmBW88movDTy
 // vão direto pra planilha (upsert por RA); continuam guardadas também no
 // localStorage do navegador dele como rascunho/backup.
 const EM1_TPV_ENTREGA1_URL = "https://script.google.com/macros/s/AKfycbxxG3oip_5ZRTMEzYn1aUM_FAJQ4GSpZl1cP6Et9b7EeNei9eBghYW8Yu4e3h7AXQgBog/exec";
+// Preenchida por ela depois de implantar o Apps Script "registrar_tpv_entrega2.gs" na
+// planilha nova "231026_1ano_VLF_Fase12_PainelOP" -- enquanto estiver vazia, a Entrega 2
+// só salva no dispositivo (localStorage), sem mandar nada pra planilha.
+const EM1_TPV_ENTREGA2_URL = "";
 // Preencher com a URL do Apps Script (Extensões > Apps Script > Implantar) depois de colar o
 // código em EM1_REEMBOLSO_APPS_SCRIPT.gs na planilha "Vestibulares - ADI 2026 (respostas)" --
 // enquanto estiver vazio, o formulário de reembolso do 1º EM salva só neste dispositivo (18/09).
@@ -1541,10 +1673,12 @@ const EM1_REEMBOLSO_URL = "https://script.google.com/macros/s/AKfycbyfescrvQkAd5
 // se um dia isso mudar por pedido explícito da Heloísa, reimplementar do zero com muito cuidado,
 // nunca só "preencher uma URL" de novo. Hoje o campo "Como podemos te chamar?" é só um apelido
 // opcional pra sessão atual (não fica salvo entre visitas) -- em branco, mostra "aluno(a)".
-// URL da implantação (Web App) do Google Apps Script que REGISTRA (só escreve, nunca lê nem devolve
-// nada) cada passo que o aluno dá no plano -- interesse, isenção, inscrito, prova, resultado, reembolso --
-// numa planilha privada só da equipe, identificando o aluno pelo RA (nunca pelo nome). Preencher quando
-// a Heloísa implantar o Apps Script e mandar o link publicado; até lá o envio simplesmente não acontece.
+// URL da implantação (Web App) do Google Apps Script que REGISTRA (via POST) cada passo que o
+// aluno dá no plano -- interesse, isenção, inscrito, prova, resultado, reembolso -- numa planilha
+// privada só da equipe, identificando o aluno pelo RA (nunca pelo nome). Preencher quando a
+// Heloísa implantar o Apps Script e mandar o link publicado; até lá o envio simplesmente não
+// acontece. NOVO (30/09): o mesmo endpoint também responde a GET (?ra=XXXX) pra devolver o Meu
+// Plano reconstruído a partir desse mesmo log -- ver restaurarPlanoDoServidor() mais abaixo.
 const TRACKING_API_URL = "https://script.google.com/macros/s/AKfycbzs2GpjgRiHVmsjrdrWt-PtmYVhcMLPByHQKAj1ARHmL5kGnN3S2TTMi7Ufpyis19_F/exec";
 
 const ESCOLAS_BY_ID = {};
@@ -1978,6 +2112,89 @@ function chaveStorage(matricula) { return "mo_plano_v2_" + matricula; }
 function carregarPlano(matricula) { try { const raw = localStorage.getItem(chaveStorage(matricula)); return raw ? JSON.parse(raw) : []; } catch (e) { return []; } }
 function salvarPlano() { try { localStorage.setItem(chaveStorage(ESTADO.matricula), JSON.stringify(ESTADO.plano)); } catch (e) {} }
 
+/* NOVO (30/09, pedido da Heloísa) -- restauração do Meu Plano a partir do log de eventos do
+   servidor. Até aqui, o Meu Plano do 8º/9º vivia só no localStorage do navegador -- se o aluno
+   trocasse de aparelho ou limpasse os dados, a etapa de inscrição que ele já tinha registrado
+   sumia da tela dele (mesmo com o histórico intacto do lado da equipe, no log de eventos). Isso
+   já tinha um paralelo funcionando no Painel de Orientação Profissional do 1º EM (TPV e
+   reembolso, que já leem de volta do servidor no login) -- aqui é a mesma ideia aplicada ao Meu
+   Plano do 8º/9º, reaproveitando o MESMO endpoint que já recebe os eventos (TRACKING_API_URL),
+   que agora também responde a GET.
+
+   Roda sempre no login, em segundo plano, sem travar a navegação (mesmo padrão de
+   em1VerificarTPVNoServidor). Nunca troca por algo mais antigo: cada item devolvido só substitui
+   o correspondente local quando o "dataHora" do servidor for mais novo que o "dataAtualizacao"
+   local -- assim um aluno que edita o plano em dois aparelhos diferentes nunca perde a edição
+   mais recente. Itens que só existem localmente (nunca chegaram a virar evento, por exemplo por
+   causa de uma falha de rede pontual) não são tocados nem removidos por essa restauração --
+   ela só ACRESCENTA/ATUALIZA, nunca apaga algo que o servidor não sabe explicar (a única forma
+   de remover um item é o próprio evento "removido_do_plano" no log, e o servidor já filtra esses
+   antes de devolver). */
+function restaurarPlanoDoServidor(ra) {
+  if (!TRACKING_API_URL || !ra) return;
+  fetch(TRACKING_API_URL + "?ra=" + encodeURIComponent(ra), { method: "GET" })
+    .then(resp => resp.ok ? resp.json() : null)
+    .then(dados => {
+      if (!dados || dados.status !== "ok" || !Array.isArray(dados.plano)) return;
+      mesclarPlanoRestaurado(dados.plano);
+    })
+    .catch(() => {}); // offline ou endpoint fora do ar -- segue só com o que já tinha local, como sempre
+}
+
+function mesclarPlanoRestaurado(itensServidor) {
+  if (!itensServidor || !itensServidor.length) return;
+  let mudou = false;
+  itensServidor.forEach(item => {
+    const escola = resolverEscolaRestaurada(item);
+    if (!escola) return; // não conseguiu casar com nenhuma escola conhecida -- ignora com segurança, não inventa
+    const existente = ESTADO.plano.find(p => p.escolaId === escola.id);
+    const tsServidor = item.dataHora ? new Date(item.dataHora).getTime() : 0;
+    const tsLocal = existente && existente.dataAtualizacao ? new Date(existente.dataAtualizacao).getTime() : 0;
+    if (existente && tsServidor <= tsLocal) return; // o que já está no aparelho é igual ou mais novo -- não mexe
+
+    const itemReconstruido = {
+      escolaId: escola.id, nome: escola.nome, cidade: escola.municipio + " - " + escola.uf, tipo: escola.tipo,
+      ofereceIsencao: !!(temTaxaInscricao(escola.tipo, escola.categoria) && escola.isencaoTaxa),
+      isencaoFase: item.isencaoFase || null,
+      isencaoResultado: item.isencaoResultado || null,
+      isento: item.isencaoResultado === "concedida",
+      origemEscolha: existente ? existente.origemEscolha : "recomendada",
+      tipoInteresse: item.categoriaInteresse || (existente ? existente.tipoInteresse : "boa_opcao"),
+      prioridade: item.prioridade || (existente ? existente.prioridade : 1),
+      etapa: item.etapa || "interesse",
+      colocacao: item.colocacao || "",
+      bolsa: item.bolsa || "",
+      reembolso: item.valorPago ? { valor: item.valorPago } : (existente ? existente.reembolso : null),
+      dataAtualizacao: item.dataHora || new Date().toISOString()
+    };
+    ESTADO.plano = ESTADO.plano.filter(p => p.escolaId !== escola.id);
+    ESTADO.plano.push(itemReconstruido);
+    mudou = true;
+  });
+  if (mudou) {
+    salvarPlano();
+    renderizarTudo();
+    renderizarPlano();
+  }
+}
+
+// Casa o registro que veio do log de eventos com uma escola de verdade em DADOS.escolas.
+// Tenta primeiro pelo id (se o log guardou um id reconhecível); se não achar, cai pra um match
+// por nome (+ cidade, quando tem mais de uma escola com o mesmo nome) -- nunca inventa uma
+// escola que não existe na base atual.
+function resolverEscolaRestaurada(item) {
+  if (item.escolaIdBruto && ESCOLAS_BY_ID[item.escolaIdBruto]) return ESCOLAS_BY_ID[item.escolaIdBruto];
+  const nomeAlvo = (item.escolaNome || "").trim().toLowerCase();
+  if (!nomeAlvo) return null;
+  const candidatos = DADOS.escolas.filter(e => (e.nome || "").trim().toLowerCase() === nomeAlvo);
+  if (candidatos.length <= 1) return candidatos[0] || null;
+  if (item.cidade) {
+    const porCidade = candidatos.find(e => (e.municipio + " - " + e.uf) === item.cidade);
+    if (porCidade) return porCidade;
+  }
+  return candidatos[0];
+}
+
 // Manda um "evento" pra planilha de acompanhamento da equipe (fogo-e-esquece: nunca trava a
 // navegação do aluno, ignora qualquer erro/offline em silêncio). Usa RA, nunca nome real.
 function enviarTracking(item, evento) {
@@ -2070,6 +2287,7 @@ async function fazerLogin() {
   ESTADO.persona = { ra, municipio: aluno.municipio, uf, nome };
   ESTADO.recomendadas = recomendacoesParaAluno(aluno.municipio, aluno.uf);
   ESTADO.plano = carregarPlano(ra);
+  restaurarPlanoDoServidor(ra); // (30/09) roda em segundo plano, sem travar o login -- ver função acima
   VIEW_ATUAL = "lista"; PIN_SELECIONADO = null;
 
   document.getElementById("view-login").style.display = "none";
@@ -3016,6 +3234,8 @@ function em1Iniciar(ra) {
   }
   em1CarregarRascunhoTPV();
   em1VerificarTPVNoServidor();
+  em1CarregarRascunhoTPV2();
+  em1VerificarTPV2NoServidor();
   em1MostrarMenuAtividades();
   em1AtualizarDesbloqueioEntregas();
   document.querySelectorAll("#view-app-1em .em1-tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === "guia"));
@@ -3052,6 +3272,7 @@ function em1MostrarMenuAtividades() {
   document.getElementById("em1-entrega-2-form").style.display = "none";
   document.getElementById("em1-entrega-3-form").style.display = "none";
   em1AtualizarStatusEntrega1Lista();
+  em1AtualizarStatusEntrega2Lista();
 }
 /* Se o aluno já enviou a Entrega 1 (mesma chave/lógica honesta do TPV -- só
    conta como enviado quando a planilha confirmou), o card dela na lista de
@@ -3071,6 +3292,22 @@ function em1AtualizarStatusEntrega1Lista() {
     status.classList.add("em1-pronto");
   }
 }
+/* Mesma lógica acima, pra Entrega 2 -- só avalia o rótulo "entregue"/"Disponível"
+   quando a entrega já está desbloqueada por data (antes disso, quem decide o rótulo
+   é em1AtualizarDesbloqueioEntregas, que mostra "🔒 Abre em ..."). */
+function em1AtualizarStatusEntrega2Lista() {
+  const status = document.getElementById("em1-status-entrega-2");
+  const btn = document.getElementById("em1-entrega-btn-2");
+  if (!status || !btn || btn.disabled) return;
+  let dados;
+  try { dados = JSON.parse(localStorage.getItem(em1ChaveTPV2()) || "null"); } catch (e) { dados = null; }
+  if (dados && dados.enviadoEm) {
+    status.textContent = "✅ Atividade entregue";
+  } else {
+    status.textContent = "Disponível";
+  }
+  status.classList.add("em1-pronto");
+}
 function em1AtualizarDesbloqueioEntregas() {
   const agora = new Date();
   [[2, EM1_ENTREGA2_DESBLOQUEIO], [3, EM1_ENTREGA3_DESBLOQUEIO]].forEach(([numero, dataDesbloqueio]) => {
@@ -3080,8 +3317,12 @@ function em1AtualizarDesbloqueioEntregas() {
     if (agora >= dataDesbloqueio) {
       btn.disabled = false;
       btn.classList.remove("em1-disabled");
-      status.textContent = "Disponível";
-      status.classList.add("em1-pronto");
+      if (numero === 2) {
+        em1AtualizarStatusEntrega2Lista();
+      } else {
+        status.textContent = "Disponível";
+        status.classList.add("em1-pronto");
+      }
     }
   });
 }
@@ -3848,6 +4089,305 @@ function em1EnviarTPV() {
         setTimeout(() => tentarEnviar(tentativa + 1), 1200);
       } else {
         document.getElementById("em1-tpv-status").textContent = "⚠️ Não consegui enviar agora (sem internet ou a planilha demorou pra responder) — suas respostas continuam salvas aqui, tente de novo mais tarde";
+      }
+    });
+  };
+  tentarEnviar(1);
+}
+
+/* ---- TPV - Entrega 2 (localStorage por RA + envio pra planilha própria) ----
+   Igual à Entrega 1 em espírito (rascunho local + "Salvar progresso" + "Enviar
+   atividade" com retry honesto), com 2 diferenças a pedido da Heloísa (01/10):
+   1) depois de confirmado o envio, a resposta trava DE VEZ -- não existe botão
+      "Editar minha resposta" aqui (diferente da Entrega 1). O próprio Apps Script
+      também recusa sobrescrever uma linha já confirmada (ver registrar_tpv_entrega2.gs),
+      então a trava não depende só do que acontece na tela.
+   2) 3 das perguntas são de múltipla escolha (interesses / o que precisa pesquisar /
+      ferramentas) -- guardadas como string separada por "; " (preservando o rótulo
+      "Outro: <texto>" quando preenchido), pra caber numa única coluna da planilha,
+      igual ao formulário do Google que essas perguntas vieram. */
+const EM1_TPV2_OPCOES = {
+  interesses: [
+    ["em1-tpv2-int-exatas", "Ciências Exatas"],
+    ["em1-tpv2-int-humanas", "Ciências Humanas"],
+    ["em1-tpv2-int-biologicas", "Ciências Biológicas"],
+    ["em1-tpv2-int-tecnologia", "Tecnologia"],
+    ["em1-tpv2-int-artes", "Artes e Comunicação"],
+    ["em1-tpv2-int-empreendedorismo", "Empreendedorismo"],
+    ["em1-tpv2-int-pensando", "Estou pensando."]
+  ],
+  pesquisar: [
+    ["em1-tpv2-pesq-universidades", "Universidades que oferecem o curso"],
+    ["em1-tpv2-pesq-notacorte", "Nota de corte do ENEM"],
+    ["em1-tpv2-pesq-mercado", "Mercado de trabalho"],
+    ["em1-tpv2-pesq-salario", "Salário médio"],
+    ["em1-tpv2-pesq-rotina", "Rotina da profissão"],
+    ["em1-tpv2-pesq-especializacao", "Possibilidades de especialização"]
+  ],
+  ferramentas: [
+    ["em1-tpv2-ferr-canva", "Canva"],
+    ["em1-tpv2-ferr-ppt", "PowerPoint (PPT)"],
+    ["em1-tpv2-ferr-slides", "Google Slides"],
+    ["em1-tpv2-ferr-caderno", "Caderno ou folha de anotações"],
+    ["em1-tpv2-ferr-docs", "Documentos digitais (Google Docs, Word etc.)"],
+    ["em1-tpv2-ferr-videos", "Vídeos de referência"],
+    ["em1-tpv2-ferr-pesquisas", "Pesquisas na internet"],
+    ["em1-tpv2-ferr-profissionais", "Conversa com profissionais da área"],
+    ["em1-tpv2-ferr-tutor", "Ajuda do tutor(a)"]
+  ]
+};
+let EM1_TPV2 = { interesses: [], pesquisar: [], ferramentas: [] };
+function em1ChaveTPV2() {
+  const ra = ESTADO.matricula || "anon";
+  return "mo1em_tpv2_" + ra;
+}
+function em1Tpv2Toggle(grupo, valor, elId) {
+  const el = document.getElementById(elId);
+  if (el && el.classList.contains("em1-travado")) return; // já enviado -- só visualização
+  const arr = EM1_TPV2[grupo];
+  const idx = arr.indexOf(valor);
+  if (idx >= 0) {
+    arr.splice(idx, 1);
+    if (el) el.classList.remove("em1-sel");
+  } else {
+    arr.push(valor);
+    if (el) el.classList.add("em1-sel");
+  }
+  em1SalvarRascunhoTPV2();
+}
+function em1Tpv2AplicarSelecoes(grupo, selecionadas) {
+  EM1_TPV2[grupo] = (selecionadas || []).slice();
+  EM1_TPV2_OPCOES[grupo].forEach(([id, label]) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle("em1-sel", EM1_TPV2[grupo].includes(label));
+  });
+}
+function em1Tpv2MontarMultipla(grupo, idOutro) {
+  const arr = EM1_TPV2[grupo].slice();
+  const outroEl = document.getElementById(idOutro);
+  const outro = outroEl ? outroEl.value.trim() : "";
+  if (outro) arr.push("Outro: " + outro);
+  return arr.join("; ");
+}
+/* Desfaz o que em1Tpv2MontarMultipla fez -- usado tanto pro rascunho local quanto
+   pra resposta que vem do doGet (mesmo formato de string nos dois casos). */
+function em1Tpv2Desserializar(valor) {
+  const partes = (valor || "").split(";").map(s => s.trim()).filter(Boolean);
+  const selecionadas = [];
+  let outro = "";
+  partes.forEach(p => {
+    if (p.indexOf("Outro: ") === 0) outro = p.slice(7);
+    else selecionadas.push(p);
+  });
+  return { selecionadas, outro };
+}
+function em1ColetarRespostasTPV2() {
+  return {
+    p0: document.getElementById("em1-tpv2-p0").value.trim(),
+    p1: document.getElementById("em1-tpv2-p1").value.trim(),
+    p2: document.getElementById("em1-tpv2-p2").value.trim(),
+    p3: em1Tpv2MontarMultipla("interesses", "em1-tpv2-p3-outro"),
+    p4: document.getElementById("em1-tpv2-p4").value.trim(),
+    p5: document.getElementById("em1-tpv2-p5").value.trim(),
+    p6: document.getElementById("em1-tpv2-p6").value.trim(),
+    p7: document.getElementById("em1-tpv2-p7").value.trim(),
+    p8: document.getElementById("em1-tpv2-p8").value.trim(),
+    p9: document.getElementById("em1-tpv2-p9").value.trim(),
+    p10: em1Tpv2MontarMultipla("pesquisar", "em1-tpv2-p10-outro"),
+    p11: document.getElementById("em1-tpv2-p11").value.trim(),
+    p12: em1Tpv2MontarMultipla("ferramentas", "em1-tpv2-p12-outro")
+  };
+}
+function em1SalvarRascunhoTPV2() {
+  const existente = JSON.parse(localStorage.getItem(em1ChaveTPV2()) || "{}");
+  if (existente.enviadoEm) return; // travado de vez -- não grava mais nada depois do envio confirmado
+  const dados = {
+    respostas: em1ColetarRespostasTPV2(),
+    rascunhoEm: new Date().toISOString(),
+    enviadoEm: null
+  };
+  localStorage.setItem(em1ChaveTPV2(), JSON.stringify(dados));
+  em1AtualizarStatusTPV2(dados);
+}
+function em1CarregarRascunhoTPV2() {
+  let dados;
+  try { dados = JSON.parse(localStorage.getItem(em1ChaveTPV2()) || "null"); } catch (e) { dados = null; }
+  const r = (dados && dados.respostas) || {};
+  document.getElementById("em1-tpv2-p0").value = r.p0 || "";
+  document.getElementById("em1-tpv2-p1").value = r.p1 || "";
+  document.getElementById("em1-tpv2-p2").value = r.p2 || "";
+  document.getElementById("em1-tpv2-p4").value = r.p4 || "";
+  document.getElementById("em1-tpv2-p5").value = r.p5 || "";
+  document.getElementById("em1-tpv2-p6").value = r.p6 || "";
+  document.getElementById("em1-tpv2-p7").value = r.p7 || "";
+  document.getElementById("em1-tpv2-p8").value = r.p8 || "";
+  document.getElementById("em1-tpv2-p9").value = r.p9 || "";
+  document.getElementById("em1-tpv2-p11").value = r.p11 || "";
+
+  const int = em1Tpv2Desserializar(r.p3);
+  em1Tpv2AplicarSelecoes("interesses", int.selecionadas);
+  document.getElementById("em1-tpv2-p3-outro").value = int.outro;
+
+  const pesq = em1Tpv2Desserializar(r.p10);
+  em1Tpv2AplicarSelecoes("pesquisar", pesq.selecionadas);
+  document.getElementById("em1-tpv2-p10-outro").value = pesq.outro;
+
+  const ferr = em1Tpv2Desserializar(r.p12);
+  em1Tpv2AplicarSelecoes("ferramentas", ferr.selecionadas);
+  document.getElementById("em1-tpv2-p12-outro").value = ferr.outro;
+
+  em1AtualizarStatusTPV2(dados);
+}
+/* Mesmo motivo da Entrega 1: checa na planilha própria da Entrega 2 se esse RA já
+   tem resposta confirmada, pra mostrar "você já respondeu" mesmo em outro aparelho. */
+function em1VerificarTPV2NoServidor() {
+  if (!EM1_TPV_ENTREGA2_URL) return;
+  const ra = ESTADO.matricula || "";
+  if (!ra) return;
+  fetch(EM1_TPV_ENTREGA2_URL + "?ra=" + encodeURIComponent(ra), { method: "GET" })
+    .then(resp => resp.ok ? resp.json() : null)
+    .then(dados => {
+      if (!dados || dados.status !== "ok" || !dados.encontrado) return;
+      const enviadoEm = dados.carimbo || new Date().toISOString();
+      const registro = { respostas: dados.respostas || {}, rascunhoEm: enviadoEm, enviadoEm: enviadoEm };
+      localStorage.setItem(em1ChaveTPV2(), JSON.stringify(registro));
+      em1CarregarRascunhoTPV2();
+      em1AtualizarStatusEntrega2Lista();
+    })
+    .catch(() => {});
+}
+function em1AtualizarStatusTPV2(dados) {
+  const el = document.getElementById("em1-tpv2-status");
+  if (!el) return;
+  el.classList.remove("em1-tpv-status-ok");
+  if (!dados) {
+    el.textContent = "💾 Nenhuma resposta salva ainda";
+  } else if (dados.enviadoEm) {
+    el.textContent = "✅ Respostas enviadas pra equipe em " + em1FormatarHora(dados.enviadoEm);
+  } else {
+    el.textContent = "💾 Rascunho salvo neste dispositivo — toque em \"Enviar atividade\" quando estiver pronto";
+  }
+  em1AplicarTravaTPV2(dados);
+}
+/* Diferente da Entrega 1: não existe "✏️ Editar minha resposta" aqui -- uma vez
+   enviada de verdade (planilha confirmou), a resposta fica só-leitura pra sempre,
+   a pedido da Heloísa (01/10). */
+function em1AplicarTravaTPV2(dados) {
+  const travado = !!(dados && dados.enviadoEm);
+  [
+    "em1-tpv2-p0", "em1-tpv2-p1", "em1-tpv2-p2", "em1-tpv2-p4", "em1-tpv2-p5",
+    "em1-tpv2-p6", "em1-tpv2-p7", "em1-tpv2-p8", "em1-tpv2-p9", "em1-tpv2-p11",
+    "em1-tpv2-p3-outro", "em1-tpv2-p10-outro", "em1-tpv2-p12-outro"
+  ].forEach(id => {
+    const elx = document.getElementById(id);
+    if (elx) elx.readOnly = travado;
+  });
+  ["interesses", "pesquisar", "ferramentas"].forEach(grupo => {
+    EM1_TPV2_OPCOES[grupo].forEach(([id]) => {
+      const elx = document.getElementById(id);
+      if (elx) elx.classList.toggle("em1-travado", travado);
+    });
+  });
+  const salvarBar = document.getElementById("em1-tpv2-salvar-bar");
+  const banner = document.getElementById("em1-tpv2-banner-enviado");
+  if (salvarBar) salvarBar.style.display = travado ? "none" : "flex";
+  if (banner) {
+    banner.style.display = travado ? "flex" : "none";
+    if (travado) document.getElementById("em1-tpv2-banner-enviado-texto").textContent = "Atividade entregue em " + em1FormatarHora(dados.enviadoEm) + " — as respostas abaixo são só de visualização e não podem mais ser alteradas.";
+  }
+}
+function em1SalvarProgressoTPV2() {
+  em1SalvarRascunhoTPV2();
+  const el = document.getElementById("em1-tpv2-status");
+  el.textContent = "✅ Progresso salvo neste dispositivo — toque em \"Enviar atividade\" quando estiver pronto pra avaliação";
+  el.classList.add("em1-tpv-status-ok");
+  clearTimeout(window.__em1SalvarProgresso2Timeout);
+  window.__em1SalvarProgresso2Timeout = setTimeout(() => {
+    let dados;
+    try { dados = JSON.parse(localStorage.getItem(em1ChaveTPV2()) || "null"); } catch (e) { dados = null; }
+    em1AtualizarStatusTPV2(dados);
+  }, 2500);
+}
+function em1ValidarTPV2(r) {
+  const faltando = [];
+  if (!r.p1) faltando.push("as 3 habilidades que você reconhece em si");
+  if (!r.p2) faltando.push("habilidades que gostaria de desenvolver");
+  if (!r.p3) faltando.push("principais interesses");
+  if (!r.p4) faltando.push("seu sonho");
+  if (!r.p5) faltando.push("por que esse sonho é importante");
+  if (!r.p6) faltando.push("quem te apoia nesse sonho");
+  if (!r.p7) faltando.push("quem te inspira");
+  if (!r.p8) faltando.push("cursos ou profissões que está considerando");
+  if (!r.p9) faltando.push("o que já sabe sobre esses cursos");
+  if (!r.p10) faltando.push("o que ainda precisa pesquisar");
+  if (!r.p11) faltando.push("quem pode te apoiar na construção do TPV");
+  if (!r.p12) faltando.push("ferramentas que pretende usar");
+  return faltando;
+}
+function em1EnviarTPV2() {
+  const respostas = em1ColetarRespostasTPV2();
+  const erroEl = document.getElementById("em1-tpv2-erro");
+  const faltando = em1ValidarTPV2(respostas);
+  if (faltando.length) {
+    erroEl.style.display = "block";
+    erroEl.textContent = "⚠️ Preencha antes de enviar: " + faltando.join(", ") + ".";
+    erroEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  erroEl.style.display = "none";
+
+  const ra = ESTADO.matricula || "sem-RA";
+  const agora = new Date().toISOString();
+  const payload = { tipo: "tpv_entrega2", ra: ra, serie: "1º EM", carimbo: agora, respostas: respostas };
+
+  const marcarEnviado = (carimbo) => {
+    const dados = { respostas: payload.respostas, rascunhoEm: carimbo, enviadoEm: carimbo };
+    localStorage.setItem(em1ChaveTPV2(), JSON.stringify(dados));
+    em1AtualizarStatusTPV2(dados);
+    em1MostrarSucessoTPV();
+    em1AtualizarStatusEntrega2Lista();
+  };
+
+  if (!EM1_TPV_ENTREGA2_URL) {
+    const dados = { respostas: payload.respostas, rascunhoEm: agora, enviadoEm: null };
+    localStorage.setItem(em1ChaveTPV2(), JSON.stringify(dados));
+    document.getElementById("em1-tpv2-status").textContent = "💾 Salvo neste dispositivo (a equipe ainda vai conectar a planilha)";
+    return;
+  }
+
+  // Mesmo padrão honesto de retry da Entrega 1 -- só marca como enviado quando a
+  // planilha confirma de verdade. "ja_enviado" é o Apps Script dizendo que esse RA
+  // já tinha uma resposta confirmada antes (ex.: enviou de outro aparelho) -- nesse
+  // caso trava com o carimbo REAL da planilha, nunca com o de agora.
+  const MAX_TENTATIVAS = 3;
+  const tentarEnviar = (tentativa) => {
+    document.getElementById("em1-tpv2-status").textContent = tentativa === 1
+      ? "⏳ Enviando..."
+      : "⏳ Enviando... (tentativa " + tentativa + " de " + MAX_TENTATIVAS + ")";
+    fetch(EM1_TPV_ENTREGA2_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).then(resp => {
+      if (!resp.ok) throw new Error("http_" + resp.status);
+      return resp.text();
+    }).then(texto => {
+      let resposta = null;
+      try { resposta = JSON.parse(texto); } catch (e) { resposta = null; }
+      if (resposta && resposta.status === "ok") {
+        marcarEnviado(agora);
+      } else if (resposta && resposta.status === "ja_enviado") {
+        marcarEnviado(resposta.carimbo || agora);
+      } else if (tentativa < MAX_TENTATIVAS) {
+        setTimeout(() => tentarEnviar(tentativa + 1), 1200);
+      } else {
+        document.getElementById("em1-tpv2-status").textContent = "⚠️ A planilha não confirmou o recebimento — suas respostas continuam salvas aqui, tente de novo em instantes";
+      }
+    }).catch(() => {
+      if (tentativa < MAX_TENTATIVAS) {
+        setTimeout(() => tentarEnviar(tentativa + 1), 1200);
+      } else {
+        document.getElementById("em1-tpv2-status").textContent = "⚠️ Não consegui enviar agora (sem internet ou a planilha demorou pra responder) — suas respostas continuam salvas aqui, tente de novo mais tarde";
       }
     });
   };
