@@ -975,7 +975,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
               <span class="recado-assinatura">— Equipe da Academia Digital</span>
             </div>
           </div>
-          <div class="aviso-obrigatorio">
+          <div class="aviso-obrigatorio" id="aviso-geral-plano">
             <img class="recado-owl" id="owl-aviso-obrigatorio" src="" alt="">
             <div class="recado-texto">
               <strong>Atenção, fique de olho nestas orientações sobre a inscrição:</strong>
@@ -2184,6 +2184,11 @@ function etapasDoItem(item) { return (item.ofereceIsencao && !ehOitavoAno()) ? E
 // guardado em ESTADO.persona no login (ver fazerLogin()).
 function ehOitavoAno() { return !!(ESTADO.persona && String(ESTADO.persona.serie || "").trim().charAt(0) === "8"); }
 function ehNonoAno() { return !!(ESTADO.persona && String(ESTADO.persona.serie || "9").trim().charAt(0) === "9"); }
+// RAs fixos de teste (9º ano, 1º EM, 8º ano -- ver doc do projeto). A pedido da Heloísa
+// (02/10): SOMENTE esses RAs podem editar/reenviar a Atividade da Fase 12 à vontade depois
+// de "enviada" -- qualquer aluno de verdade continua com a trava permanente de sempre.
+const RAS_TESTE = ["01", "02", "03"];
+function ehRaDeTeste() { return RAS_TESTE.indexOf(String(ESTADO.matricula || "")) !== -1; }
 const CHAVE_NACIONAL = "mo_interesse_nacional_v2";
 
 let ESTADO = { matricula: null, persona: null, recomendadas: [], plano: [] };
@@ -3017,15 +3022,19 @@ function atualizarStatusAtividade8(dados) {
   const el = document.getElementById("atividade8-status");
   if (!el) return;
   if (!dados) el.textContent = "💾 Nenhuma resposta enviada ainda";
-  else if (dados.enviadoEm) el.textContent = "✅ Respostas enviadas pra equipe em " + em1FormatarHora(dados.enviadoEm);
+  else if (dados.enviadoEm) el.textContent = ehRaDeTeste()
+    ? "🧪 RA de teste — última resposta enviada em " + em1FormatarHora(dados.enviadoEm) + " (pode editar e reenviar à vontade)"
+    : "✅ Respostas enviadas pra equipe em " + em1FormatarHora(dados.enviadoEm);
   else el.textContent = "💾 Rascunho salvo neste dispositivo — toque em \"Enviar atividade\" quando estiver pronto";
   aplicarTravaAtividade8(dados);
 }
 // Diferente de outras telas do Mapa de Oportunidades: uma vez enviada de verdade
 // (planilha confirmou), a resposta fica só-leitura pra sempre -- sem "✏️ Editar",
-// a pedido da Heloísa (mesma regra da Entrega 2 do TPV do 1º EM).
+// a pedido da Heloísa (mesma regra da Entrega 2 do TPV do 1º EM). EXCEÇÃO (02/10, a
+// pedido dela): os RAs de teste (ver RAS_TESTE) nunca travam, pra dar pra testar o
+// envio várias vezes -- só aluno de verdade trava de vez.
 function aplicarTravaAtividade8(dados) {
-  const travado = !!(dados && dados.enviadoEm);
+  const travado = !!(dados && dados.enviadoEm) && !ehRaDeTeste();
   ["atividade8-p1", "atividade8-p2"].forEach(id => { const el = document.getElementById(id); if (el) el.readOnly = travado; });
   const barra = document.getElementById("atividade8-salvar-bar");
   const banner = document.getElementById("atividade8-banner-enviado");
@@ -3035,7 +3044,7 @@ function aplicarTravaAtividade8(dados) {
     if (travado) document.getElementById("atividade8-banner-enviado-texto").textContent = "Atividade entregue em " + em1FormatarHora(dados.enviadoEm) + " — suas respostas ficam salvas aqui, só de visualização.";
   }
   const badge = document.getElementById("atividade-badge");
-  if (badge && ehOitavoAno()) badge.style.display = travado ? "inline" : "none";
+  if (badge && ehOitavoAno()) badge.style.display = (dados && dados.enviadoEm) ? "inline" : "none";
 }
 function validarAtividade8(r) {
   const faltando = [];
@@ -3121,7 +3130,9 @@ function montarResumoAtividade9() {
   if (!el) return;
   let dados;
   try { dados = JSON.parse(localStorage.getItem(chaveAtividade()) || "null"); } catch (e) { dados = null; }
-  const travado = !!(dados && dados.enviadoEm);
+  // RA de teste sempre vê o resumo AO VIVO (não o retrato congelado) -- combina com a
+  // trava desligada pra esse RA, já que ele pode continuar editando o plano e reenviando.
+  const travado = !!(dados && dados.enviadoEm) && !ehRaDeTeste();
   const lista = travado ? (dados.escolas || []) : coletarSnapshotAtividade9();
   if (!lista.length) { el.innerHTML = travado ? "" : "Você ainda não marcou interesse em nenhuma escola."; return; }
   const linhas = lista.map(item => `<li>${item.nome} — ${ETAPA_LABEL[item.etapa] || item.etapa}</li>`).join("");
@@ -3160,14 +3171,18 @@ function atualizarStatusAtividade9(dados) {
   const el = document.getElementById("atividade9-status");
   if (el) {
     if (!dados) el.textContent = "💾 Nenhuma resposta enviada ainda";
-    else if (dados.enviadoEm) el.textContent = "✅ Enviado pra equipe em " + em1FormatarHora(dados.enviadoEm);
+    else if (dados.enviadoEm) el.textContent = ehRaDeTeste()
+      ? "🧪 RA de teste — último envio em " + em1FormatarHora(dados.enviadoEm) + " (pode continuar editando o plano e reenviar à vontade)"
+      : "✅ Enviado pra equipe em " + em1FormatarHora(dados.enviadoEm);
     else el.textContent = "💾 Nenhuma resposta enviada ainda";
   }
   aplicarTravaAtividade9(dados);
   montarResumoAtividade9();
 }
+// EXCEÇÃO (02/10, a pedido dela): os RAs de teste (ver RAS_TESTE) nunca travam, pra dar
+// pra testar o envio várias vezes -- só aluno de verdade trava de vez.
 function aplicarTravaAtividade9(dados) {
-  const travado = !!(dados && dados.enviadoEm);
+  const travado = !!(dados && dados.enviadoEm) && !ehRaDeTeste();
   const barra = document.getElementById("atividade9-salvar-bar");
   const banner = document.getElementById("atividade9-banner-enviado");
   if (barra) barra.style.display = travado ? "none" : "flex";
@@ -3176,7 +3191,7 @@ function aplicarTravaAtividade9(dados) {
     if (travado) document.getElementById("atividade9-banner-enviado-texto").textContent = "Atividade entregue em " + em1FormatarHora(dados.enviadoEm) + " — o resumo abaixo é só de visualização.";
   }
   const badge = document.getElementById("atividade-badge");
-  if (badge && ehNonoAno()) badge.style.display = travado ? "inline" : "none";
+  if (badge && ehNonoAno()) badge.style.display = (dados && dados.enviadoEm) ? "inline" : "none";
 }
 function enviarAtividade9() {
   const erroEl = document.getElementById("atividade9-erro");
@@ -3265,15 +3280,17 @@ function iniciarAtividadeFase12() {
     verificarAtividade9NoServidor();
   }
 }
-// Esconde os avisos de reembolso/isenção e mostra o aviso "ainda no 8º ano" no Meu
-// Plano quando for o caso (8º ano não tem taxa de inscrição/reembolso a pedido da
-// Heloísa, 02/10).
+// Esconde o aviso fixo geral de inscrição/reembolso no Meu Plano do 8º ano (a pedido
+// da Heloísa, 02/10 — esse aviso fala de inscrição no vestibulinho/reembolso, que ainda
+// não se aplica a quem está no 8º ano) e mostra, no lugar dele, o aviso "ainda no 8º ano".
 function aplicarAvisoSerie() {
   const painel8 = document.getElementById("aviso-8ano-plano");
+  const avisoGeral = document.getElementById("aviso-geral-plano");
   const li1 = document.getElementById("aviso-li-reembolso-1");
   const li2 = document.getElementById("aviso-li-reembolso-2");
   const oitavo = ehOitavoAno();
   if (painel8) painel8.style.display = oitavo ? "flex" : "none";
+  if (avisoGeral) avisoGeral.style.display = oitavo ? "none" : "flex";
   if (li1) li1.style.display = oitavo ? "none" : "list-item";
   if (li2) li2.style.display = oitavo ? "none" : "list-item";
   const owl8 = document.getElementById("owl-aviso-8ano");
