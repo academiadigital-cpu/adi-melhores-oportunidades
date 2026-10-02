@@ -1136,7 +1136,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
           <p>Exploração das principais diferenças do que é a faculdade e as diferenças pra com a vida escolar (Extensão, Estágios) vinculando com as atividades de autonomia, profissões do futuro e tecnologia + Orientações para o TPV.</p>
         </div>
         <div class="em1-tpv-pergunta">
-          <a class="em1-btn em1-btn-primary" href="https://drive.google.com/file/d/1t3I2dGeofoiaIT1Qrn3jCuCR9j2MPFYF/view?usp=sharing" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;text-align:center">🎥 Assista a gravação do Encontro do Clube sobre essa atividade!</a>
+          <a class="em1-btn em1-btn-primary" id="em1-video-entrega2" href="#" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;text-align:center">🎥 Assista a gravação do Encontro do Clube sobre essa atividade!</a>
         </div>
 
         <div class="em1-tpv-pergunta">
@@ -1262,6 +1262,9 @@ select.em1-cat-search option{color:#001433;font-weight:700}
           <h3>🎯 TPV: Consolidação e Declaração de Intenções</h3>
           <p>Comunicação e orientações para a entrega/apresentação final do Trabalho de Projeto de Vida.</p>
         </div>
+        <div class="em1-tpv-pergunta">
+          <a class="em1-btn em1-btn-primary" id="em1-video-entrega3" href="#" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;text-align:center">🎥 Assista a gravação do Encontro do Clube sobre essa atividade!</a>
+        </div>
       </div>
 
       <div class="em1-atividades-wrap" id="em1-entrega-1-form" style="display:none">
@@ -1274,6 +1277,10 @@ select.em1-cat-search option{color:#001433;font-weight:700}
         <div class="em1-tpv-banner-enviado" id="em1-tpv-banner-enviado" style="display:none">
           <span class="em1-tpv-banner-enviado-icone">✅</span>
           <span id="em1-tpv-banner-enviado-texto"></span>
+        </div>
+
+        <div class="em1-tpv-pergunta">
+          <a class="em1-btn em1-btn-primary" id="em1-video-entrega1" href="#" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;text-align:center">🎥 Assista a gravação do Encontro do Clube sobre essa atividade!</a>
         </div>
 
         <div class="em1-tpv-pergunta">
@@ -1662,6 +1669,14 @@ const EM1_TPV_ENTREGA1_URL = "https://script.google.com/macros/s/AKfycbxxG3oip_5
 // planilha nova "231026_1ano_VLF_Fase12_PainelOP" (02/10). Igual à Entrega 1, com upsert
 // NÃO: aqui o doPost recusa sobrescrever um RA já enviado (trava permanente, ver doc).
 const EM1_TPV_ENTREGA2_URL = "https://script.google.com/macros/s/AKfycbyav8xZ8VM55wrbRbFFghyIz56QBGLl_7aefNCUUbcUwbvgTLHi4SroKviqNUCmOfbq/exec";
+// Links da gravação do Encontro do Clube de cada Entrega (botão "🎥 Assista a gravação...").
+// A Entrega 1 já teve seu encontro, por isso já tem o link real. As Entregas 2 e 3 só vão
+// ter encontro em 03/10 -- a gravação fica no Classroom e ela só vai conseguir pegar o link
+// a partir de segunda (05/10). Até lá ficam vazias de propósito: o botão aparece igual nas
+// três entregas, mas desabilitado/"em breve" quando o link ainda não foi preenchido (02/10).
+const EM1_VIDEO_ENTREGA1 = "https://drive.google.com/file/d/1t3I2dGeofoiaIT1Qrn3jCuCR9j2MPFYF/view?usp=sharing";
+const EM1_VIDEO_ENTREGA2 = "";
+const EM1_VIDEO_ENTREGA3 = "";
 // Preencher com a URL do Apps Script (Extensões > Apps Script > Implantar) depois de colar o
 // código em EM1_REEMBOLSO_APPS_SCRIPT.gs na planilha "Vestibulares - ADI 2026 (respostas)" --
 // enquanto estiver vazio, o formulário de reembolso do 1º EM salva só neste dispositivo (18/09).
@@ -3238,6 +3253,7 @@ function em1Iniciar(ra) {
   em1VerificarTPV2NoServidor();
   em1MostrarMenuAtividades();
   em1AtualizarDesbloqueioEntregas();
+  em1AplicarBotoesVideo();
   document.querySelectorAll("#view-app-1em .em1-tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === "guia"));
   document.getElementById("em1-painel-guia").classList.add("active");
   document.getElementById("em1-painel-carreiras").classList.remove("active");
@@ -3307,6 +3323,35 @@ function em1AtualizarStatusEntrega2Lista() {
     status.textContent = "Disponível";
   }
   status.classList.add("em1-pronto");
+}
+/* Botão "🎥 Assista a gravação do Encontro do Clube" das 3 Entregas -- mesmo botão nas três,
+   mas só fica clicável quando a constante EM1_VIDEO_ENTREGAn (acima) tem um link de verdade.
+   Sem link ainda, o botão some o href e mostra "em breve", sem travar a entrega em si (o
+   aluno continua respondendo normalmente). Reaplicado no login; basta preencher a constante
+   e publicar de novo quando ela mandar o link do Classroom (02/10). */
+function em1AplicarBotaoVideo(id, url) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (url) {
+    el.href = url;
+    el.textContent = "🎥 Assista a gravação do Encontro do Clube sobre essa atividade!";
+    el.style.opacity = "";
+    el.style.cursor = "pointer";
+    el.removeAttribute("aria-disabled");
+    el.onclick = null;
+  } else {
+    el.removeAttribute("href");
+    el.textContent = "🎥 Gravação do Encontro do Clube (em breve)";
+    el.style.opacity = "0.6";
+    el.style.cursor = "default";
+    el.setAttribute("aria-disabled", "true");
+    el.onclick = function (e) { e.preventDefault(); return false; };
+  }
+}
+function em1AplicarBotoesVideo() {
+  em1AplicarBotaoVideo("em1-video-entrega1", EM1_VIDEO_ENTREGA1);
+  em1AplicarBotaoVideo("em1-video-entrega2", EM1_VIDEO_ENTREGA2);
+  em1AplicarBotaoVideo("em1-video-entrega3", EM1_VIDEO_ENTREGA3);
 }
 function em1AtualizarDesbloqueioEntregas() {
   const agora = new Date();
