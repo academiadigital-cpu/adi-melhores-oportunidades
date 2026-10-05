@@ -463,6 +463,21 @@
 
   #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(120%); background: var(--navy); color: var(--navy-ink); padding: 13px 22px; border-radius: 999px; font-size: 13.5px; font-weight: 700; box-shadow: var(--shadow-lg); z-index: 200; display: flex; align-items: center; gap: 9px; transition: transform .28s cubic-bezier(.2,.9,.25,1); max-width: 90vw; }
   #toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* (05/10) Recado de parabéns pela entrega da atividade (todas as turmas): modal global + cartão fixo */
+  .parabens-bg { position: fixed; inset: 0; background: rgba(16,25,59,0.62); display: none; align-items: center; justify-content: center; z-index: 7000; padding: 20px; }
+  .parabens-bg.show { display: flex; }
+  .parabens-card { position: relative; background: #fff; color: #150a24; border-radius: 24px; max-width: 420px; width: 100%; padding: 34px 26px 28px; text-align: center; box-shadow: 0 24px 60px rgba(0,0,0,.4); border-top: 8px solid #4ac59a; }
+  .parabens-emoji { font-size: 56px; line-height: 1; margin-bottom: 10px; }
+  .parabens-card h2 { font-family: "Baloo 2", "Manrope", sans-serif; font-size: 26px; color: #10193b; margin-bottom: 10px; }
+  .parabens-posicao { display: inline-block; background: #10193b; color: #fff; border-radius: 999px; padding: 9px 20px; font-weight: 800; font-size: 16px; margin: 4px 0 14px; }
+  .parabens-posicao strong { color: #5fd9ae; font-size: 20px; }
+  .parabens-moedas { background: #fbf0ce; border: 2px solid #c99a12; color: #4a3600; border-radius: 16px; padding: 14px 16px; font-size: 16px; line-height: 1.5; font-weight: 600; margin-bottom: 20px; }
+  .parabens-moedas strong { color: #2a1d00; }
+  .parabens-card button.parabens-btn { width: 100%; border: none; cursor: pointer; background: #1f8f68; color: #fff; font-weight: 800; font-size: 16px; padding: 14px; border-radius: 14px; }
+  .parabens-card button.parabens-btn:hover { filter: brightness(1.08); }
+  .parabens-recado { display: none; align-items: flex-start; gap: 12px; background: #fbf0ce; border: 2px solid #c99a12; color: #4a3600; border-radius: 14px; padding: 14px 16px; margin: 12px 0 0; font-size: 15px; line-height: 1.55; font-weight: 600; }
+  .parabens-recado strong { color: #2a1d00; }
   footer.app-footer { text-align: center; padding: 18px 20px 26px; font-size: 14px; color: var(--ink-faint); }
 
   .whatsapp-fab {
@@ -1012,6 +1027,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
             <div id="atividade8-banner-enviado" class="status-box" style="display:none;margin-top:16px">
               <span>✅</span> <span id="atividade8-banner-enviado-texto"></span>
             </div>
+            <div class="parabens-recado" id="atividade8-parabens"></div>
             <label style="font-weight:700;display:block;margin:18px 0 6px">O que é essencial em uma escola do Ensino Médio?</label>
             <textarea class="mural-textarea" id="atividade8-p1" placeholder="Escreva aqui..."></textarea>
             <label style="font-weight:700;display:block;margin:16px 0 6px">O que você acha que precisa desenvolver para, no próximo ano, conseguir entrar em uma Melhor Oportunidade?</label>
@@ -1034,6 +1050,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
             <div id="atividade9-banner-enviado" class="status-box" style="display:none;margin-top:16px">
               <span>✅</span> <span id="atividade9-banner-enviado-texto"></span>
             </div>
+            <div class="parabens-recado" id="atividade9-parabens"></div>
             <div id="atividade9-resumo" class="hint" style="margin-top:16px"></div>
             <p id="atividade9-erro" class="aviso-box" style="display:none;margin-top:14px"></p>
             <div id="atividade9-salvar-bar" style="margin-top:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
@@ -1186,6 +1203,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
           <span class="em1-tpv-banner-enviado-icone">✅</span>
           <span id="em1-tpv2-banner-enviado-texto"></span>
         </div>
+        <div class="parabens-recado" id="em1-tpv2-parabens"></div>
 
         <div class="em1-tpv-explicacao">
           <h3>🎓 Mundo Universitário e Mapeamento de Carreiras</h3>
@@ -1697,6 +1715,15 @@ select.em1-cat-search option{color:#001433;font-weight:700}
   </div>
 </div>
 
+<div class="parabens-bg" id="parabens-bg" onclick="if(event.target===this) fecharParabensEntrega()" role="dialog" aria-modal="true" aria-labelledby="parabens-titulo">
+  <div class="parabens-card">
+    <div class="parabens-emoji">🎉🏆</div>
+    <h2 id="parabens-titulo">Parabéns pela entrega!</h2>
+    <div id="parabens-posicao-wrap" style="display:none"><div class="parabens-posicao">Você foi o <strong id="parabens-posicao-n">nº 1</strong> a entregar essa atividade!</div></div>
+    <div class="parabens-moedas">🪙 Você será <strong>recompensado(a) na Gamefik com 1.000 moedas</strong> pela entrega!</div>
+    <button class="parabens-btn" onclick="fecharParabensEntrega()">Continuar</button>
+  </div>
+</div>
 <div id="toast"></div>
 
 <script>
@@ -3024,6 +3051,36 @@ function confirmarNaoSolicitouIsencao(escolaId) {
    Oportunidades; o que é enviado é um retrato (snapshot) do Meu Plano no
    momento da confirmação.
    ========================================================================= */
+// ---------- Recado de parabéns pela entrega (05/10, todas as turmas) ----------
+// A posição ("você foi o nº X a entregar") vem do Apps Script de cada atividade (ordem em que a
+// resposta chegou na planilha, sem contar RAs de teste). Se o script ainda não devolver o número
+// (versão antiga implantada) ou for RA de teste, a frase da posição simplesmente não aparece.
+function posicaoValida(p) { const n = Number(p); return Number.isFinite(n) && n >= 1 ? Math.floor(n) : null; }
+function mostrarParabensEntrega(posicao) {
+  const pos = posicaoValida(posicao);
+  const wrap = document.getElementById("parabens-posicao-wrap");
+  if (wrap) wrap.style.display = pos ? "block" : "none";
+  const n = document.getElementById("parabens-posicao-n");
+  if (n && pos) n.textContent = "nº " + pos;
+  const bg = document.getElementById("parabens-bg");
+  if (bg) bg.classList.add("show");
+}
+function fecharParabensEntrega() {
+  const bg = document.getElementById("parabens-bg");
+  if (bg) bg.classList.remove("show");
+}
+// Cartão fixo que fica na tela da atividade depois do envio (e volta ao reabrir/trocar de aparelho).
+function renderizarRecadoParabens(elId, dados) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  if (!dados || !dados.enviadoEm) { el.style.display = "none"; el.innerHTML = ""; return; }
+  const pos = posicaoValida(dados.posicao);
+  el.innerHTML = '<span style="font-size:24px;line-height:1">🎉</span><span><strong>Parabéns pela entrega!</strong> ' +
+    (pos ? 'Você foi o <strong>nº ' + pos + '</strong> a entregar essa atividade e ' : 'Você ') +
+    'será <strong>recompensado(a) na Gamefik com 1.000 moedas</strong>. 🪙</span>';
+  el.style.display = "flex";
+}
+
 function chaveAtividade() { return "atividade_fase12_" + ESTADO.matricula; }
 
 // ---------- 8º ano ----------
@@ -3052,7 +3109,7 @@ function verificarAtividade8NoServidor() {
     .then(dados => {
       if (!dados || dados.status !== "ok" || !dados.encontrado) return;
       const enviadoEm = dados.carimbo || new Date().toISOString();
-      const registro = { respostas: dados.respostas || {}, enviadoEm: enviadoEm };
+      const registro = { respostas: dados.respostas || {}, enviadoEm: enviadoEm, posicao: posicaoValida(dados.posicao) };
       localStorage.setItem(chaveAtividade(), JSON.stringify(registro));
       carregarRascunhoAtividade8();
     })
@@ -3083,6 +3140,7 @@ function aplicarTravaAtividade8(dados) {
     banner.style.display = travado ? "flex" : "none";
     if (travado) document.getElementById("atividade8-banner-enviado-texto").textContent = "Atividade entregue em " + em1FormatarHora(dados.enviadoEm) + " — suas respostas ficam salvas aqui, só de visualização.";
   }
+  renderizarRecadoParabens("atividade8-parabens", dados);
   const badge = document.getElementById("atividade-badge");
   if (badge && ehOitavoAno()) badge.style.display = (dados && dados.enviadoEm) ? "inline" : "none";
 }
@@ -3109,11 +3167,11 @@ function enviarAtividade8() {
   const agora = new Date().toISOString();
   const payload = { tipo: "atividade_8ano_fase12", ra: ra, serie: "8º ano", carimbo: agora, qtdEscolas: ESTADO.plano.length, respostas: respostas };
 
-  const marcarEnviado = (carimbo) => {
-    const dados = { respostas: payload.respostas, enviadoEm: carimbo };
+  const marcarEnviado = (carimbo, posicao, novoEnvio) => {
+    const dados = { respostas: payload.respostas, enviadoEm: carimbo, posicao: posicaoValida(posicao) };
     localStorage.setItem(chaveAtividade(), JSON.stringify(dados));
     atualizarStatusAtividade8(dados);
-    mostrarToast("✅ Atividade enviada!");
+    if (novoEnvio) mostrarParabensEntrega(posicao);
   };
 
   if (!ATIVIDADE_8ANO_URL) {
@@ -3141,9 +3199,9 @@ function enviarAtividade8() {
       let resposta = null;
       try { resposta = JSON.parse(texto); } catch (e) { resposta = null; }
       if (resposta && resposta.status === "ok") {
-        marcarEnviado(agora);
+        marcarEnviado(agora, resposta.posicao, true);
       } else if (resposta && resposta.status === "ja_enviado") {
-        marcarEnviado(resposta.carimbo || agora);
+        marcarEnviado(resposta.carimbo || agora, resposta.posicao, false);
       } else if (tentativa < MAX_TENTATIVAS) {
         setTimeout(() => tentarEnviar(tentativa + 1), 1200);
       } else {
@@ -3201,7 +3259,7 @@ function verificarAtividade9NoServidor() {
     .then(dados => {
       if (!dados || dados.status !== "ok" || !dados.encontrado) return;
       const enviadoEm = dados.carimbo || new Date().toISOString();
-      const registro = { escolas: dados.escolas || [], enviadoEm: enviadoEm };
+      const registro = { escolas: dados.escolas || [], enviadoEm: enviadoEm, posicao: posicaoValida(dados.posicao) };
       localStorage.setItem(chaveAtividade(), JSON.stringify(registro));
       atualizarStatusAtividade9(registro);
     })
@@ -3230,6 +3288,7 @@ function aplicarTravaAtividade9(dados) {
     banner.style.display = travado ? "flex" : "none";
     if (travado) document.getElementById("atividade9-banner-enviado-texto").textContent = "Atividade entregue em " + em1FormatarHora(dados.enviadoEm) + " — o resumo abaixo é só de visualização.";
   }
+  renderizarRecadoParabens("atividade9-parabens", dados);
   const badge = document.getElementById("atividade-badge");
   if (badge && ehNonoAno()) badge.style.display = (dados && dados.enviadoEm) ? "inline" : "none";
 }
@@ -3249,11 +3308,11 @@ function enviarAtividade9() {
   const escolas = coletarSnapshotAtividade9();
   const payload = { tipo: "atividade_9ano_fase12", ra: ra, serie: "9º ano", carimbo: agora, escolas: escolas };
 
-  const marcarEnviado = (carimbo) => {
-    const dados = { escolas: escolas, enviadoEm: carimbo };
+  const marcarEnviado = (carimbo, posicao, novoEnvio) => {
+    const dados = { escolas: escolas, enviadoEm: carimbo, posicao: posicaoValida(posicao) };
     localStorage.setItem(chaveAtividade(), JSON.stringify(dados));
     atualizarStatusAtividade9(dados);
-    mostrarToast("✅ Atividade enviada!");
+    if (novoEnvio) mostrarParabensEntrega(posicao);
   };
 
   if (!ATIVIDADE_9ANO_URL) {
@@ -3277,9 +3336,9 @@ function enviarAtividade9() {
       let resposta = null;
       try { resposta = JSON.parse(texto); } catch (e) { resposta = null; }
       if (resposta && resposta.status === "ok") {
-        marcarEnviado(agora);
+        marcarEnviado(agora, resposta.posicao, true);
       } else if (resposta && resposta.status === "ja_enviado") {
-        marcarEnviado(resposta.carimbo || agora);
+        marcarEnviado(resposta.carimbo || agora, resposta.posicao, false);
       } else if (tentativa < MAX_TENTATIVAS) {
         setTimeout(() => tentarEnviar(tentativa + 1), 1200);
       } else {
@@ -4746,7 +4805,7 @@ function em1VerificarTPV2NoServidor() {
     .then(dados => {
       if (!dados || dados.status !== "ok" || !dados.encontrado) return;
       const enviadoEm = dados.carimbo || new Date().toISOString();
-      const registro = { respostas: dados.respostas || {}, rascunhoEm: enviadoEm, enviadoEm: enviadoEm };
+      const registro = { respostas: dados.respostas || {}, rascunhoEm: enviadoEm, enviadoEm: enviadoEm, posicao: posicaoValida(dados.posicao) };
       localStorage.setItem(em1ChaveTPV2(), JSON.stringify(registro));
       em1CarregarRascunhoTPV2();
       em1AtualizarStatusEntrega2Lista();
@@ -4792,6 +4851,7 @@ function em1AplicarTravaTPV2(dados) {
     banner.style.display = travado ? "flex" : "none";
     if (travado) document.getElementById("em1-tpv2-banner-enviado-texto").textContent = "Atividade entregue em " + em1FormatarHora(dados.enviadoEm) + " — as respostas abaixo são só de visualização e não podem mais ser alteradas.";
   }
+  renderizarRecadoParabens("em1-tpv2-parabens", dados);
 }
 function em1SalvarProgressoTPV2() {
   em1SalvarRascunhoTPV2();
@@ -4837,11 +4897,11 @@ function em1EnviarTPV2() {
   const agora = new Date().toISOString();
   const payload = { tipo: "tpv_entrega2", ra: ra, serie: "1º EM", carimbo: agora, respostas: respostas };
 
-  const marcarEnviado = (carimbo) => {
-    const dados = { respostas: payload.respostas, rascunhoEm: carimbo, enviadoEm: carimbo };
+  const marcarEnviado = (carimbo, posicao, novoEnvio) => {
+    const dados = { respostas: payload.respostas, rascunhoEm: carimbo, enviadoEm: carimbo, posicao: posicaoValida(posicao) };
     localStorage.setItem(em1ChaveTPV2(), JSON.stringify(dados));
     em1AtualizarStatusTPV2(dados);
-    em1MostrarSucessoTPV();
+    if (novoEnvio) mostrarParabensEntrega(posicao); // (05/10) recado com posição + 1.000 moedas Gamefik
     em1AtualizarStatusEntrega2Lista();
   };
 
@@ -4872,9 +4932,9 @@ function em1EnviarTPV2() {
       let resposta = null;
       try { resposta = JSON.parse(texto); } catch (e) { resposta = null; }
       if (resposta && resposta.status === "ok") {
-        marcarEnviado(agora);
+        marcarEnviado(agora, resposta.posicao, true);
       } else if (resposta && resposta.status === "ja_enviado") {
-        marcarEnviado(resposta.carimbo || agora);
+        marcarEnviado(resposta.carimbo || agora, resposta.posicao, false);
       } else if (tentativa < MAX_TENTATIVAS) {
         setTimeout(() => tentarEnviar(tentativa + 1), 1200);
       } else {
