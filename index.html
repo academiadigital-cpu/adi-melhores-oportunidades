@@ -5196,7 +5196,7 @@ function em1CardInscricaoHtml(item) {
   else if (item.etapa === "treineiro") extraHtml = `<div class="em1-insc-treineiro">🎓 Fez como treineiro${item.nota ? " — Nota: " + item.nota : ""}</div>`;
   else if (item.isento) extraHtml = `<div class="em1-insc-isento">🎉 Você conseguiu a isenção de taxa aqui — sem reembolso a pedir.</div>`;
   const reembolsoBtn = podeReembolso ? `<button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1IrParaReembolso('${item.id}')">💰 Solicitar reembolso</button>` : "";
-  const badgePlanilha = item.confirmadoPlanilha ? `<div class="em1-insc-badge-planilha">📄 Confirmado na planilha da equipe</div>` : "";
+  const badgePlanilha = item.confirmadoPlanilha ? `<div class="em1-insc-badge-planilha">📝 Inscrição registrada via formulário — confirmada pela equipe</div>` : "";
 
   return `<div class="em1-insc-card">
     ${badgePlanilha}
