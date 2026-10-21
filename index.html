@@ -391,6 +391,9 @@
   .status-box.reembolso { background: var(--yellow-soft); color: var(--yellow-soft-ink); }
   .taxa-opcoes { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin-top: 10px; }
   .taxa-opcoes .taxa-aviso { margin: 10px 0 0; }
+  .isencao-pergunta { margin-top: 12px; padding: 12px 14px; border-radius: var(--radius-s); background: var(--blue-soft); color: var(--blue-soft-ink); font-size: 13.5px; }
+  .isencao-pergunta p { margin: 0 0 8px; }
+  .isencao-pergunta .left-actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .modal-hint { font-size: 14.5px; margin: 0 0 4px; }
   .modal-hint a { color: var(--blue); font-weight: 700; }
 
@@ -701,6 +704,8 @@ select.em1-cat-search option{color:#001433;font-weight:700}
 .em1-insc-card-head strong{color:#001433}
 .em1-insc-card .stepper{margin:16px 0 2px}
 .em1-insc-card-acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.em1-insc-pergunta{margin-top:12px;background:#F0F7FF;border:1.5px solid #BBD7F5;border-radius:10px;padding:10px 12px;font-size:13px}
+.em1-insc-pergunta p{margin:0 0 8px}
 .em1-btn.em1-btn-sm{padding:9px 14px;font-size:12.5px}
 .em1-insc-aprovado,.em1-insc-isento{margin-top:10px;background:#F5FFF8;border:1.5px solid #A9E6BC;color:#0A7030;border-radius:10px;padding:10px 12px;font-size:13px;font-weight:700}
 .em1-insc-treineiro{margin-top:10px;background:var(--blue-soft);border:1.5px solid #A9CBE0;color:var(--blue-soft-ink);border-radius:10px;padding:10px 12px;font-size:13px;font-weight:700}
@@ -876,7 +881,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
               <h3>🧭 Como navegar pelo Mapa de Oportunidades</h3>
               <div class="guia-linha"><div class="guia-icone">🏠</div><p><strong>Escolas recomendadas:</strong> a lista de Melhores Oportunidades já filtrada pra perto de você — comece por aqui pra ver suas recomendações.</p></div>
               <div class="guia-linha"><div class="guia-icone">🌎</div><p><strong>Explorar todas as MOs do Brasil:</strong> o catálogo completo, caso você queira pesquisar oportunidades em outras regiões do país.</p></div>
-              <div class="guia-linha"><div class="guia-icone">❤️</div><p><strong>Meu Plano:</strong> onde você marca interesse, acompanha cada etapa da inscrição (isenção, inscrito, prova, resultado) e organiza sua estratégia de vestibulinhos.</p></div>
+              <div class="guia-linha"><div class="guia-icone">❤️</div><p><strong>Meu Plano:</strong> onde você marca interesse, acompanha cada etapa da inscrição (interesse, inscrito, prova, resultado — e, dentro de inscrito, a isenção da taxa) e organiza sua estratégia de vestibulinhos.</p></div>
             </div>
 
             <div class="guia-secao" id="guia-secao-prepara">
@@ -1399,7 +1404,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
 
     <div class="em1-tab-panel" id="em1-painel-reembolso">
       <div class="em1-atividades-wrap">
-        <div class="em1-atividades-intro">📋 Suas inscrições em vestibulares, com o <strong>acompanhamento de cada etapa</strong> — interesse, isenção de taxa, inscrição, prova e resultado. Os cards abaixo são <strong>criados e atualizados automaticamente</strong> sempre que você responde o formulário mais abaixo, e você pode <strong>ajustar a etapa a qualquer momento</strong> pelo ✏️.</div>
+        <div class="em1-atividades-intro">📋 Suas inscrições em vestibulares, com o <strong>acompanhamento de cada etapa</strong> — interesse, inscrição (com a isenção de taxa), prova e resultado. Os cards abaixo são <strong>criados e atualizados automaticamente</strong> sempre que você responde o formulário mais abaixo, e você pode <strong>ajustar a etapa a qualquer momento</strong> pelo ✏️.</div>
         <div id="em1-insc-lista"></div>
       </div>
 
@@ -2239,7 +2244,15 @@ const ETAPAS_ORDEM_ISENCAO = ["interesse", "isencao", "inscrito", "prova", "apro
 const ETAPA_LABEL = { interesse: "Interesse", isencao: "Isenção de taxa", inscrito: "Inscrito(a)", prova: "Prova feita", aprovado: "Aprovado(a)" };
 // Só passa pela etapa de isenção quem é de escola privada QUE oferece isenção (segundo a planilha) --
 // escola pública, ou privada sem isenção, pula direto pra "Inscrito(a)".
-function etapasDoItem(item) { return (item.ofereceIsencao && !ehOitavoAno()) ? ETAPAS_ORDEM_ISENCAO : ETAPAS_ORDEM; }
+/* (21/10, pedido da Heloísa) A isenção de taxa deixou de ser uma etapa própria do stepper: ela é uma
+   pergunta DENTRO de "Inscrito(a)" (já é uma inscrição no vestibulinho). Etapas = Interesse > Inscrito(a) >
+   Prova feita > Aprovado(a) pra todo mundo. Itens antigos com etapa "isencao" viram "inscrito" na tela. */
+function etapasDoItem(item) { return ETAPAS_ORDEM; }
+function pedeIsencaoNoItem(item) { return !!(item.ofereceIsencao && !ehOitavoAno()); }
+// Falta o aluno responder sobre a isenção (já se inscreveu, a instituição oferece isenção e ainda não há resposta final).
+function isencaoPendente(item) {
+  return pedeIsencaoNoItem(item) && item.etapa !== "interesse" && !item.isento && !item.isencaoResultado;
+}
 // 8º ano não tem isenção de taxa nem reembolso no Meu Plano (só as etapas de inscrição) --
 // a pedido da Heloísa (02/10). "serie" vem da planilha de alunos (ALUNOS_CSV_URL) e é
 // guardado em ESTADO.persona no login (ver fazerLogin()).
@@ -2365,6 +2378,88 @@ function enviarTracking(item, evento) {
   } catch (e) {}
 }
 
+/* (07/10) RESSINCRONIZAÇÃO DE EVENTOS PERDIDOS -- entre 30/09 (16h17) e a correção do coletor, o
+   Apps Script que recebe os eventos (TRACKING_API_URL) estava sem a função doPost, então tudo que
+   o aluno fez nesse período ficou só no navegador dele (localStorage) e nunca chegou na planilha
+   de acompanhamento. Aqui, no login, o site confere o que o aluno fez DEPOIS do corte e reenvia
+   (evento "ressincronizado", com a data/hora original da alteração). Só marca como enviado
+   quando o servidor confirma {status:"ok"} (sem no-cors, de propósito) -- se o coletor ainda
+   estiver fora do ar, tenta de novo no próximo login. O coletor ignora o que já estiver igual no
+   log, então reenviar nunca duplica. Limitações: não recupera o passo a passo intermediário
+   (só o estado final de cada oportunidade), nem oportunidades removidas nesse período, nem os
+   arquivos de comprovante de reembolso (o aluno precisa reenviar). */
+const RESYNC_CORTE = "2026-09-30T19:17:00.000Z"; // 30/09, 16h17 (Brasília): último evento gravado antes da pane
+function assinaturaItemResync(parts) { return parts.map(v => (v === null || v === undefined) ? "" : String(v)).join("|"); }
+function postarRessincronizacao(payload) {
+  return fetch(TRACKING_API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) })
+    .then(resp => resp.ok ? resp.json() : null)
+    .then(j => !!(j && j.status === "ok"))
+    .catch(() => false);
+}
+function ressincronizarEventosPerdidos(eh1em) {
+  try {
+    if (!TRACKING_API_URL || !ESTADO.matricula) return;
+    const ra = String(ESTADO.matricula);
+    const corte = new Date(RESYNC_CORTE).getTime();
+    const chaveLS = "mo_resync_v1_" + ra;
+    let feitos = {};
+    try { feitos = JSON.parse(localStorage.getItem(chaveLS) || "{}") || {}; } catch (e) { feitos = {}; }
+    const fila = [];
+    const posCorte = (iso) => { const t = iso ? new Date(iso).getTime() : 0; return t && t > corte; };
+
+    if (eh1em) {
+      em1CarregarInscricoes().forEach(item => {
+        if (!posCorte(item.dataAtualizacao)) return;
+        const sig = assinaturaItemResync([item.etapa, item.isencaoFase, item.isencaoResultado, item.curso, item.colocacao, item.instituicao]);
+        if (feitos["ev_" + item.id] === sig) return;
+        fila.push({ chave: "ev_" + item.id, sig, payload: {
+          ra, evento: "ressincronizado", ressincronizado: true, escolaId: item.id || "",
+          escolaNome: item.instituicao || "", cidade: "", tipoEscola: "", categoriaInteresse: item.curso || "", prioridade: "",
+          etapaAtual: item.etapa || "", isencaoFase: item.isencaoFase || "", isencaoResultado: item.isencaoResultado || "",
+          valorPago: "", colocacao: item.colocacao || "", bolsa: "", dataHora: item.dataAtualizacao
+        }});
+      });
+    } else {
+      (ESTADO.plano || []).forEach(item => {
+        if (posCorte(item.dataAtualizacao)) {
+          const sig = assinaturaItemResync([item.etapa, item.isencaoFase, item.isencaoResultado, item.tipoInteresse, item.prioridade, item.colocacao, item.bolsa]);
+          if (feitos["ev_" + item.escolaId] !== sig) {
+            fila.push({ chave: "ev_" + item.escolaId, sig, payload: {
+              ra, evento: "ressincronizado", ressincronizado: true, escolaId: item.escolaId || "",
+              escolaNome: item.nome || "", cidade: item.cidade || "", tipoEscola: item.tipo || "",
+              categoriaInteresse: item.tipoInteresse || "", prioridade: item.prioridade || "",
+              etapaAtual: item.etapa || "", isencaoFase: item.isencaoFase || "", isencaoResultado: item.isencaoResultado || "",
+              valorPago: item.reembolso ? item.reembolso.valor : "", colocacao: item.colocacao || "", bolsa: item.bolsa || "",
+              dataHora: item.dataAtualizacao
+            }});
+          }
+        }
+        const rb = item.reembolso;
+        if (rb && posCorte(rb.data) && feitos["rb_" + item.escolaId] !== "ok") {
+          fila.push({ chave: "rb_" + item.escolaId, sig: "ok", payload: {
+            tipo: "reembolso_protegido", ressincronizado: true, ra, escolaNome: item.nome || "",
+            valor: rb.valor || "", nomeResponsavel: rb.nomeResponsavel || "", formaRecebimento: rb.formaRecebimento || "",
+            tipoPix: rb.tipoPix || "", chave: rb.chave || "", banco: rb.banco || "", agencia: rb.agencia || "",
+            agenciaDv: rb.agenciaDv || "", conta: rb.conta || "", contaDv: rb.contaDv || "",
+            temComprovanteInscricao: !!rb.temComprovanteInscricao, temComprovantePagamento: !!rb.temComprovantePagamento,
+            temComprovanteRecusa: !!rb.temComprovanteRecusaIsencao, dataHora: rb.data
+          }});
+        }
+      });
+    }
+    if (!fila.length) return;
+    (async () => {
+      for (const t of fila) {
+        const ok = await postarRessincronizacao(t.payload);
+        if (!ok) break; // coletor ainda fora do ar/sem rede: tenta de novo no próximo login
+        feitos[t.chave] = t.sig;
+        try { localStorage.setItem(chaveLS, JSON.stringify(feitos)); } catch (e) {}
+        await new Promise(r => setTimeout(r, 500));
+      }
+    })();
+  } catch (e) {}
+}
+
 // Contador de interesse: só o que foi de fato marcado (botão "Marcar interesse" -> vai pro Meu Plano),
 // contado localmente neste navegador. Sem um backend compartilhado entre alunos ainda, não dá pra somar
 // o interesse de alunos diferentes -- por isso o número tende a ficar baixo/zerado num navegador novo,
@@ -2431,6 +2526,7 @@ async function fazerLogin() {
     ESTADO.matricula = ra; // já setado acima, mas garante que em1EnviarTrackingAcesso() já enxerga o RA certo
     em1EnviarTrackingAcesso(); // registra o acesso de verdade (login), mesmo que o aluno não faça mais nada (29/09)
     em1Iniciar(ra);
+    setTimeout(() => ressincronizarEventosPerdidos(true), 4000); // (07/10) reenvia o que ficou sem gravar na pane do coletor
     return;
   }
 
@@ -2460,10 +2556,23 @@ async function fazerLogin() {
   renderizarPlano();
   aplicarAvisoSerie(); // esconde reembolso/isenção e mostra o aviso "ainda no 8º ano" quando for o caso
   iniciarAtividadeFase12(); // aba "Atividade" -- conteúdo diferente por turma (8º/9º ano)
+  mapaEnviarTrackingAcesso(serieAluno); // (20/10) registra o login do 8º/9º ano, mesmo que o aluno não marque nenhuma escola
+  setTimeout(() => ressincronizarEventosPerdidos(false), 4000); // (07/10) reenvia o que ficou sem gravar na pane do coletor
 
   // (09/09) Removida de vez a busca automática do nome real (ver seção 24 do doc do projeto):
   // além de já estar desligada (ALUNO_NOME_API_URL = null), o código em si foi apagado -- assim
   // nem um preenchimento futuro dessa constante por engano volta a expor nome de aluno em tela.
+}
+/* (20/10) Evento de acesso (login) ao Mapa de Oportunidades do 8º/9º ano. Até aqui só o 1º EM mandava
+   "acesso" no login; no 8º/9º o aluno só aparecia na planilha depois de marcar uma escola, então quem
+   entrou e não fez nada era contado como "nunca acessou". O evento não leva escola de propósito: o
+   atualizar_acompanhamento.gs soma "acesso" no contador de acessos e ignora esse evento na hora de montar
+   as colunas de oportunidades, então não vira inscrição fantasma. Fogo-e-esquece, igual ao resto. */
+function mapaEnviarTrackingAcesso(serie) {
+  enviarTracking({
+    escolaId: "", nome: "Mapa de Oportunidades " + String(serie || "").trim(), cidade: "", tipo: "",
+    tipoInteresse: "", prioridade: 0, etapa: "", isencaoFase: "", isencaoResultado: "", colocacao: ""
+  }, "acesso");
 }
 function sair() {
   ESTADO = { matricula: null, persona: null, recomendadas: [], plano: [] };
@@ -2864,6 +2973,7 @@ function renderizarPlano() {
 
   ESTADO.plano.slice().sort((a, b) => b.prioridade - a.prioridade).forEach(item => {
     const escola = ESCOLAS_BY_ID[item.escolaId];
+    if (item.etapa === "isencao") item.etapa = "inscrito"; // (21/10) legado: isenção não é mais etapa
     const rejeitado = item.etapa === "nao_aprovado";
     const etapasItem = etapasDoItem(item);
     const idxAtual = etapasItem.indexOf(item.etapa);
@@ -2884,28 +2994,28 @@ function renderizarPlano() {
     let proximaAcao = "";
     if (!rejeitado) {
       if (item.etapa === "interesse") {
-        proximaAcao = (item.ofereceIsencao && !ehOitavoAno())
-          ? `<button class="btn small" onclick="abrirModalEtapa('${item.escolaId}','isencao')">Solicite a isenção de taxa!</button><button class="btn small outline-blue" onclick="confirmarNaoSolicitouIsencao('${item.escolaId}')">Não solicitei a Isenção de Taxa</button>`
-          : `<button class="btn small" onclick="abrirModalEtapa('${item.escolaId}','inscrito')">Marcar como inscrito(a)</button>`;
-      }
-      else if (item.etapa === "isencao" && item.isencaoFase !== "solicitada") {
-        proximaAcao = `<button class="btn small" onclick="abrirModalEtapa('${item.escolaId}','isencao')">Solicite a isenção de taxa!</button><button class="btn small outline-blue" onclick="confirmarNaoSolicitouIsencao('${item.escolaId}')">Não solicitei a Isenção de Taxa</button>`;
-      }
-      else if (item.etapa === "isencao" && item.isencaoFase === "solicitada") {
-        proximaAcao = `<button class="btn small" onclick="confirmarResultadoIsencao('${item.escolaId}', true)">✅ Consegui a isenção!</button><button class="btn small outline-blue" onclick="confirmarResultadoIsencao('${item.escolaId}', false)">Não consegui a isenção</button>`;
+        proximaAcao = `<button class="btn small" onclick="abrirModalEtapa('${item.escolaId}','inscrito')">Marcar como inscrito(a)</button>`;
       }
       else if (item.etapa === "inscrito") proximaAcao = `<button class="btn small" onclick="abrirModalEtapa('${item.escolaId}','prova')">Marcar prova feita</button>`;
       else if (item.etapa === "prova") proximaAcao = `<button class="btn small" onclick="abrirModalEtapa('${item.escolaId}','resultado')">Registrar resultado</button>`;
     }
 
-    const podeTaxa = item.etapa !== "interesse" && item.etapa !== "isencao" && !item.isento && !ehOitavoAno();
+    // (21/10) Pergunta de isenção dentro de "Inscrito(a)": 1) já pediu? 2) a solicitação foi aprovada? Sim/Não.
+    let isencaoHtml = "";
+    if (isencaoPendente(item)) {
+      const id = item.escolaId;
+      isencaoHtml = item.isencaoFase === "solicitada"
+        ? `<div class="isencao-pergunta"><p><strong>A solicitação da isenção foi aprovada?</strong></p><div class="left-actions"><button class="btn small" onclick="confirmarResultadoIsencao('${id}', true)">✅ Sim</button><button class="btn small outline-blue" onclick="confirmarResultadoIsencao('${id}', false)">Não</button></div></div>`
+        : `<div class="isencao-pergunta"><p><strong>Isenção da taxa de inscrição:</strong> você pediu isenção nessa instituição?</p><div class="left-actions"><button class="btn small" onclick="abrirModalEtapa('${id}','isencao')">Já pedi a isenção</button><button class="btn small outline-blue" onclick="confirmarNaoSolicitouIsencao('${id}')">Não pedi a isenção</button></div></div>`;
+    }
+    const podeTaxa = item.etapa !== "interesse" && !item.isento && !ehOitavoAno() && !isencaoPendente(item);
     let taxaHtml = "";
     if (item.isento) {
       taxaHtml = `<div class="status-box" style="background:var(--success-soft);color:var(--success-soft-ink)"><span>🎉 Você conseguiu a isenção de taxa nessa oportunidade — não tem reembolso a pedir aqui.</span></div>`;
     } else if (item.reembolso) {
       taxaHtml = `<div class="status-box reembolso"><span>💰 Reembolso solicitado (R$ ${item.reembolso.valor}) — em análise pela coordenação.</span></div>`;
     } else if (podeTaxa) {
-      taxaHtml = `<div class="taxa-opcoes"><button class="btn small outline-blue" onclick="abrirModalReembolso('${item.escolaId}')">💰 Solicitar reembolso</button><p class="taxa-aviso aviso-box">⚠️ O Ismart reembolsa apenas <strong>1 inscrição por aluno</strong> — a de maior valor entre as que você pagou.</p></div>`;
+      taxaHtml = `<div class="taxa-opcoes">${item.isencaoResultado === "negada" ? '<p class="taxa-aviso aviso-box" style="margin:0">Sua isenção não foi aprovada. Se você pagou a taxa de inscrição, peça o reembolso aqui.</p>' : ""}<button class="btn small outline-blue" onclick="abrirModalReembolso('${item.escolaId}')">💰 Solicitar reembolso</button><p class="taxa-aviso aviso-box">⚠️ O Ismart reembolsa apenas <strong>1 inscrição por aluno</strong> — a de maior valor entre as que você pagou.</p></div>`;
     }
 
     let aprovadoHtml = "";
@@ -2943,6 +3053,7 @@ function renderizarPlano() {
       <div class="stepper">${stepsHtml}</div>
       ${aprovadoHtml}
       ${agendaHtml}
+      ${isencaoHtml}
       <div class="plano-actions"><div class="left-actions">${proximaAcao}</div><div class="right-actions"><button class="btn small ghost" onclick="abrirModalEditarPlano('${item.escolaId}')">✏️ Editar</button></div></div>
       ${taxaHtml}
     `;
@@ -2964,8 +3075,8 @@ function abrirModalEtapa(escolaId, novaEtapa) {
   const campos = document.getElementById("modal-etapa-campos");
   campos.innerHTML = "";
   if (novaEtapa === "isencao") {
-    titulo.textContent = "Solicite a isenção de taxa!";
-    sub.textContent = item.nome + " — o pedido é feito direto no site da instituição. Depois de pedir lá, anexe aqui o comprovante da sua solicitação.";
+    titulo.textContent = "Registre seu pedido de isenção";
+    sub.textContent = item.nome + " — o pedido de isenção é feito direto no site da instituição. Se você já pediu lá, anexe aqui o comprovante da sua solicitação.";
     campos.innerHTML = (escola && escola.site ? `<p class="modal-hint"><a href="${escola.site}" target="_blank" rel="noopener">🔗 Abrir site da instituição ↗</a></p>` : "") +
       `<label>Comprovante da solicitação de isenção</label><input id="etapa-comprovante-isencao" type="file" accept="image/*,.pdf">`;
   }
@@ -2988,7 +3099,7 @@ function abrirModalEtapa(escolaId, novaEtapa) {
 function confirmarEtapa() {
   const { item, novaEtapa } = MODAL_CTX;
   if (novaEtapa === "isencao") {
-    item.etapa = "isencao";
+    if (item.etapa === "interesse" || item.etapa === "isencao") item.etapa = "inscrito"; // (21/10) isenção é pergunta dentro de "Inscrito(a)"
     item.isencaoFase = "solicitada";
   } else if (novaEtapa === "resultado") {
     const resultado = document.getElementById("etapa-resultado").value;
@@ -3003,7 +3114,7 @@ function confirmarEtapa() {
   if (dataProvaEl) item.dataProva = dataProvaEl.value || null;
   item.dataAtualizacao = new Date().toISOString();
   salvarPlano(); fecharModal("modal-etapa"); renderizarPlano();
-  enviarTracking(item, item.etapa);
+  enviarTracking(item, novaEtapa === "isencao" ? "isencao" : item.etapa);
   mostrarToast(novaEtapa === "isencao" ? "📎 Pedido de isenção registrado!" : "📌 Etapa atualizada!");
   if (novaEtapa === "inscrito") mostrarRecado("inscrito");
   else if (novaEtapa === "prova") mostrarRecado("prova");
@@ -3014,11 +3125,11 @@ function confirmarResultadoIsencao(escolaId, conseguiu) {
   if (!item) return;
   item.isencaoResultado = conseguiu ? "concedida" : "negada";
   item.isento = conseguiu;
-  item.etapa = "inscrito";
+  if (item.etapa === "interesse" || item.etapa === "isencao") item.etapa = "inscrito"; // nunca faz o aluno voltar de etapa
   item.dataAtualizacao = new Date().toISOString();
   salvarPlano(); renderizarPlano();
   enviarTracking(item, "isencao_" + item.isencaoResultado);
-  mostrarToast(conseguiu ? "🎉 Que ótimo — isenção conseguida!" : "📌 Sem problema, agora é só se inscrever normalmente.");
+  mostrarToast(conseguiu ? "🎉 Que ótimo — isenção conseguida!" : "📌 Isenção não aprovada. Se você pagou a taxa, peça o reembolso no card.");
   if (conseguiu) mostrarRecado("isencaoConcedida");
 }
 function confirmarNaoSolicitouIsencao(escolaId) {
@@ -3027,12 +3138,11 @@ function confirmarNaoSolicitouIsencao(escolaId) {
   item.isencaoFase = "nao_solicitada";
   item.isencaoResultado = "nao_solicitada";
   item.isento = false;
-  item.etapa = "inscrito";
+  if (item.etapa === "interesse" || item.etapa === "isencao") item.etapa = "inscrito";
   item.dataAtualizacao = new Date().toISOString();
   salvarPlano(); renderizarPlano();
   enviarTracking(item, "isencao_nao_solicitada");
-  mostrarToast("📌 Etapa atualizada — marcado(a) como inscrito(a)!");
-  mostrarRecado("inscrito");
+  mostrarToast("📌 Anotado — sem pedido de isenção. Se você pagar a taxa, poderá pedir o reembolso.");
 }
 
 /* =========================================================================
@@ -3563,7 +3673,7 @@ function abrirModalEditarPlano(escolaId) {
   const sel = document.getElementById("editar-plano-etapa");
   const opcoes = etapasDoItem(item).slice();
   sel.innerHTML = opcoes.map(k => `<option value="${k}">${ETAPA_LABEL[k]}</option>`).join("") + `<option value="nao_aprovado">Não aprovado(a)</option>`;
-  sel.value = item.etapa;
+  sel.value = item.etapa === "isencao" ? "inscrito" : item.etapa;
 
   const btnRemover = document.getElementById("btn-remover-plano");
   btnRemover.textContent = "🗑️ Remover oportunidade do plano";
@@ -4988,7 +5098,7 @@ function em1IniciarReembolso() {
    compartilhadas pelas duas visões). As transições simples (isenção,
    inscrito, prova feita) acontecem direto pelos botões do card; só o
    resultado final (aprovado/não aprovado + colocação) abre um modal curto. */
-const EM1_ETAPAS_ORDEM = ["interesse", "isencao", "inscrito", "prova", "aprovado"];
+const EM1_ETAPAS_ORDEM = ["interesse", "inscrito", "prova", "aprovado"]; // (21/10) isenção virou pergunta dentro de "Inscrito(a)"
 let EM1_INSC_MODAL_ID = null;
 let EM1_INSC_EDITAR_ID = null;
 function em1ChaveInscricoes() {
@@ -5053,9 +5163,12 @@ function em1AtualizarItemInscricao(id, mudancas, evento) {
   em1EnviarTracking(item, evento || item.etapa);
   em1RenderizarInscricoes();
 }
-function em1InscSolicitarIsencao(id) { em1AtualizarItemInscricao(id, { etapa: "isencao", isencaoFase: "solicitada" }, "isencao_solicitada"); }
-function em1InscNaoSolicitouIsencao(id) { em1AtualizarItemInscricao(id, { etapa: "inscrito", isencaoFase: "nao_solicitada", isencaoResultado: "nao_solicitada", isento: false }, "isencao_nao_solicitada"); }
-function em1InscResultadoIsencao(id, conseguiu) { em1AtualizarItemInscricao(id, { etapa: "inscrito", isencaoResultado: conseguiu ? "concedida" : "negada", isento: conseguiu }, "isencao_" + (conseguiu ? "concedida" : "negada")); }
+// (21/10) Isenção é pergunta dentro de "Inscrito(a)": nunca faz o aluno voltar de etapa.
+function em1EtapaAposIsencao_(id) { const it = em1CarregarInscricoes().find(x => x.id === id); return (!it || it.etapa === "interesse" || it.etapa === "isencao") ? "inscrito" : it.etapa; }
+function em1InscMarcarInscrito(id) { em1AtualizarItemInscricao(id, { etapa: "inscrito" }, "inscrito"); }
+function em1InscSolicitarIsencao(id) { em1AtualizarItemInscricao(id, { etapa: em1EtapaAposIsencao_(id), isencaoFase: "solicitada" }, "isencao_solicitada"); }
+function em1InscNaoSolicitouIsencao(id) { em1AtualizarItemInscricao(id, { etapa: em1EtapaAposIsencao_(id), isencaoFase: "nao_solicitada", isencaoResultado: "nao_solicitada", isento: false }, "isencao_nao_solicitada"); }
+function em1InscResultadoIsencao(id, conseguiu) { em1AtualizarItemInscricao(id, { etapa: em1EtapaAposIsencao_(id), isencaoResultado: conseguiu ? "concedida" : "negada", isento: conseguiu }, "isencao_" + (conseguiu ? "concedida" : "negada")); }
 function em1InscMarcarProvaFeita(id) { em1AtualizarItemInscricao(id, { etapa: "prova" }); }
 function em1InscAbrirResultado(id) {
   const item = em1CarregarInscricoes().find(it => it.id === id);
@@ -5100,7 +5213,7 @@ function em1InscAbrirEditar(id) {
   document.getElementById("em1-insc-editar-erro").textContent = "";
   const sel = document.getElementById("em1-insc-editar-etapa");
   sel.innerHTML = EM1_ETAPAS_ORDEM.map(k => `<option value="${k}">${ETAPA_LABEL[k]}</option>`).join("") + `<option value="nao_aprovado">Não aprovado(a)</option><option value="treineiro">Fiz como treineiro (não estou concorrendo à vaga)</option>`;
-  sel.value = item.etapa;
+  sel.value = item.etapa === "isencao" ? "inscrito" : item.etapa;
   document.getElementById("em1-insc-editar-colocacao").value = item.colocacao || "";
   document.getElementById("em1-insc-editar-nota").value = item.nota || "";
   em1InscEditarEtapaChange();
@@ -5156,6 +5269,7 @@ function em1FecharReembolso() {
   EM1_REEMB_ALVO_ID = null;
 }
 function em1CardInscricaoHtml(item) {
+  if (item.etapa === "isencao") item.etapa = "inscrito"; // (21/10) legado: isenção não é mais etapa
   // "Treineiro" (25/09, 3ª rodada): quem fez a prova só de treino, sem concorrer à vaga
   // de verdade, também termina fora da sequência normal de etapas (igual "não aprovado"),
   // só que sem o tom de rejeição -- por isso os dois entram em "especial", mas só
@@ -5177,10 +5291,8 @@ function em1CardInscricaoHtml(item) {
 
   let proximaAcao = "";
   if (!especial) {
-    if (item.etapa === "interesse" || (item.etapa === "isencao" && item.isencaoFase !== "solicitada")) {
-      proximaAcao = `<button class="em1-btn em1-btn-primary em1-btn-sm" onclick="em1InscSolicitarIsencao('${item.id}')">📎 Solicite a isenção de taxa!</button><button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1InscNaoSolicitouIsencao('${item.id}')">Não solicitei a Isenção de Taxa</button>`;
-    } else if (item.etapa === "isencao" && item.isencaoFase === "solicitada") {
-      proximaAcao = `<button class="em1-btn em1-btn-primary em1-btn-sm" onclick="em1InscResultadoIsencao('${item.id}', true)">✅ Consegui a isenção!</button><button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1InscResultadoIsencao('${item.id}', false)">Não consegui a isenção</button>`;
+    if (item.etapa === "interesse") {
+      proximaAcao = `<button class="em1-btn em1-btn-primary em1-btn-sm" onclick="em1InscMarcarInscrito('${item.id}')">Marcar como inscrito(a)</button>`;
     } else if (item.etapa === "inscrito") {
       proximaAcao = `<button class="em1-btn em1-btn-primary em1-btn-sm" onclick="em1InscMarcarProvaFeita('${item.id}')">Marcar prova feita</button>`;
     } else if (item.etapa === "prova") {
@@ -5188,13 +5300,22 @@ function em1CardInscricaoHtml(item) {
     }
   }
 
-  const podeReembolso = item.etapa !== "interesse" && item.etapa !== "isencao" && !item.isento;
+  // (21/10) Pergunta de isenção dentro de "Inscrito(a)": 1) já pediu? 2) a solicitação foi aprovada? Sim/Não.
+  const isencaoPendenteEm1 = !especial && item.etapa !== "interesse" && !item.isento && !item.isencaoResultado;
+  let perguntaHtml = "";
+  if (isencaoPendenteEm1) {
+    perguntaHtml = item.isencaoFase === "solicitada"
+      ? `<div class="em1-insc-pergunta"><p><strong>A solicitação da isenção foi aprovada?</strong></p><div class="em1-insc-card-acoes" style="margin-top:0"><button class="em1-btn em1-btn-primary em1-btn-sm" onclick="em1InscResultadoIsencao('${item.id}', true)">✅ Sim</button><button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1InscResultadoIsencao('${item.id}', false)">Não</button></div></div>`
+      : `<div class="em1-insc-pergunta"><p><strong>Isenção da taxa de inscrição:</strong> você pediu isenção nessa instituição?</p><div class="em1-insc-card-acoes" style="margin-top:0"><button class="em1-btn em1-btn-primary em1-btn-sm" onclick="em1InscSolicitarIsencao('${item.id}')">Já pedi a isenção</button><button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1InscNaoSolicitouIsencao('${item.id}')">Não pedi a isenção</button></div></div>`;
+  }
+  const podeReembolso = item.etapa !== "interesse" && !item.isento && !isencaoPendenteEm1;
   // Prioriza o aviso de aprovado/treineiro quando o item chegou lá -- mesmo que também
   // tenha isenção, é o estado mais atual/relevante pra mostrar.
   let extraHtml = "";
   if (item.etapa === "aprovado") extraHtml = `<div class="em1-insc-aprovado">🎉 Aprovado(a)!${item.colocacao ? " Colocação: " + item.colocacao : ""}</div>`;
   else if (item.etapa === "treineiro") extraHtml = `<div class="em1-insc-treineiro">🎓 Fez como treineiro${item.nota ? " — Nota: " + item.nota : ""}</div>`;
   else if (item.isento) extraHtml = `<div class="em1-insc-isento">🎉 Você conseguiu a isenção de taxa aqui — sem reembolso a pedir.</div>`;
+  else if (item.isencaoResultado === "negada" && podeReembolso) extraHtml = `<div class="em1-insc-isento" style="background:#FFF8E6;border-color:#F2D58A;color:#8A5A00">Sua isenção não foi aprovada. Se você pagou a taxa de inscrição, peça o reembolso.</div>`;
   const reembolsoBtn = podeReembolso ? `<button class="em1-btn em1-btn-secondary em1-btn-sm" onclick="em1IrParaReembolso('${item.id}')">💰 Solicitar reembolso</button>` : "";
   const badgePlanilha = item.confirmadoPlanilha ? `<div class="em1-insc-badge-planilha">📝 Inscrição registrada via formulário — confirmada pela equipe</div>` : "";
 
@@ -5209,6 +5330,7 @@ function em1CardInscricaoHtml(item) {
     </div>
     <div class="stepper">${stepsHtml}</div>
     ${extraHtml}
+    ${perguntaHtml}
     ${(proximaAcao || reembolsoBtn) ? `<div class="em1-insc-card-acoes">${proximaAcao}${reembolsoBtn}</div>` : ""}
   </div>`;
 }
