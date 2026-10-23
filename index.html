@@ -797,6 +797,8 @@ select.em1-cat-search option{color:#001433;font-weight:700}
 .tab.tab-atividade-destaque.active{color:#fff;box-shadow:0 0 0 3px rgba(255,122,84,.35)}
 .tab.tab-atividade-destaque .badge-count{background:#fff;color:#b43a16}
 /* (23/10) Entrega Final do TPV (Entrega 3, 1º EM) */
+.em1-aviso-prazo-geral{display:flex;gap:10px;align-items:flex-start;background:#FFF6DC;border:1.5px solid #F0DDA0;color:#6b5200;border-radius:12px;padding:13px 16px;margin:0 0 14px;font-size:13.5px;line-height:1.45}
+.em1-aviso-prazo-icone{font-size:18px;line-height:1.2}
 .em1e3-passo{background:#fff;border:2px solid #DCEAE1;border-radius:12px;padding:14px 16px;margin-bottom:12px;display:flex;gap:14px;align-items:flex-start}
 .em1e3-num{flex:0 0 34px;height:34px;border-radius:50%;background:#002561;color:#fff;font-family:"Baloo 2","Manrope",sans-serif;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:16px}
 .em1e3-corpo{flex:1;min-width:0}
@@ -1209,6 +1211,10 @@ select.em1-cat-search option{color:#001433;font-weight:700}
           <p>O Trabalho de Projeto de Vida (TPV) é uma das atividades mais importantes da trilha Vai Lá e Faz. Nele, você aprofunda sua escolha de área de interesse a partir da construção do seu Sonho Grande, refletindo sobre quem você é, qual seu propósito e onde quer chegar profissionalmente — e planeja com clareza os próximos passos do seu ano. Seus planos podem mudar, mas ter um plano estruturado agora é o que importa. Conte com seu tutor(a) ao longo dessa jornada!</p>
         </div>
         <div class="em1-atividades-intro">📝 Aqui ficam as atividades da sua Jornada de Orientação Profissional. Escolha uma entrega abaixo pra responder — você pode voltar aqui quando quiser.</div>
+        <div class="em1-aviso-prazo-geral" role="note">
+          <span class="em1-aviso-prazo-icone">⏰</span>
+          <span><b>Se você não entregou as atividades anteriores do TPV, você tem até o dia 13/11 para realizar a entrega 1, 2 e 3.</b></span>
+        </div>
         <button class="em1-entrega-btn" onclick="em1AbrirEntrega(1)">
           <div class="em1-entrega-info">
             <span class="em1-entrega-titulo">Trabalho de Projeto de Vida - Entrega 1</span>
@@ -1861,7 +1867,7 @@ const EM1_VIDEO_ENTREGA3 = "";
 // ---- Entrega 3 (Entrega Final do TPV) -- 23/10 ----
 // URL "/exec" do Apps Script registrar_tpv_entrega3.gs, implantado na planilha "131126_1ano_VLF_Fase13_Entrega3TPV".
 // ENQUANTO ESTIVER VAZIA o botão "Enviar atividade" mostra a mensagem de erro (nada é enviado de verdade).
-const EM1_TPV_ENTREGA3_URL = "";
+const EM1_TPV_ENTREGA3_URL = "https://script.google.com/macros/s/AKfycbzQS-bll-hZ4SGTp-c3VjnVvJ79_AP7aGskBzKnwFNdumZF1OL7X-F8vEAOMQFaC2t0lg/exec";
 // Link (Drive/Canva, aberto a qualquer pessoa com o link) do deck "Comunicação Aplicada ao TPV" (Encontro do Clube, Fase 13).
 // Vazio = o botão aparece como "em breve".
 const EM1_MATERIAL_ENTREGA3 = "https://drive.google.com/file/d/1L9FHEiJtK1KQOldKjazdrnceEu9i2GAW/view?usp=drive_link";
@@ -4094,7 +4100,8 @@ function em1AtualizarDesbloqueioEntregas() {
     const btn = document.getElementById("em1-entrega-btn-" + numero);
     const status = document.getElementById("em1-status-entrega-" + numero);
     if (!btn || !status) return;
-    if (agora >= dataDesbloqueio) {
+    // RAs de teste (01/02/03) veem tudo liberado, pra ela conferir a navegação antes da data oficial.
+    if (agora >= dataDesbloqueio || ehRaDeTeste()) {
       btn.disabled = false;
       btn.classList.remove("em1-disabled");
       if (numero === 2) {
