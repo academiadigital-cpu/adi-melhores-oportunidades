@@ -790,6 +790,41 @@ select.em1-cat-search option{color:#001433;font-weight:700}
   .em1-tpv-salvar-bar .em1-btn{max-width:100%}
 }
 
+
+/* (23/10) aba "Atividade da Fase 12" em 1º lugar, em destaque, com selo "Pendente" */
+.tab.tab-atividade-destaque{background:var(--coral);color:#fff;border-radius:999px;padding:8px 16px;margin:9px 18px 9px 0;border-bottom:none}
+.tab.tab-atividade-destaque:hover:not(.active){color:#fff;filter:brightness(1.05)}
+.tab.tab-atividade-destaque.active{color:#fff;box-shadow:0 0 0 3px rgba(255,122,84,.35)}
+.tab.tab-atividade-destaque .badge-count{background:#fff;color:#b43a16}
+/* (23/10) Entrega Final do TPV (Entrega 3, 1º EM) */
+.em1e3-passo{background:#fff;border:2px solid #DCEAE1;border-radius:12px;padding:14px 16px;margin-bottom:12px;display:flex;gap:14px;align-items:flex-start}
+.em1e3-num{flex:0 0 34px;height:34px;border-radius:50%;background:#002561;color:#fff;font-family:"Baloo 2","Manrope",sans-serif;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:16px}
+.em1e3-corpo{flex:1;min-width:0}
+.em1e3-corpo h4{margin:0 0 4px;font-size:15px;color:#001433;font-family:"Baloo 2","Manrope",sans-serif}
+.em1e3-corpo p{margin:0 0 10px;font-size:13px;color:#48584E;line-height:1.5}
+.em1e3-link{display:inline-flex;align-items:center;gap:8px;background:#E7EAF4;border:1.5px solid #C7D0EA;color:#001433;border-radius:999px;padding:9px 16px;font-weight:800;font-size:13px;text-decoration:none}
+.em1e3-link:hover{background:#DAE0F2}
+.em1e3-link.em-breve{background:#FFF6DC;border-color:#F0DDA0;color:#8C6D00;cursor:default}
+.em1e3-drop{display:block;border:2px dashed #9FB0D8;background:#F6F8FD;border-radius:12px;padding:18px;text-align:center;color:#002561;font-weight:700;font-size:13.5px;cursor:pointer}
+.em1e3-drop:hover{background:#EEF2FB}
+.em1e3-drop small{display:block;font-weight:600;color:#5b6a8a;margin-top:4px}
+.em1e3-drop.tem-arquivo{border-style:solid;border-color:#0A7030;background:#F5FFF8;color:#0A7030}
+.em1e3-ou{text-align:center;font-size:12px;color:#7a8a80;margin:8px 0;font-weight:700}
+.em1e3-input,.em1e3-textarea{width:100%;border:2px solid #DCEAE1;border-radius:10px;padding:11px 12px;font-size:13.5px;font-family:"Manrope",sans-serif;color:#001433;background:#fff}
+.em1e3-textarea{min-height:92px;resize:vertical}
+.em1e3-input:focus,.em1e3-textarea:focus{outline:none;border-color:#002561}
+.em1e3-enviar-wrap{background:#fff;border:2px solid #002561;border-radius:14px;padding:16px;margin:16px 0 8px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.em1e3-enviar-wrap .em1e3-num{background:#0A7030}
+.em1e3-enviar{flex:1;min-width:220px;background:#0A7030;color:#fff;border:0;border-radius:999px;padding:18px 24px;font-family:"Baloo 2","Manrope",sans-serif;font-size:19px;font-weight:800;letter-spacing:.3px;box-shadow:0 8px 20px rgba(10,112,48,.35);cursor:pointer}
+.em1e3-enviar:hover{filter:brightness(1.07)}
+.em1e3-enviar:disabled{opacity:.65;cursor:wait}
+.em1e3-erro,.em1e3-aviso{display:none;gap:10px;border-radius:12px;padding:13px 16px;margin-top:10px;font-size:13.5px;font-weight:700;line-height:1.45}
+.em1e3-erro{background:#FDECEC;border:1.5px solid #E9A3A3;color:#8f2323}
+.em1e3-erro a{color:#8f2323;text-decoration:underline}
+.em1e3-aviso{background:#FFF6DC;border:1.5px solid #F0DDA0;color:#8C6D00}
+.em1e3-banner-just{display:flex;gap:10px;align-items:flex-start;background:#FFF6DC;border:1.5px solid #F0DDA0;color:#8C6D00;border-radius:12px;padding:13px 16px;margin-bottom:14px;font-size:13.5px;font-weight:700;line-height:1.4}
+.em1e3-banner-just{display:none}
+@media (max-width:759px){.em1e3-passo{padding:12px 12px;gap:10px}.em1e3-enviar{font-size:17px;padding:16px 18px}}
 </style>
 </head>
 <body>
@@ -846,11 +881,11 @@ select.em1-cat-search option{color:#001433;font-weight:700}
 
     <nav class="tabs">
       <div class="wrap">
+        <button class="tab tab-atividade-destaque" data-tab="atividade" onclick="trocarAba('atividade')">📝 Atividade da Fase 12 <span class="badge-count" id="atividade-pendente">Pendente</span><span class="badge-count" id="atividade-badge" style="display:none">✅</span></button>
         <button class="tab active" data-tab="guia" onclick="trocarAba('guia')">📖 Guia do Mapa de Oportunidades</button>
         <button class="tab" data-tab="explorar" onclick="trocarAba('explorar')">🏠 Escolas recomendadas</button>
         <button class="tab" data-tab="catalogo" onclick="trocarAba('catalogo')">🌎 Explorar todas as MOs do Brasil</button>
         <button class="tab" data-tab="plano" onclick="trocarAba('plano')">❤️ Meu Plano <span class="badge-count" id="tab-plano-count">0</span></button>
-        <button class="tab" data-tab="atividade" onclick="trocarAba('atividade')">📝 Atividade da Fase 12 <span class="badge-count" id="atividade-badge" style="display:none">✅</span></button>
         <button class="tab" id="tab-btn-prepara" data-tab="prepara" onclick="trocarAba('prepara')">🚀 Prepara-MOs</button>
       </div>
     </nav>
@@ -1190,7 +1225,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
         </button>
         <button class="em1-entrega-btn em1-disabled" id="em1-entrega-btn-3" disabled onclick="em1AbrirEntrega(3)">
           <div class="em1-entrega-info">
-            <span class="em1-entrega-titulo">Trabalho de Projeto de Vida - Entrega 3</span>
+            <span class="em1-entrega-titulo">🎤 Entrega Final do TPV (Entrega 3)</span>
             <span class="em1-entrega-prazo">📅 Prazo: 13/11</span>
           </div>
           <span class="em1-entrega-status" id="em1-status-entrega-3">🔒 Abre em 24/10</span>
@@ -1335,15 +1370,73 @@ select.em1-cat-search option{color:#001433;font-weight:700}
       <div class="em1-atividades-wrap" id="em1-entrega-3-form" style="display:none">
         <button class="em1-voltar-atividades" onclick="em1VoltarAtividades()">← Voltar pras atividades</button>
         <div class="em1-atividades-intro">
-          📝 <b>Trabalho de Projeto de Vida - Entrega 3.</b> Prazo: 13/11.
+          📝 <b>Trabalho de Projeto de Vida - Entrega 3 (Entrega Final).</b> Prazo: 13/11. Siga a ordem abaixo, do passo 1 ao 5.
+          <div class="em1-tpv-status" id="em1-e3-status">💾 Nenhum envio ainda</div>
         </div>
+
+        <div class="em1-tpv-banner-enviado" id="em1-e3-banner-enviado" style="display:none">
+          <span class="em1-tpv-banner-enviado-icone">✅</span>
+          <span id="em1-e3-banner-enviado-texto"></span>
+        </div>
+        <div class="em1e3-banner-just" id="em1-e3-banner-just">
+          <span style="font-size:18px">📝</span>
+          <span id="em1-e3-banner-just-texto"></span>
+        </div>
+
         <div class="em1-tpv-explicacao">
           <h3>🎯 TPV: Consolidação e Declaração de Intenções</h3>
-          <p>Comunicação e orientações para a entrega/apresentação final do Trabalho de Projeto de Vida.</p>
+          <p>Chegou a hora da entrega final do seu Trabalho de Projeto de Vida: monte a sua apresentação, envie por aqui e se prepare para apresentá-la a uma banca. <b>Entregar a atividade vale 3.000 moedas!</b></p>
         </div>
-        <div class="em1-tpv-pergunta">
-          <a class="em1-btn em1-btn-primary" id="em1-video-entrega3" href="#" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;text-align:center">🎥 Assista a gravação do Encontro do Clube sobre essa atividade!</a>
+
+        <div class="em1e3-passo">
+          <div class="em1e3-num">1</div>
+          <div class="em1e3-corpo">
+            <h4>Leia o material de apoio</h4>
+            <p>É o material do <b>Encontro do Clube da Fase 13</b>, que aconteceu no sábado, dia <b>24/10</b>: <i>Comunicação Aplicada ao TPV</i>.</p>
+            <a class="em1e3-link" id="em1-e3-material" href="#" target="_blank" rel="noopener">📘 Acessar o material do Encontro do Clube</a>
+          </div>
         </div>
+
+        <div class="em1e3-passo">
+          <div class="em1e3-num">2</div>
+          <div class="em1e3-corpo">
+            <h4>Inspire-se</h4>
+            <p>Assista a esta apresentação para se inspirar na entrega do seu TPV.</p>
+            <a class="em1e3-link" id="em1-e3-video" href="#" target="_blank" rel="noopener">▶ Assistir ao vídeo de inspiração</a>
+          </div>
+        </div>
+
+        <div class="em1e3-passo">
+          <div class="em1e3-num">3</div>
+          <div class="em1e3-corpo">
+            <h4>Anexe o material da sua apresentação (slides)</h4>
+            <p>Pode ser feito no Canva ou no PowerPoint. <b>O próximo passo é apresentar o seu TPV para uma banca, no Encontro do Clube do dia 14/11.</b></p>
+            <label class="em1e3-drop" id="em1-e3-drop" for="em1-e3-arquivo">
+              <span id="em1-e3-drop-titulo">📎 Toque para anexar o arquivo</span>
+              <small id="em1-e3-drop-sub">PDF ou PowerPoint (.pptx) · até 15 MB</small>
+            </label>
+            <input type="file" id="em1-e3-arquivo" accept=".pdf,.ppt,.pptx,.pps,.ppsx,.odp,.key" style="display:none" onchange="em1E3EscolherArquivo(this)">
+            <div class="em1e3-ou">— ou —</div>
+            <input class="em1e3-input" id="em1-e3-link" type="url" inputmode="url" placeholder="Cole aqui o link da sua apresentação (Canva, Google Drive...)" oninput="em1E3SalvarRascunho()">
+            <p style="margin:8px 0 0;font-size:12px;color:#5b6a8a">Se usar link, confira se ele está liberado para qualquer pessoa com o link poder ver.</p>
+          </div>
+        </div>
+
+        <div class="em1e3-passo">
+          <div class="em1e3-num">4</div>
+          <div class="em1e3-corpo">
+            <h4>Não conseguiu participar do encontro? <span style="font-weight:600;color:#5b6a8a">(opcional)</span></h4>
+            <p>Justifique sua ausência para garantir 200 moedas e o seu engajamento não ficar prejudicado na ADI!</p>
+            <textarea class="em1e3-textarea" id="em1-e3-justif" placeholder="Escreva aqui o motivo da sua ausência" oninput="em1E3SalvarRascunho()"></textarea>
+          </div>
+        </div>
+
+        <div class="em1e3-enviar-wrap">
+          <div class="em1e3-num">5</div>
+          <button class="em1e3-enviar" id="em1-e3-btn-enviar" onclick="em1E3Enviar()">📤 ENVIAR ATIVIDADE</button>
+        </div>
+        <div class="em1e3-aviso" id="em1-e3-aviso" role="alert"></div>
+        <div class="em1e3-erro" id="em1-e3-erro" role="alert"><span>⚠️</span><span>Não foi possível enviar, tente outra vez ou chame nossa equipe pelo número <a href="https://wa.me/5511947423986" target="_blank" rel="noopener">+55 11 94742-3986</a>.</span></div>
       </div>
 
       <div class="em1-atividades-wrap" id="em1-entrega-1-form" style="display:none">
@@ -1765,6 +1858,15 @@ const EM1_TPV_ENTREGA2_URL = "https://script.google.com/macros/s/AKfycbyav8xZ8VM
 const EM1_VIDEO_ENTREGA1 = "https://drive.google.com/file/d/1t3I2dGeofoiaIT1Qrn3jCuCR9j2MPFYF/view?usp=sharing";
 const EM1_VIDEO_ENTREGA2 = "https://drive.google.com/file/d/1Eew96VVLqGfSnPxqqwnNg3Nn1stJA5Jo/view?usp=drive_link"; // (05/10) gravação do encontro de 03/10
 const EM1_VIDEO_ENTREGA3 = "";
+// ---- Entrega 3 (Entrega Final do TPV) -- 23/10 ----
+// URL "/exec" do Apps Script registrar_tpv_entrega3.gs, implantado na planilha "131126_1ano_VLF_Fase13_Entrega3TPV".
+// ENQUANTO ESTIVER VAZIA o botão "Enviar atividade" mostra a mensagem de erro (nada é enviado de verdade).
+const EM1_TPV_ENTREGA3_URL = "";
+// Link (Drive/Canva, aberto a qualquer pessoa com o link) do deck "Comunicação Aplicada ao TPV" (Encontro do Clube, Fase 13).
+// Vazio = o botão aparece como "em breve".
+const EM1_MATERIAL_ENTREGA3 = "https://drive.google.com/file/d/1L9FHEiJtK1KQOldKjazdrnceEu9i2GAW/view?usp=drive_link";
+// Vídeo para o aluno se inspirar na entrega do TPV.
+const EM1_VIDEO_INSPIRACAO_ENTREGA3 = "https://youtu.be/HJmeGkCIGn4?si=IQ1V60wYcuRn4dy9";
 // Preencher com a URL do Apps Script (Extensões > Apps Script > Implantar) depois de colar o
 // código em EM1_REEMBOLSO_APPS_SCRIPT.gs na planilha "Vestibulares - ADI 2026 (respostas)" --
 // enquanto estiver vazio, o formulário de reembolso do 1º EM salva só neste dispositivo (18/09).
@@ -2583,6 +2685,12 @@ function sair() {
   document.getElementById("login-nome").value = "";
 }
 
+/* (23/10) "Pendente" aparece até a atividade da Fase 12 ser entregue (quando o selo ✅ aparece, o "Pendente" some). */
+function atualizarPendenteAtividade() {
+  const b = document.getElementById("atividade-badge");
+  const pend = document.getElementById("atividade-pendente");
+  if (b && pend) pend.style.display = (b.style.display === "none" || b.style.display === "") ? "inline" : "none";
+}
 function trocarAba(nome) {
   document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === nome));
   document.querySelectorAll(".tab-content").forEach(c => c.classList.toggle("active", c.id === "tab-" + nome));
@@ -3253,6 +3361,7 @@ function aplicarTravaAtividade8(dados) {
   renderizarRecadoParabens("atividade8-parabens", dados);
   const badge = document.getElementById("atividade-badge");
   if (badge && ehOitavoAno()) badge.style.display = (dados && dados.enviadoEm) ? "inline" : "none";
+  atualizarPendenteAtividade();
 }
 function validarAtividade8(r) {
   const faltando = [];
@@ -3401,6 +3510,7 @@ function aplicarTravaAtividade9(dados) {
   renderizarRecadoParabens("atividade9-parabens", dados);
   const badge = document.getElementById("atividade-badge");
   if (badge && ehNonoAno()) badge.style.display = (dados && dados.enviadoEm) ? "inline" : "none";
+  atualizarPendenteAtividade();
 }
 function enviarAtividade9() {
   const erroEl = document.getElementById("atividade9-erro");
@@ -3473,6 +3583,7 @@ function iniciarAtividadeFase12() {
   const hint9 = document.getElementById("atividade-hint-9ano");
   const badge = document.getElementById("atividade-badge");
   if (badge) badge.style.display = "none";
+  atualizarPendenteAtividade();
   if (ehOitavoAno()) {
     if (painel8) painel8.style.display = "block";
     if (painel9) painel9.style.display = "none";
@@ -3872,6 +3983,8 @@ function em1Iniciar(ra) {
   em1VerificarTPVNoServidor();
   em1CarregarRascunhoTPV2();
   em1VerificarTPV2NoServidor();
+  em1E3Iniciar();
+  em1VerificarTPV3NoServidor();
   em1MostrarMenuAtividades();
   em1AtualizarDesbloqueioEntregas();
   em1AplicarBotoesVideo();
@@ -3910,6 +4023,7 @@ function em1MostrarMenuAtividades() {
   document.getElementById("em1-entrega-3-form").style.display = "none";
   em1AtualizarStatusEntrega1Lista();
   em1AtualizarStatusEntrega2Lista();
+  em1AtualizarStatusEntrega3Lista();
 }
 /* Se o aluno já enviou a Entrega 1 (mesma chave/lógica honesta do TPV -- só
    conta como enviado quando a planilha confirmou), o card dela na lista de
@@ -3986,8 +4100,7 @@ function em1AtualizarDesbloqueioEntregas() {
       if (numero === 2) {
         em1AtualizarStatusEntrega2Lista();
       } else {
-        status.textContent = "Disponível";
-        status.classList.add("em1-pronto");
+        em1AtualizarStatusEntrega3Lista();
       }
     }
   });
@@ -5059,6 +5172,215 @@ function em1EnviarTPV2() {
     });
   };
   tentarEnviar(1);
+}
+
+
+/* ---- TPV - Entrega 3 / Entrega Final (23/10) ----
+   O aluno envia: o arquivo da apresentação (slides) OU o link dela, e/ou a justificativa de ausência do
+   Encontro do Clube (opcional). Diferente da Entrega 2, pode REENVIAR (o Apps Script faz upsert por RA).
+   Honestidade de envio: só mostra "entregue" quando a planilha responde {"status":"ok"}; qualquer falha
+   mostra a mensagem combinada com a equipe (com o WhatsApp). O arquivo vai em base64 dentro do POST
+   (limite de 15 MB; acima disso o aluno usa o campo de link). */
+const EM1_E3_LIMITE_MB = 15;
+const EM1_E3_EXT = ["pdf", "ppt", "pptx", "pps", "ppsx", "odp", "key"];
+let EM1_E3_ARQUIVO = null;
+let EM1_E3_ENVIANDO = false;
+function em1ChaveTPV3() { return "mo1em_tpv3_" + (ESTADO.matricula || "anon"); }
+function em1E3Ler() { try { return JSON.parse(localStorage.getItem(em1ChaveTPV3()) || "null") || {}; } catch (e) { return {}; } }
+function em1E3Gravar(d) { try { localStorage.setItem(em1ChaveTPV3(), JSON.stringify(d)); } catch (e) {} }
+function em1E3UrlSegura(u) { return /^https?:\/\//i.test(u || "") ? u : ""; }
+function em1E3Tamanho(bytes) { return bytes >= 1048576 ? (bytes / 1048576).toFixed(1).replace(".", ",") + " MB" : Math.max(1, Math.round(bytes / 1024)) + " KB"; }
+
+function em1E3AplicarLinks() {
+  const mat = document.getElementById("em1-e3-material");
+  if (mat) {
+    if (EM1_MATERIAL_ENTREGA3) { mat.href = EM1_MATERIAL_ENTREGA3; mat.classList.remove("em-breve"); mat.textContent = "📘 Acessar o material do Encontro do Clube"; mat.onclick = null; }
+    else { mat.removeAttribute("href"); mat.classList.add("em-breve"); mat.textContent = "📘 Material do Encontro do Clube (em breve)"; mat.onclick = function (e) { e.preventDefault(); return false; }; }
+  }
+  const vid = document.getElementById("em1-e3-video");
+  if (vid) {
+    if (EM1_VIDEO_INSPIRACAO_ENTREGA3) { vid.href = EM1_VIDEO_INSPIRACAO_ENTREGA3; vid.classList.remove("em-breve"); vid.onclick = null; }
+    else { vid.removeAttribute("href"); vid.classList.add("em-breve"); vid.textContent = "▶ Vídeo de inspiração (em breve)"; vid.onclick = function (e) { e.preventDefault(); return false; }; }
+  }
+}
+function em1E3Iniciar() {
+  em1E3AplicarLinks();
+  EM1_E3_ARQUIVO = null;
+  const inp = document.getElementById("em1-e3-arquivo"); if (inp) inp.value = "";
+  const d = em1E3Ler();
+  const r = d.rascunho || {};
+  const linkEl = document.getElementById("em1-e3-link"), jEl = document.getElementById("em1-e3-justif");
+  if (linkEl) linkEl.value = r.link || "";
+  if (jEl) jEl.value = r.justificativa || (d.enviado && d.enviado.justificativa) || "";
+  if (linkEl && !linkEl.value && d.enviado && d.enviado.como === "Link") linkEl.value = d.enviado.link || "";
+  em1E3Renderizar();
+}
+function em1E3SalvarRascunho() {
+  const d = em1E3Ler();
+  d.rascunho = { link: document.getElementById("em1-e3-link").value.trim(), justificativa: document.getElementById("em1-e3-justif").value.trim() };
+  em1E3Gravar(d);
+}
+function em1E3EscolherArquivo(input) {
+  const aviso = document.getElementById("em1-e3-aviso");
+  aviso.style.display = "none";
+  const f = input.files && input.files[0];
+  if (!f) { EM1_E3_ARQUIVO = null; em1E3Renderizar(); return; }
+  const ext = (f.name.split(".").pop() || "").toLowerCase();
+  if (EM1_E3_EXT.indexOf(ext) === -1) {
+    input.value = ""; EM1_E3_ARQUIVO = null;
+    aviso.style.display = "flex"; aviso.textContent = "⚠️ Esse tipo de arquivo não é aceito. Envie em PDF ou PowerPoint (.pptx), ou cole o link da apresentação.";
+    em1E3Renderizar(); return;
+  }
+  if (f.size > EM1_E3_LIMITE_MB * 1048576) {
+    input.value = ""; EM1_E3_ARQUIVO = null;
+    aviso.style.display = "flex"; aviso.textContent = "⚠️ Esse arquivo tem " + em1E3Tamanho(f.size) + " e o limite é " + EM1_E3_LIMITE_MB + " MB. Cole o link da apresentação (Canva ou Google Drive) no campo abaixo.";
+    em1E3Renderizar(); return;
+  }
+  EM1_E3_ARQUIVO = f;
+  em1E3Renderizar();
+}
+function em1E3Renderizar() {
+  const d = em1E3Ler();
+  const env = d.enviado || null;
+  const entregou = !!(env && env.entregou);
+  const justEnviada = !!(env && env.justificativa);
+  // status
+  const st = document.getElementById("em1-e3-status");
+  if (st) {
+    st.classList.toggle("em1-tpv-status-ok", entregou);
+    if (entregou) st.textContent = "✅ Apresentação entregue em " + em1FormatarHora(env.carimbo);
+    else if (justEnviada) st.textContent = "📝 Justificativa recebida em " + em1FormatarHora(env.atualizadoEm || env.carimbo) + " — falta enviar a apresentação";
+    else st.textContent = "💾 Nenhum envio ainda";
+  }
+  // banner verde (entregue)
+  const ban = document.getElementById("em1-e3-banner-enviado"), banTxt = document.getElementById("em1-e3-banner-enviado-texto");
+  if (ban) {
+    ban.style.display = entregou ? "flex" : "none";
+    if (entregou) {
+      const pos = posicaoValida(env.posicao);
+      banTxt.textContent = "";
+      banTxt.appendChild(document.createTextNode("Parabéns pela entrega! " + (pos ? "Você foi o nº " + pos + " a entregar. " : "") + "Você garantiu 3.000 moedas! " +
+        "Recebemos a sua apresentação em " + em1FormatarHora(env.carimbo) + ". Próximo passo: apresentar para a banca no Encontro do Clube do dia 14/11. "));
+      const url = em1E3UrlSegura(env.link);
+      if (url) {
+        const a = document.createElement("a"); a.href = url; a.target = "_blank"; a.rel = "noopener"; a.style.color = "inherit"; a.style.textDecoration = "underline";
+        a.textContent = env.como === "Arquivo" ? "Ver o arquivo enviado" + (env.nomeArquivo ? " (" + env.nomeArquivo + ")" : "") : "Ver o link enviado";
+        banTxt.appendChild(a);
+      }
+      banTxt.appendChild(document.createTextNode(". Se precisar trocar, anexe de novo e toque em \"Reenviar atividade\"."));
+    }
+  }
+  // banner amarelo (só justificativa)
+  const bj = document.getElementById("em1-e3-banner-just"), bjt = document.getElementById("em1-e3-banner-just-texto");
+  if (bj) {
+    const mostrar = !entregou && justEnviada;
+    bj.style.display = mostrar ? "flex" : "none";
+    if (mostrar) bjt.textContent = "Recebemos a sua justificativa de ausência. A apresentação (slides) ainda não foi enviada: anexe o material no passo 3 e toque em \"Enviar atividade\".";
+  }
+  // botão
+  const btn = document.getElementById("em1-e3-btn-enviar");
+  if (btn && !EM1_E3_ENVIANDO) btn.textContent = entregou ? "📤 REENVIAR ATIVIDADE" : "📤 ENVIAR ATIVIDADE";
+  // área de anexo
+  const drop = document.getElementById("em1-e3-drop"), t = document.getElementById("em1-e3-drop-titulo"), sub = document.getElementById("em1-e3-drop-sub");
+  if (drop) {
+    drop.classList.toggle("tem-arquivo", !!EM1_E3_ARQUIVO || (entregou && env.como === "Arquivo"));
+    if (EM1_E3_ARQUIVO) { t.textContent = "📎 " + EM1_E3_ARQUIVO.name; sub.textContent = em1E3Tamanho(EM1_E3_ARQUIVO.size) + " · toque para trocar o arquivo"; }
+    else if (entregou && env.como === "Arquivo") { t.textContent = "✅ Arquivo enviado: " + (env.nomeArquivo || "apresentação"); sub.textContent = "Toque aqui para enviar outro arquivo no lugar"; }
+    else { t.textContent = "📎 Toque para anexar o arquivo"; sub.textContent = "PDF ou PowerPoint (.pptx) · até " + EM1_E3_LIMITE_MB + " MB"; }
+  }
+  em1AtualizarStatusEntrega3Lista();
+}
+function em1AtualizarStatusEntrega3Lista() {
+  const status = document.getElementById("em1-status-entrega-3");
+  const btn = document.getElementById("em1-entrega-btn-3");
+  if (!status || !btn || btn.disabled) return;
+  const env = em1E3Ler().enviado;
+  if (env && env.entregou) status.textContent = "✅ Atividade entregue";
+  else if (env && env.justificativa) status.textContent = "📝 Justificativa enviada";
+  else status.textContent = "Disponível";
+  status.classList.add("em1-pronto");
+}
+/* Restaura o estado do aluno a partir da planilha (qualquer aparelho). Roda em segundo plano e nunca trava a navegação. */
+function em1VerificarTPV3NoServidor() {
+  if (!EM1_TPV_ENTREGA3_URL) return;
+  const ra = ESTADO.matricula || "";
+  if (!ra) return;
+  fetch(EM1_TPV_ENTREGA3_URL + "?ra=" + encodeURIComponent(ra), { method: "GET" })
+    .then(resp => resp.ok ? resp.json() : null)
+    .then(dados => {
+      if (!dados || dados.status !== "ok" || !dados.encontrado) return;
+      const d = em1E3Ler();
+      d.enviado = { entregou: !!dados.entregou, como: dados.como || "", link: dados.link || "", nomeArquivo: dados.nomeArquivo || "",
+        justificativa: dados.justificativa || "", carimbo: dados.carimbo || "", atualizadoEm: dados.atualizadoEm || "", posicao: posicaoValida(dados.posicao) };
+      em1E3Gravar(d);
+      const jEl = document.getElementById("em1-e3-justif"); if (jEl && !jEl.value) jEl.value = d.enviado.justificativa;
+      const lEl = document.getElementById("em1-e3-link"); if (lEl && !lEl.value && d.enviado.como === "Link") lEl.value = d.enviado.link;
+      em1E3Renderizar();
+    })
+    .catch(() => {});
+}
+function em1E3LerBase64(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => { const s = String(r.result || ""); resolve(s.slice(s.indexOf(",") + 1)); };
+    r.onerror = () => reject(r.error || new Error("leitura"));
+    r.readAsDataURL(file);
+  });
+}
+async function em1E3Enviar() {
+  if (EM1_E3_ENVIANDO) return;
+  const aviso = document.getElementById("em1-e3-aviso"), erro = document.getElementById("em1-e3-erro"), btn = document.getElementById("em1-e3-btn-enviar");
+  aviso.style.display = "none"; erro.style.display = "none";
+  let link = document.getElementById("em1-e3-link").value.trim();
+  const justificativa = document.getElementById("em1-e3-justif").value.trim();
+  const mostrarAviso = (txt) => { aviso.textContent = "⚠️ " + txt; aviso.style.display = "flex"; aviso.scrollIntoView({ behavior: "smooth", block: "center" }); };
+  const mostrarErro = () => { erro.style.display = "flex"; erro.scrollIntoView({ behavior: "smooth", block: "center" }); };
+  if (!EM1_E3_ARQUIVO && !link && !justificativa) {
+    mostrarAviso("Anexe o material da sua apresentação (slides) no passo 3, ou — se não participou do encontro — preencha a justificativa de ausência no passo 4.");
+    return;
+  }
+  if (link) {
+    if (!/^https?:\/\//i.test(link)) link = "https://" + link;
+    if (!/^https?:\/\/[^\s\/]+\.[^\s\/]{2,}/i.test(link)) { mostrarAviso("O link da apresentação não parece válido. Confira e cole de novo."); return; }
+  }
+  const ra = ESTADO.matricula || "sem-RA";
+  const payload = { tipo: "tpv_entrega3", ra: ra, serie: "1º EM", carimbo: new Date().toISOString(), link: EM1_E3_ARQUIVO ? "" : link, justificativa: justificativa };
+  EM1_E3_ENVIANDO = true; btn.disabled = true; btn.textContent = "⏳ Enviando...";
+  const terminar = () => { EM1_E3_ENVIANDO = false; btn.disabled = false; em1E3Renderizar(); };
+  if (!EM1_TPV_ENTREGA3_URL) { terminar(); mostrarErro(); return; }
+  try {
+    if (EM1_E3_ARQUIVO) payload.arquivo = { nome: EM1_E3_ARQUIVO.name, tipo: EM1_E3_ARQUIVO.type || "application/octet-stream", base64: await em1E3LerBase64(EM1_E3_ARQUIVO) };
+  } catch (e) { terminar(); mostrarErro(); return; }
+  const corpo = JSON.stringify(payload);
+  const MAX = 3;
+  for (let tentativa = 1; tentativa <= MAX; tentativa++) {
+    if (tentativa > 1) btn.textContent = "⏳ Enviando... (tentativa " + tentativa + " de " + MAX + ")";
+    try {
+      const resp = await fetch(EM1_TPV_ENTREGA3_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: corpo });
+      if (!resp.ok) throw new Error("http_" + resp.status);
+      let r = null;
+      try { r = JSON.parse(await resp.text()); } catch (e) { r = null; }
+      if (r && r.status === "ok") {
+        const d = em1E3Ler();
+        d.enviado = { entregou: !!r.entregou, como: r.como || "", link: r.link || "", nomeArquivo: r.nomeArquivo || "", justificativa: r.justificativa || "",
+          carimbo: r.carimbo || payload.carimbo, atualizadoEm: r.atualizadoEm || payload.carimbo, posicao: posicaoValida(r.posicao) };
+        d.rascunho = { link: link, justificativa: justificativa };
+        em1E3Gravar(d);
+        EM1_E3_ARQUIVO = null; const inp = document.getElementById("em1-e3-arquivo"); if (inp) inp.value = "";
+        terminar();
+        const alvo = document.getElementById(d.enviado.entregou ? "em1-e3-banner-enviado" : "em1-e3-banner-just");
+        if (alvo) alvo.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+      if (r && r.status === "erro" && r.mensagem === "tipo_nao_aceito") { terminar(); mostrarAviso("Esse tipo de arquivo não é aceito. Envie em PDF ou PowerPoint (.pptx), ou cole o link da apresentação."); return; }
+      if (r && r.status === "erro" && r.mensagem === "arquivo_grande") { terminar(); mostrarAviso("Esse arquivo é grande demais (limite de " + EM1_E3_LIMITE_MB + " MB). Cole o link da apresentação (Canva ou Google Drive)."); return; }
+      if (r && r.status === "erro" && (r.mensagem === "vazio" || r.mensagem === "arquivo_vazio")) { terminar(); mostrarAviso("Anexe o material da sua apresentação (slides) ou preencha a justificativa antes de enviar."); return; }
+      throw new Error("sem_confirmacao");
+    } catch (e) {
+      if (tentativa < MAX) await new Promise(res => setTimeout(res, 1500));
+    }
+  }
+  terminar(); mostrarErro();
 }
 
 /* ---- Reembolso de Inscrição (1º EM) -- alimenta a planilha "Vestibulares - ADI 2026
