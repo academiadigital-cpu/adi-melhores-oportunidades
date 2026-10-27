@@ -824,6 +824,26 @@ select.em1-cat-search option{color:#001433;font-weight:700}
 .em1e3-erro{background:#FDECEC;border:1.5px solid #E9A3A3;color:#8f2323}
 .em1e3-erro a{color:#8f2323;text-decoration:underline}
 .em1e3-aviso{background:#FFF6DC;border:1.5px solid #F0DDA0;color:#8C6D00}
+.em1e3-orient{background:#fff;border:2px solid #002561;border-radius:14px;overflow:hidden;margin:0 0 14px}
+.em1e3-orient-h{background:#002561;color:#fff;padding:11px 16px;font-family:"Baloo 2","Manrope",sans-serif;font-weight:800;font-size:16px}
+.em1e3-orient-b{padding:14px 16px}
+.em1e3-orient-sub{font-size:13px;color:#48584E;margin:0 0 8px;font-weight:700}
+.em1e3-orient-r{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px dashed #DCEAE1}
+.em1e3-orient-sub + .em1e3-orient-r{border-top:0}
+.em1e3-orient-n{flex:0 0 26px;height:26px;border-radius:50%;background:#E7EAF4;color:#002561;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.em1e3-orient-t{font-size:14px;color:#001433;line-height:1.5}
+.em1e3-orient-t b{color:#002561}
+.em1e3-orient-t span{color:#48584E}
+.em1e3-orient-resumo{background:#F6F8FD;border-top:2px solid #E7EAF4;padding:12px 16px}
+.em1e3-orient-resumo h5{margin:0 0 6px;font-size:13.5px;color:#002561;font-family:"Baloo 2","Manrope",sans-serif}
+.em1e3-orient-resumo ul{margin:0;padding-left:18px;font-size:13px;color:#001433;line-height:1.6}
+.em1e3-orient-resumo li b{color:#002561}
+.em1e3-ban-p{margin:0 0 10px;font-weight:600;font-size:14px;line-height:1.5}
+.em1e3-ban-p:last-child{margin-bottom:0}
+.em1e3-ban-p strong{font-weight:800}
+.em1e3-ban-tit{font-size:15.5px;font-weight:800}
+.em1e3-ban-sec{font-size:13px;font-weight:600;opacity:.9}
+#em1-e3-banner-enviado{align-items:flex-start}
 .em1e3-banner-just{display:flex;gap:10px;align-items:flex-start;background:#FFF6DC;border:1.5px solid #F0DDA0;color:#8C6D00;border-radius:12px;padding:13px 16px;margin-bottom:14px;font-size:13.5px;font-weight:700;line-height:1.4}
 .em1e3-banner-just{display:none}
 @media (max-width:759px){.em1e3-passo{padding:12px 12px;gap:10px}.em1e3-enviar{font-size:17px;padding:16px 18px}}
@@ -1389,9 +1409,26 @@ select.em1-cat-search option{color:#001433;font-weight:700}
           <span id="em1-e3-banner-just-texto"></span>
         </div>
 
-        <div class="em1-tpv-explicacao">
-          <h3>🎯 TPV: Consolidação e Declaração de Intenções</h3>
-          <p>Chegou a hora da entrega final do seu Trabalho de Projeto de Vida: monte a sua apresentação, envie por aqui e se prepare para apresentá-la a uma banca. <b>Entregar a atividade vale 3.000 moedas!</b></p>
+        <div class="em1e3-orient" id="em1-e3-orientacoes">
+          <div class="em1e3-orient-h">📋 Orientações do TPV</div>
+          <div class="em1e3-orient-b">
+            <p class="em1e3-orient-sub">Sua apresentação deve responder a estas 5 perguntas, nesta ordem:</p>
+            <div class="em1e3-orient-r"><div class="em1e3-orient-n">1</div><div class="em1e3-orient-t"><b>Seu sonho</b> <span>– Qual é o sonho que você quer conquistar? Como ele surgiu? Por que é tão importante para você?</span></div></div>
+            <div class="em1e3-orient-r"><div class="em1e3-orient-n">2</div><div class="em1e3-orient-t"><b>O caminho até lá</b> <span>– O que você já fez e faz hoje para se aproximar desse sonho?</span></div></div>
+            <div class="em1e3-orient-r"><div class="em1e3-orient-n">3</div><div class="em1e3-orient-t"><b>Obstáculos</b> <span>– Quando surgem dificuldades (como você errar ou desanimar), de que forma você transforma essas situações em oportunidades para aprender? Dê exemplos.</span></div></div>
+            <div class="em1e3-orient-r"><div class="em1e3-orient-n">4</div><div class="em1e3-orient-t"><b>Quem é você nessa jornada</b> <span>– Quais são as qualidades que mais vão te ajudar a chegar lá? E o que você acha que ainda precisa desenvolver?</span></div></div>
+            <div class="em1e3-orient-r"><div class="em1e3-orient-n">5</div><div class="em1e3-orient-t"><b>O papel do Ismart</b> <span>– Como você acredita que o Ismart pode te apoiar nessa caminhada em direção ao seu sonho?</span></div></div>
+          </div>
+          <div class="em1e3-orient-resumo">
+            <h5>Resumo da atividade</h5>
+            <ul>
+              <li><b>Prazo de envio:</b> 13/11 · <b>Apresentação à banca:</b> Encontro do Clube do dia 14/11</li>
+              <li><b>Formato:</b> slides em PDF ou PowerPoint (até 15 MB) ou link do Canva ou Google Drive</li>
+              <li><b>Moedas:</b> 1.000 ao entregar a atividade + 2.000 ao apresentar para a banca</li>
+              <li>Você pode reenviar quantas vezes precisar; vale o último envio</li>
+              <li>Não participou do Encontro de 24/10? Justifique no passo 4 e garanta 200 moedas</li>
+            </ul>
+          </div>
         </div>
 
         <div class="em1e3-passo">
@@ -1416,7 +1453,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
           <div class="em1e3-num">3</div>
           <div class="em1e3-corpo">
             <h4>Anexe o material da sua apresentação (slides)</h4>
-            <p>Pode ser feito no Canva ou no PowerPoint. <b>O próximo passo é apresentar o seu TPV para uma banca, no Encontro do Clube do dia 14/11.</b></p>
+            <p>Monte a apresentação no Canva ou no PowerPoint, respondendo às 5 perguntas das Orientações, e anexe aqui. <b>Depois, apresente o seu TPV para a banca no Encontro do Clube do dia 14/11.</b></p>
             <label class="em1e3-drop" id="em1-e3-drop" for="em1-e3-arquivo">
               <span id="em1-e3-drop-titulo">📎 Toque para anexar o arquivo</span>
               <small id="em1-e3-drop-sub">PDF ou PowerPoint (.pptx) · até 15 MB</small>
@@ -5266,15 +5303,35 @@ function em1E3Renderizar() {
     if (entregou) {
       const pos = posicaoValida(env.posicao);
       banTxt.textContent = "";
-      banTxt.appendChild(document.createTextNode("Parabéns pela entrega! " + (pos ? "Você foi o nº " + pos + " a entregar. " : "") + "Você garantiu 3.000 moedas! " +
-        "Recebemos a sua apresentação em " + em1FormatarHora(env.carimbo) + ". Próximo passo: apresentar para a banca no Encontro do Clube do dia 14/11. "));
+      const mkP = (cls) => { const el = document.createElement("p"); el.className = "em1e3-ban-p" + (cls ? " " + cls : ""); banTxt.appendChild(el); return el; };
+      const mkB = (t) => { const el = document.createElement("strong"); el.textContent = t; return el; };
+      // 1) título
+      const p1 = mkP("em1e3-ban-tit");
+      p1.textContent = "Parabéns pela entrega!" + (pos ? " Você foi o nº " + pos + " a entregar." : "");
+      // 2) moedas já garantidas
+      const p2 = mkP();
+      p2.appendChild(document.createTextNode("Você garantiu "));
+      p2.appendChild(mkB("1.000 moedas"));
+      p2.appendChild(document.createTextNode(" com a entrega da atividade."));
+      // 3) moedas da banca
+      const p3 = mkP();
+      p3.appendChild(document.createTextNode("Para garantir as outras "));
+      p3.appendChild(mkB("2.000 moedas"));
+      p3.appendChild(document.createTextNode(", apresente para a banca no "));
+      p3.appendChild(mkB("Encontro do Clube do dia\u00a014/11"));
+      p3.appendChild(document.createTextNode("."));
+      // 4) recebimento + link
+      const p4 = mkP("em1e3-ban-sec");
+      p4.appendChild(document.createTextNode("Recebemos a sua apresentação em " + em1FormatarHora(env.carimbo) + ". "));
       const url = em1E3UrlSegura(env.link);
       if (url) {
         const a = document.createElement("a"); a.href = url; a.target = "_blank"; a.rel = "noopener"; a.style.color = "inherit"; a.style.textDecoration = "underline";
         a.textContent = env.como === "Arquivo" ? "Ver o arquivo enviado" + (env.nomeArquivo ? " (" + env.nomeArquivo + ")" : "") : "Ver o link enviado";
-        banTxt.appendChild(a);
+        p4.appendChild(a);
       }
-      banTxt.appendChild(document.createTextNode(". Se precisar trocar, anexe de novo e toque em \"Reenviar atividade\"."));
+      // 5) reenvio
+      const p5 = mkP("em1e3-ban-sec");
+      p5.textContent = "Precisa trocar? Anexe de novo e toque em \"Reenviar atividade\".";
     }
   }
   // banner amarelo (só justificativa)
