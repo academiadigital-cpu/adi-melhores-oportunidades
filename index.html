@@ -407,6 +407,30 @@
   .modal { background: var(--paper-raised); border-radius: var(--radius-l); box-shadow: var(--shadow-lg); width: 100%; max-width: 420px; padding: 26px 26px 22px; max-height: 88vh; overflow-y: auto; }
   .modal h3 { font-size: 18px; margin-bottom: 4px; }
   .modal .modal-sub { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 6px; }
+
+  .mo-bloco { border: 2px solid var(--coral); background: var(--coral-soft); border-radius: var(--radius-m); padding: 14px 16px; margin: 16px 0 4px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .mo-bloco .mo-txt { flex: 1 1 260px; font-size: 14px; line-height: 1.45; color: var(--coral-soft-ink); }
+  .mo-bloco .mo-txt b { font-size: 15px; display: block; margin-bottom: 2px; }
+  .mo-bloco .mo-btn { background: var(--paper-raised); color: var(--coral-soft-ink); border: 2px solid var(--coral); border-radius: 999px; padding: 10px 18px; font-weight: 800; font-size: 14px; cursor: pointer; font-family: inherit; }
+  .mo-bloco .mo-btn:hover { background: var(--coral); color: var(--coral-ink); }
+  .mo-ou { text-align: center; color: var(--ink-faint); font-weight: 700; font-size: 12.5px; margin: 12px 0 0; }
+  #modal-mo .modal { max-width: 520px; }
+  .mo-lista { border: 1.5px solid var(--border); border-radius: var(--radius-s); overflow: hidden; margin: 8px 0 10px; max-height: 240px; overflow-y: auto; }
+  .mo-item { display: block; width: 100%; text-align: left; background: transparent; border: 0; border-top: 1px solid var(--border); padding: 9px 12px; font-size: 13.5px; color: var(--ink); cursor: pointer; font-family: inherit; }
+  .mo-item:first-child { border-top: 0; }
+  .mo-item small { display: block; color: var(--ink-faint); font-weight: 500; }
+  .mo-item:hover { background: var(--blue-soft); }
+  .mo-item.sel { background: #E8F7EE; color: #0A7030; font-weight: 700; }
+  .mo-item.sel small { color: #0A7030; }
+  .mo-vazio { padding: 12px; font-size: 13.5px; color: var(--ink-faint); }
+  .mo-link { background: none; border: 0; color: var(--coral-soft-ink); font-weight: 700; font-size: 13px; text-decoration: underline; cursor: pointer; padding: 0; margin: 0 0 10px; font-family: inherit; }
+  .mo-manual { display: none; margin-bottom: 8px; }
+  .mo-manual label { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); display: block; margin: 8px 0 3px; }
+  .mo-chk { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: var(--ink); margin: 4px 0 2px; line-height: 1.4; cursor: pointer; }
+  .mo-chk input { width: auto; margin: 3px 0 0; flex-shrink: 0; }
+  .mo-erro { display: none; margin-top: 10px; }
+  .mo-entregue p { margin: 0 0 8px; }
+  .mo-entregue p:last-child { margin: 0; }
   .modal-botoes { display: flex; gap: 10px; margin-top: 22px; }
   .modal-botoes .btn { flex: 1; margin-top: 0; }
   .aviso-box { background: var(--yellow-soft); color: var(--yellow-soft-ink); border-radius: var(--radius-s); padding: 14px; font-size: 13.5px; font-weight: 600; line-height: 1.5; margin-top: 6px; }
@@ -1109,6 +1133,13 @@ select.em1-cat-search option{color:#001433;font-weight:700}
                 <li>Confira o resumo abaixo e confirme o envio.</li>
               </ol>
             </div>
+            <div id="atividade9-mo-bloco">
+              <div class="mo-bloco">
+                <div class="mo-txt"><b>🏫 Já estou numa Melhor Oportunidade</b>Se você já estuda (ou já garantiu vaga) numa escola boa para o 1º EM, não precisa escolher 3 escolas. Informe qual é a sua escola e conclua a atividade.</div>
+                <button type="button" class="mo-btn" onclick="abrirModalMO()">Já estou numa Melhor Oportunidade</button>
+              </div>
+              <div class="mo-ou">— ou faça a atividade normalmente, marcando 3 escolas —</div>
+            </div>
             <div id="atividade9-banner-enviado" class="status-box" style="display:none;margin-top:16px">
               <span>✅</span> <span id="atividade9-banner-enviado-texto"></span>
             </div>
@@ -1233,7 +1264,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
         <div class="em1-atividades-intro">📝 Aqui ficam as atividades da sua Jornada de Orientação Profissional. Escolha uma entrega abaixo pra responder — você pode voltar aqui quando quiser.</div>
         <div class="em1-aviso-prazo-geral" role="note">
           <span class="em1-aviso-prazo-icone">⏰</span>
-          <span><b>Se você não entregou as atividades anteriores do TPV, você tem até o dia 13/11 para realizar a entrega 1, 2 e 3.</b></span>
+          <span><b>Se você não entregou as atividades anteriores do TPV, você tem até o dia 18/11 para realizar a entrega 1, 2 e 3.</b></span>
         </div>
         <button class="em1-entrega-btn" onclick="em1AbrirEntrega(1)">
           <div class="em1-entrega-info">
@@ -1252,7 +1283,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
         <button class="em1-entrega-btn em1-disabled" id="em1-entrega-btn-3" disabled onclick="em1AbrirEntrega(3)">
           <div class="em1-entrega-info">
             <span class="em1-entrega-titulo">🎤 Entrega Final do TPV (Entrega 3)</span>
-            <span class="em1-entrega-prazo">📅 Prazo: 13/11</span>
+            <span class="em1-entrega-prazo">📅 Prazo: 18/11</span>
           </div>
           <span class="em1-entrega-status" id="em1-status-entrega-3">🔒 Abre em 24/10</span>
         </button>
@@ -1396,7 +1427,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
       <div class="em1-atividades-wrap" id="em1-entrega-3-form" style="display:none">
         <button class="em1-voltar-atividades" onclick="em1VoltarAtividades()">← Voltar pras atividades</button>
         <div class="em1-atividades-intro">
-          📝 <b>Trabalho de Projeto de Vida - Entrega 3 (Entrega Final).</b> Prazo: 13/11. Siga a ordem abaixo, do passo 1 ao 5.
+          📝 <b>Trabalho de Projeto de Vida - Entrega 3 (Entrega Final).</b> Prazo: 18/11. Siga a ordem abaixo, do passo 1 ao 5.
           <div class="em1-tpv-status" id="em1-e3-status">💾 Nenhum envio ainda</div>
         </div>
 
@@ -1422,7 +1453,9 @@ select.em1-cat-search option{color:#001433;font-weight:700}
           <div class="em1e3-orient-resumo">
             <h5>Resumo da atividade</h5>
             <ul>
-              <li><b>Prazo de envio:</b> 13/11 · <b>Apresentação à banca:</b> Encontro do Clube do dia 14/11</li>
+              <li><b>Prazo de envio e apresentação à banca:</b> 18/11</li>
+              <li><b>Encontro de preparação:</b> dia 14/11, para você se preparar para as apresentações do TPV</li>
+              <li><b>Tempo de apresentação:</b> 5 minutos</li>
               <li><b>Formato:</b> slides em PDF ou PowerPoint (até 15 MB) ou link do Canva ou Google Drive</li>
               <li><b>Moedas:</b> 1.000 ao entregar a atividade + 2.000 ao apresentar para a banca</li>
               <li>Você pode reenviar quantas vezes precisar; vale o último envio</li>
@@ -1453,7 +1486,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
           <div class="em1e3-num">3</div>
           <div class="em1e3-corpo">
             <h4>Anexe o material da sua apresentação (slides)</h4>
-            <p>Monte a apresentação no Canva ou no PowerPoint, respondendo às 5 perguntas das Orientações, e anexe aqui. <b>Depois, apresente o seu TPV para a banca no Encontro do Clube do dia 14/11.</b></p>
+            <p>Monte a apresentação no Canva ou no PowerPoint, respondendo às 5 perguntas das Orientações, e anexe aqui. <b>Depois, apresente o seu TPV para a banca no dia 18/11.</b> No dia 14/11 teremos um encontro de preparação para as apresentações.</p>
             <label class="em1e3-drop" id="em1-e3-drop" for="em1-e3-arquivo">
               <span id="em1-e3-drop-titulo">📎 Toque para anexar o arquivo</span>
               <small id="em1-e3-drop-sub">PDF ou PowerPoint (.pptx) · até 15 MB</small>
@@ -1781,6 +1814,31 @@ select.em1-cat-search option{color:#001433;font-weight:700}
     <div class="modal-botoes">
       <button class="btn ghost" onclick="fecharModal('modal-editar-plano')">Cancelar</button>
       <button class="btn" onclick="confirmarEdicaoPlano()">Salvar alterações</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-mo" class="modal-overlay">
+  <div class="modal">
+    <h3>🏫 Qual é a sua Melhor Oportunidade?</h3>
+    <p class="modal-sub">Escolha a escola em que você já está ou já garantiu vaga para o 1º EM. Se não encontrar, clique em "Não achei minha escola" e digite o nome.</p>
+    <div id="mo-busca-wrap">
+      <input type="text" id="mo-busca" placeholder="Digite o nome da escola ou da cidade" autocomplete="off" oninput="filtrarMO()">
+      <div class="mo-lista" id="mo-lista"></div>
+      <button type="button" class="mo-link" onclick="alternarMOManual(true)">Não achei minha escola</button>
+    </div>
+    <div class="mo-manual" id="mo-manual">
+      <label for="mo-nome-manual">Nome da escola</label>
+      <input type="text" id="mo-nome-manual" maxlength="120" autocomplete="off">
+      <label for="mo-cidade-manual">Cidade - UF</label>
+      <input type="text" id="mo-cidade-manual" maxlength="80" autocomplete="off" placeholder="Ex.: São Paulo - SP">
+      <button type="button" class="mo-link" style="margin-top:8px" onclick="alternarMOManual(false)">← Voltar para a busca</button>
+    </div>
+    <label class="mo-chk"><input type="checkbox" id="mo-confirma"> <span>Confirmo que já estou matriculado(a) ou já tenho vaga garantida nessa escola para o 1º EM.</span></label>
+    <p id="mo-erro" class="aviso-box mo-erro"></p>
+    <div class="modal-botoes">
+      <button class="btn ghost" onclick="fecharModal('modal-mo')">Cancelar</button>
+      <button class="btn" id="mo-enviar" onclick="confirmarMO()">Confirmar e enviar atividade</button>
     </div>
   </div>
 </div>
@@ -3493,11 +3551,105 @@ function montarResumoAtividade9() {
   // RA de teste sempre vê o resumo AO VIVO (não o retrato congelado) -- combina com a
   // trava desligada pra esse RA, já que ele pode continuar editando o plano e reenviando.
   const travado = !!(dados && dados.enviadoEm) && !ehRaDeTeste();
+  // Entrega feita pelo botão "Já estou numa Melhor Oportunidade": mostra a escola informada.
+  if (dados && dados.enviadoEm && dados.mo && dados.mo.nome) { el.innerHTML = htmlMOEntregue(dados.mo); return; }
   const lista = travado ? (dados.escolas || []) : coletarSnapshotAtividade9();
   if (!lista.length) { el.innerHTML = travado ? "" : "Você ainda não marcou interesse em nenhuma escola."; return; }
   const linhas = lista.map(item => `<li>${item.nome} — ${ETAPA_LABEL[item.etapa] || item.etapa}</li>`).join("");
   el.innerHTML = `<strong>${travado ? "Foi isso que enviamos pra equipe:" : "Isso é o que vamos enviar pra equipe:"}</strong><ul style="padding-left:20px;margin-top:6px">${linhas}</ul>`;
 }
+// ---------- "Já estou numa Melhor Oportunidade" (9º ano) ----------
+function htmlMOEntregue(mo) {
+  const d = document.createElement("div");
+  d.className = "mo-entregue";
+  const p1 = document.createElement("p");
+  p1.appendChild(document.createTextNode("🏫 Sua Melhor Oportunidade: "));
+  const nome = document.createElement("strong"); nome.textContent = mo.nome || ""; p1.appendChild(nome);
+  p1.appendChild(document.createTextNode((mo.cidade ? " — " + mo.cidade : "") + "."));
+  const p2 = document.createElement("p");
+  p2.textContent = "Parabéns! Você já está bem encaminhado(a). Se quiser, continue explorando outras escolas como segunda opção.";
+  d.appendChild(p1); d.appendChild(p2);
+  return d.outerHTML;
+}
+let MO_SELECIONADA = null;
+function abrirModalMO() {
+  MO_SELECIONADA = null;
+  document.getElementById("mo-busca").value = "";
+  document.getElementById("mo-nome-manual").value = "";
+  document.getElementById("mo-cidade-manual").value = "";
+  document.getElementById("mo-confirma").checked = false;
+  document.getElementById("mo-erro").style.display = "none";
+  alternarMOManual(false);
+  filtrarMO();
+  abrirModal("modal-mo");
+}
+function alternarMOManual(ligado) {
+  document.getElementById("mo-manual").style.display = ligado ? "block" : "none";
+  document.getElementById("mo-busca-wrap").style.display = ligado ? "none" : "block";
+  if (ligado) MO_SELECIONADA = null;
+}
+function filtrarMO() {
+  const lista = document.getElementById("mo-lista");
+  const q = normalizarTexto(document.getElementById("mo-busca").value);
+  const mun = normalizarTexto(ESTADO.persona && ESTADO.persona.municipio);
+  const uf = ESTADO.persona && ESTADO.persona.uf;
+  let achadas;
+  if (!q) {
+    achadas = DADOS.escolas.filter(e => normalizarTexto(e.municipio) === mun && (!uf || e.uf === uf));
+  } else {
+    const tokens = q.split(" ");
+    achadas = DADOS.escolas.filter(e => {
+      const alvo = normalizarTexto(e.nome + " " + e.municipio + " " + e.uf);
+      return tokens.every(t => alvo.indexOf(t) !== -1);
+    });
+  }
+  achadas.sort((a, b) => {
+    const da = normalizarTexto(a.municipio) === mun ? 0 : 1, db = normalizarTexto(b.municipio) === mun ? 0 : 1;
+    return da - db || String(a.nome).localeCompare(String(b.nome), "pt-BR");
+  });
+  const total = achadas.length;
+  achadas = achadas.slice(0, 8);
+  lista.innerHTML = "";
+  if (!achadas.length) {
+    const v = document.createElement("div"); v.className = "mo-vazio";
+    v.textContent = q ? "Nenhuma escola encontrada com esse nome. Tente outra palavra ou clique em \"Não achei minha escola\"." : "Digite o nome da escola para buscar.";
+    lista.appendChild(v); return;
+  }
+  achadas.forEach(e => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "mo-item";
+    if (MO_SELECIONADA && MO_SELECIONADA.escolaId === e.id) b.classList.add("sel");
+    b.appendChild(document.createTextNode((b.classList.contains("sel") ? "✔ " : "") + e.nome));
+    const sm = document.createElement("small"); sm.textContent = e.municipio + " - " + e.uf; b.appendChild(sm);
+    b.onclick = () => { MO_SELECIONADA = { escolaId: e.id, nome: e.nome, cidade: e.municipio + " - " + e.uf, naCatalogo: true }; filtrarMO(); };
+    lista.appendChild(b);
+  });
+  if (total > achadas.length) {
+    const m = document.createElement("div"); m.className = "mo-vazio";
+    m.textContent = "Mostrando " + achadas.length + " de " + total + " — digite mais letras para filtrar."; lista.appendChild(m);
+  }
+}
+function confirmarMO() {
+  const erro = document.getElementById("mo-erro");
+  const manual = document.getElementById("mo-manual").style.display === "block";
+  let mo = MO_SELECIONADA;
+  if (manual) {
+    const nome = document.getElementById("mo-nome-manual").value.trim().replace(/\s+/g, " ");
+    const cidade = document.getElementById("mo-cidade-manual").value.trim().replace(/\s+/g, " ");
+    mo = nome.length >= 3 ? { escolaId: "", nome: nome, cidade: cidade, naCatalogo: false } : null;
+  }
+  const faltando = [];
+  if (!mo) faltando.push(manual ? "digitar o nome da sua escola" : "escolher a sua escola na lista");
+  if (!document.getElementById("mo-confirma").checked) faltando.push("marcar a confirmação de matrícula/vaga");
+  if (faltando.length) {
+    erro.style.display = "block";
+    erro.textContent = "⚠️ Antes de enviar: " + faltando.join(" e ") + ".";
+    return;
+  }
+  erro.style.display = "none";
+  fecharModal("modal-mo");
+  executarEnvioAtividade9({ escolas: [], mo: mo });
+}
+
 function validarAtividade9() {
   const faltando = [];
   if (ESTADO.plano.length < 3) faltando.push("marcar interesse em pelo menos 3 escolas diferentes (você tem " + ESTADO.plano.length + ")");
@@ -3522,6 +3674,7 @@ function verificarAtividade9NoServidor() {
       if (!dados || dados.status !== "ok" || !dados.encontrado) return;
       const enviadoEm = dados.carimbo || new Date().toISOString();
       const registro = { escolas: dados.escolas || [], enviadoEm: enviadoEm, posicao: posicaoValida(dados.posicao) };
+      if (dados.jaNaMO && dados.mo && dados.mo.nome) registro.mo = { escolaId: dados.mo.escolaId || "", nome: dados.mo.nome, cidade: dados.mo.cidade || "", naCatalogo: !!dados.mo.naCatalogo };
       localStorage.setItem(chaveAtividade(), JSON.stringify(registro));
       atualizarStatusAtividade9(registro);
     })
@@ -3546,6 +3699,8 @@ function aplicarTravaAtividade9(dados) {
   const barra = document.getElementById("atividade9-salvar-bar");
   const banner = document.getElementById("atividade9-banner-enviado");
   if (barra) barra.style.display = travado ? "none" : "flex";
+  const moBloco = document.getElementById("atividade9-mo-bloco");
+  if (moBloco) moBloco.style.display = travado ? "none" : "block";
   if (banner) {
     banner.style.display = travado ? "flex" : "none";
     if (travado) document.getElementById("atividade9-banner-enviado-texto").textContent = "Atividade entregue em " + em1FormatarHora(dados.enviadoEm) + " — o resumo abaixo é só de visualização.";
@@ -3565,14 +3720,24 @@ function enviarAtividade9() {
     return;
   }
   erroEl.style.display = "none";
-
+  executarEnvioAtividade9({ escolas: coletarSnapshotAtividade9(), mo: null });
+}
+// Envio único da atividade do 9º ano: serve tanto para "3 escolas" quanto para "Já estou numa MO".
+function executarEnvioAtividade9(entrega) {
+  const escolas = entrega.escolas || [];
+  const mo = entrega.mo || null;
   const ra = ESTADO.matricula || "sem-RA";
   const agora = new Date().toISOString();
-  const escolas = coletarSnapshotAtividade9();
   const payload = { tipo: "atividade_9ano_fase12", ra: ra, serie: "9º ano", carimbo: agora, escolas: escolas };
+  if (mo) { payload.jaEstouNaMO = true; payload.mo = mo; }
 
+  const montarDados = (carimbo, posicao) => {
+    const d = { escolas: escolas, enviadoEm: carimbo, posicao: posicaoValida(posicao) };
+    if (mo) d.mo = mo;
+    return d;
+  };
   const marcarEnviado = (carimbo, posicao, novoEnvio) => {
-    const dados = { escolas: escolas, enviadoEm: carimbo, posicao: posicaoValida(posicao) };
+    const dados = montarDados(carimbo, posicao);
     localStorage.setItem(chaveAtividade(), JSON.stringify(dados));
     atualizarStatusAtividade9(dados);
     if (novoEnvio) mostrarParabensEntrega(posicao);
@@ -3601,7 +3766,9 @@ function enviarAtividade9() {
       if (resposta && resposta.status === "ok") {
         marcarEnviado(agora, resposta.posicao, true);
       } else if (resposta && resposta.status === "ja_enviado") {
+        // Já havia uma entrega salva no servidor: restaura o que está LÁ (não o que acabamos de tentar enviar).
         marcarEnviado(resposta.carimbo || agora, resposta.posicao, false);
+        verificarAtividade9NoServidor();
       } else if (tentativa < MAX_TENTATIVAS) {
         setTimeout(() => tentarEnviar(tentativa + 1), 1200);
       } else {
@@ -5318,7 +5485,7 @@ function em1E3Renderizar() {
       p3.appendChild(document.createTextNode("Para garantir as outras "));
       p3.appendChild(mkB("2.000 moedas"));
       p3.appendChild(document.createTextNode(", apresente para a banca no "));
-      p3.appendChild(mkB("Encontro do Clube do dia\u00a014/11"));
+      p3.appendChild(mkB("dia\u00a018/11"));
       p3.appendChild(document.createTextNode("."));
       // 4) recebimento + link
       const p4 = mkP("em1e3-ban-sec");
