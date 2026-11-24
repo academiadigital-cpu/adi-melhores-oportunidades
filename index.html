@@ -408,6 +408,18 @@
   .modal h3 { font-size: 18px; margin-bottom: 4px; }
   .modal .modal-sub { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 6px; }
 
+  /* (24/11) campo "escola própria" (9º ano, Meu Plano) */
+  .ep-bloco { background: var(--paper-raised); border: 1.5px solid var(--border); border-radius: var(--radius-m); padding: 16px 18px; margin: 22px 0 8px; }
+  .ep-bloco h3 { margin: 0 0 6px; font-size: 16px; color: var(--ink); }
+  .ep-bloco p { margin: 0 0 10px; font-size: 14px; line-height: 1.45; color: var(--ink-soft); }
+  .ep-bloco label { display: block; font-weight: 700; font-size: 13.5px; margin-bottom: 6px; color: var(--ink); }
+  .ep-bloco textarea { width: 100%; box-sizing: border-box; min-height: 84px; resize: vertical; border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 12px; font-family: inherit; font-size: 15px; color: var(--ink); background: #fff; }
+  .ep-bloco textarea:focus { outline: 2px solid var(--blue); outline-offset: 1px; border-color: var(--blue); }
+  .ep-rodape { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+  .ep-contador { font-size: 12.5px; color: var(--ink-faint); }
+  .ep-status { margin-top: 8px; font-size: 13.5px; min-height: 18px; color: var(--ink-soft); }
+  .ep-status.ok { color: var(--success-soft-ink); }
+  .ep-status.pend { color: var(--coral-soft-ink); }
   .mo-bloco { border: 2px solid var(--coral); background: var(--coral-soft); border-radius: var(--radius-m); padding: 14px 16px; margin: 16px 0 4px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
   .mo-bloco .mo-txt { flex: 1 1 260px; font-size: 14px; line-height: 1.45; color: var(--coral-soft-ink); }
   .mo-bloco .mo-txt b { font-size: 15px; display: block; margin-bottom: 2px; }
@@ -1095,6 +1107,18 @@ select.em1-cat-search option{color:#001433;font-weight:700}
             <p>Vá até "Escolas recomendadas" e marque interesse nas que fizerem sentido pra você.</p>
           </div>
           <div id="plano-lista" class="plano-lista"></div>
+          <div class="ep-bloco" id="ep-bloco" style="display:none">
+            <h3>🎓 Já sabe que vai estudar em outra escola?</h3>
+            <p>Se você já sabe que vai estudar em uma escola que não está entre as recomendadas, conte pra gente. É só um registro para a equipe acompanhar o seu caminho e não substitui as inscrições do seu plano.</p>
+            <label for="ep-texto">Qual é a escola e em qual cidade?</label>
+            <textarea id="ep-texto" maxlength="300" placeholder="Ex.: Colégio Exemplo, Belo Horizonte/MG. Já fiz a matrícula." oninput="epAoDigitar()"></textarea>
+            <div class="ep-rodape">
+              <span class="ep-contador" id="ep-contador">0/300</span>
+              <button class="btn small" id="ep-salvar" onclick="epSalvar()">Salvar</button>
+            </div>
+            <div class="ep-status" id="ep-status" role="status" aria-live="polite"></div>
+            <p style="margin:8px 0 0;font-size:12.5px;color:var(--ink-faint)">Escreva só o nome da escola e a cidade, sem dados pessoais (como CPF ou senhas).</p>
+          </div>
         </div>
 
         <div id="tab-atividade" class="tab-content">
@@ -1512,7 +1536,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
           <button class="em1e3-enviar" id="em1-e3-btn-enviar" onclick="em1E3Enviar()">📤 ENVIAR ATIVIDADE</button>
         </div>
         <div class="em1e3-aviso" id="em1-e3-aviso" role="alert"></div>
-        <div class="em1e3-erro" id="em1-e3-erro" role="alert"><span>⚠️</span><span>Não foi possível enviar, tente outra vez ou chame nossa equipe pelo número <a href="https://wa.me/5511947423986" target="_blank" rel="noopener">+55 11 94742-3986</a>.</span></div>
+        <div class="em1e3-erro" id="em1-e3-erro" role="alert"><span>⚠️</span><span>Não foi possível enviar, tente outra vez ou chame nossa equipe pelo número <a href="https://wa.me/5511981800287" target="_blank" rel="noopener">+55 11 98180-0287</a>.</span></div>
       </div>
 
       <div class="em1-atividades-wrap" id="em1-entrega-1-form" style="display:none">
@@ -1753,7 +1777,7 @@ select.em1-cat-search option{color:#001433;font-weight:700}
   </div>
 
 
-  <a class="whatsapp-fab" href="https://wa.me/5511947423986" target="_blank" rel="noopener" aria-label="Falar com a equipe Ismart no WhatsApp">
+  <a class="whatsapp-fab" href="https://wa.me/5511981800287" target="_blank" rel="noopener" aria-label="Falar com a equipe Ismart no WhatsApp">
     <span class="whatsapp-fab-icon">
       <svg viewBox="0 0 32 32" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M16.02 3C9.4 3 4 8.4 4 15.02c0 2.24.6 4.36 1.75 6.24L4 29l7.9-1.72a11.98 11.98 0 0 0 4.12.73h.01c6.62 0 12.02-5.4 12.02-12.02C28.05 8.4 22.65 3 16.02 3zm0 21.9h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-4.36.95.94-4.26-.24-.38a9.86 9.86 0 0 1-1.52-5.6c0-5.47 4.45-9.92 9.93-9.92 2.65 0 5.14 1.04 7.01 2.91a9.86 9.86 0 0 1 2.9 7.01c0 5.47-4.45 9.88-9.24 9.88zm5.44-7.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.24-.46-2.37-1.46-.87-.78-1.47-1.74-1.64-2.04-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.5-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.87 1.22 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35z"/></svg>
     </span>
@@ -2500,6 +2524,7 @@ function restaurarPlanoDoServidor(ra) {
   fetch(TRACKING_API_URL + "?ra=" + encodeURIComponent(ra), { method: "GET" })
     .then(resp => resp.ok ? resp.json() : null)
     .then(dados => {
+      if (dados && dados.status === "ok" && dados.escolaPropria) epMesclarServidor(dados.escolaPropria); // (24/11) escola própria (9º ano)
       if (!dados || dados.status !== "ok" || !Array.isArray(dados.plano)) return;
       mesclarPlanoRestaurado(dados.plano);
     })
@@ -2558,6 +2583,92 @@ function resolverEscolaRestaurada(item) {
     if (porCidade) return porCidade;
   }
   return candidatos[0];
+}
+
+/* (24/11, pedido da Heloísa) ESCOLA PRÓPRIA -- 9º ano, aba Meu Plano. Campo aberto para o aluno registrar que já sabe que
+   vai estudar numa escola que NÃO está entre as recomendadas. É só um REGISTRO para a equipe: não conta como atividade
+   entregue, não conta como aprovado e não mexe em nenhum indicador. Guarda no aparelho (localStorage) e envia ao coletor
+   (tipo "escola_propria", aba "Escola própria (9º ano)" da planilha de acompanhamento). Se o envio falhar, fica marcado
+   como pendente e é reenviado no próximo login. Em outro aparelho, o texto volta pelo GET (?ra=) junto com o plano.
+   Só aparece para o 9º ano. Salvar vazio apaga o registro (vale sempre o último). */
+const EP_MAX = 300;
+function epChave() { return "mo_escola_propria_v1_" + (ESTADO.matricula || ""); }
+function epCarregar() { try { const r = localStorage.getItem(epChave()); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
+function epGuardar(o) { try { localStorage.setItem(epChave(), JSON.stringify(o)); } catch (e) {} }
+function epLimpar(txt) { return String(txt || "").replace(/\s+/g, " ").trim().slice(0, EP_MAX); }
+function epAtualizarContador() {
+  const ta = document.getElementById("ep-texto"), c = document.getElementById("ep-contador");
+  if (ta && c) c.textContent = ta.value.length + "/" + EP_MAX;
+}
+function epAoDigitar() {
+  const ta = document.getElementById("ep-texto");
+  if (ta) ta.dataset.sujo = "1";
+  epAtualizarContador();
+}
+function epAtualizarStatus(reg, mensagemExtra) {
+  const el = document.getElementById("ep-status");
+  if (!el) return;
+  el.className = "ep-status";
+  if (mensagemExtra) { el.textContent = mensagemExtra; return; }
+  if (!reg || !reg.texto) { el.textContent = ""; return; }
+  if (reg.enviado) { el.classList.add("ok"); el.textContent = "✅ Registrado em " + em1FormatarHora(reg.dataHora) + ". Se mudar de ideia, é só editar e salvar de novo."; }
+  else { el.classList.add("pend"); el.textContent = "⚠️ Salvo neste aparelho, mas ainda não chegou na equipe. Toque em Salvar para tentar de novo."; }
+}
+function epMontar() {
+  const bloco = document.getElementById("ep-bloco");
+  if (!bloco) return;
+  if (!ehNonoAno()) { bloco.style.display = "none"; return; }
+  bloco.style.display = "block";
+  const ta = document.getElementById("ep-texto");
+  const salvo = epCarregar();
+  if (document.activeElement !== ta && ta.dataset.sujo !== "1") ta.value = salvo ? (salvo.texto || "") : "";
+  epAtualizarContador();
+  const el = document.getElementById("ep-status");
+  if (el && !el.dataset.msg) epAtualizarStatus(salvo);
+}
+function epEnviar(reg) {
+  return postarRessincronizacao({ tipo: "escola_propria", ra: String(ESTADO.matricula || ""), texto: reg.texto, dataHora: reg.dataHora });
+}
+function epSalvar() {
+  const ta = document.getElementById("ep-texto"), btn = document.getElementById("ep-salvar"), el = document.getElementById("ep-status");
+  if (!ta || !ehNonoAno()) return;
+  const texto = epLimpar(ta.value);
+  const salvo = epCarregar();
+  if (!texto && !(salvo && salvo.texto)) { epAtualizarStatus(null, "Escreva o nome da escola e a cidade antes de salvar."); return; }
+  if (salvo && salvo.texto === texto && salvo.enviado) { ta.dataset.sujo = "0"; ta.value = texto; epAtualizarStatus(salvo); return; }
+  const reg = { texto, dataHora: new Date().toISOString(), enviado: false };
+  epGuardar(reg);
+  ta.value = texto; ta.dataset.sujo = "0"; epAtualizarContador();
+  btn.disabled = true; el.dataset.msg = "1"; epAtualizarStatus(null, "Enviando…");
+  epEnviar(reg).then(ok => {
+    if (ok) { reg.enviado = true; epGuardar(reg); }
+    btn.disabled = false; delete el.dataset.msg;
+    if (!texto && ok) epAtualizarStatus(null, "Registro removido.");
+    else epAtualizarStatus(reg);
+  });
+}
+// Login: reenvia o que ficou pendente (falha de rede na última vez).
+function epReenviarPendente() {
+  try {
+    if (!ehNonoAno() || !TRACKING_API_URL) return;
+    const reg = epCarregar();
+    if (!reg || reg.enviado || reg.texto === undefined) return;
+    epEnviar(reg).then(ok => { if (ok) { reg.enviado = true; epGuardar(reg); epMontar(); } });
+  } catch (e) {}
+}
+// Vindo do servidor (GET ?ra=): só substitui o local se for mais novo.
+function epMesclarServidor(ep) {
+  try {
+    if (!ep || !ehNonoAno()) return;
+    const tsS = ep.dataHora ? new Date(ep.dataHora).getTime() : 0;
+    const local = epCarregar();
+    const tsL = local && local.dataHora ? new Date(local.dataHora).getTime() : 0;
+    if (!tsS || tsS <= tsL) return;
+    epGuardar({ texto: epLimpar(ep.texto), dataHora: ep.dataHora, enviado: true });
+    const ta = document.getElementById("ep-texto");
+    if (ta) ta.dataset.sujo = "0";
+    epMontar();
+  } catch (e) {}
 }
 
 // Manda um "evento" pra planilha de acompanhamento da equipe (fogo-e-esquece: nunca trava a
@@ -2742,6 +2853,7 @@ async function fazerLogin() {
   ESTADO.recomendadas = recomendacoesParaAluno(aluno.municipio, aluno.uf);
   ESTADO.plano = carregarPlano(ra);
   restaurarPlanoDoServidor(ra); // (30/09) roda em segundo plano, sem travar o login -- ver função acima
+  epReenviarPendente(); // (24/11) reenvia a escola própria que ficou pendente
   VIEW_ATUAL = "lista"; PIN_SELECIONADO = null;
 
   document.getElementById("view-login").style.display = "none";
@@ -3173,6 +3285,7 @@ function atualizarStatsPlano() {
 }
 
 function renderizarPlano() {
+  epMontar(); // (24/11) campo "escola própria" (só 9º ano)
   const lista = document.getElementById("plano-lista");
   const vazio = document.getElementById("plano-vazio");
   lista.innerHTML = "";
